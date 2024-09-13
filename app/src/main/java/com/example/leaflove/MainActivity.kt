@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.ui.theme.LeafLoveTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +23,27 @@ class MainActivity : ComponentActivity() {
         setContent {
             LeafLoveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    LeafLove()
                 }
             }
         }
     }
 }
-
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LeafLoveTheme {
-        Greeting("Android")
+fun LeafLove(){
+    val navController = rememberNavController()
+    
+    NavHost(navController = navController, startDestination = "loginscreen") {
+        composable("loginscreen") {
+            loginScreen(navController)
+        }
+        composable("signupscreen"){
+            registerScreen(navHost = navController)
+        }
+        composable("mainscreen"){
+            mainScreen(navHost = navController)
+        }
     }
+
+
 }
