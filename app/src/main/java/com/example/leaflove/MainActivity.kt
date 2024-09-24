@@ -1,5 +1,6 @@
 package com.example.leaflove
 
+import Main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             LeafLoveTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -31,6 +33,7 @@ class MainActivity : ComponentActivity() {
 }
 @Composable
 fun LeafLove(){
+    val viewModel: MainViewModel = MainViewModel();
     val navController = rememberNavController()
     
     NavHost(navController = navController, startDestination = "loginscreen") {
@@ -41,7 +44,7 @@ fun LeafLove(){
             registerScreen(navHost = navController)
         }
         composable("mainscreen"){
-            mainScreen(navHost = navController)
+            mainScreen(navHost = navController, viewModel)
         }
     }
 

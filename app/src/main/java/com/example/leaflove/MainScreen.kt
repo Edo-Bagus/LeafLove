@@ -1,6 +1,7 @@
 package com.example.leaflove
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,14 +10,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.material3.Text
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 
 @Composable
-fun mainScreen(navHost: NavHostController){
+fun mainScreen(navHost: NavHostController, viewModel: MainViewModel){
     val image = painterResource(R.drawable.mainmenu)
     val image2 = painterResource(R.drawable.header)
     val image3 = painterResource(R.drawable.mainmenu2)
@@ -32,15 +35,11 @@ fun mainScreen(navHost: NavHostController){
             .fillMaxSize())
     }
 
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(714.dp)
-        .offset(x = 0.dp, y = -offsetmainmenu)
-        .zIndex(0.9f)){
-        Image(painter = image,
-            contentDescription = "",
-            modifier = Modifier.fillMaxSize())
+
+    Column(modifier = Modifier.offset(y= 32.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.End){
+        Text(text = viewModel.weatherState.value.weather?.firstOrNull()?.main ?: "No weather data")
     }
+
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(500.dp)
