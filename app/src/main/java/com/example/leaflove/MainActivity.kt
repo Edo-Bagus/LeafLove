@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
 fun LeafLove(){
     val navController = rememberNavController()
     
-    NavHost(navController = navController, startDestination = "loginscreen") {
+    NavHost(navController = navController, startDestination = "myplantscreen") {
         composable("loginscreen") {
             loginScreen(navController)
         }
@@ -42,6 +42,9 @@ fun LeafLove(){
         }
         composable("mainscreen"){
             mainScreen(navHost = navController)
+        }
+        composable("myplantscreen"){
+            myPlantScreen(navHost = navController)
         }
     }
 
