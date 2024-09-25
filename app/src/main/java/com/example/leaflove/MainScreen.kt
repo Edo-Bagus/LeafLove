@@ -47,6 +47,7 @@ fun mainScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
         painterResource(R.drawable.baseline_home_24),
         painterResource(R.drawable.outline_forest_24)
     )
+    val itemsNavigation = listOf("ARScreen","mainscreen","myplantscreen")
 
     // State to keep track of selected item
     var selectedItem by remember { mutableStateOf(0) }
@@ -102,8 +103,7 @@ fun mainScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                         shape = RoundedCornerShape(screenWidth*0.3f),
                         clip = false
                     )
-                    .width(screenWidth *0.2f)
-                    .height(screenHeight ),
+                    .width(screenWidth *0.2f),
                 colors = ButtonDefaults.buttonColors(Color.White)
             ) {
                 Text(text = "Coin",
@@ -113,15 +113,18 @@ fun mainScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
             Button(
                 onClick = { /*TODO*/ },
                 modifier = Modifier
-                    .width(screenWidth)) {
+                    .width(screenWidth*0.6f)) {
                 Text(text = "Search")
             }
             Spacer(modifier = Modifier.weight(1f))
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .wrapContentSize()) {
                 Icon(
-                    painter = painterResource(R.drawable.account_icon),
+                    painter = painterResource(R.drawable.baseline_person_24),
                     contentDescription = "Account",
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .size(screenWidth * 0.1f)
                 )
             }
             Spacer(modifier = Modifier.weight(0.1f))
@@ -285,8 +288,8 @@ fun mainScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                             )
                         },
                         label = { Text(item) },
-                        selected = selectedItem == index,
-                        onClick = { selectedItem = index }
+                        selected = selectedItem+1 == index,
+                        onClick = { navHost.navigate(itemsNavigation[index])}
                     )
                 }
             }

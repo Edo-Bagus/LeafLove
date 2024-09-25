@@ -127,7 +127,11 @@ fun loginScreen(navHost: NavHostController) {
 
             // Sign In Button
             Button(
-                onClick = { navHost.navigate("mainscreen") },
+                onClick = { navHost.navigate("mainscreen"){
+                    popUpTo(0) {
+                        inclusive = true
+                    }
+                } },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = screenWidth * 0.05f),
@@ -142,7 +146,9 @@ fun loginScreen(navHost: NavHostController) {
 
             // Sign Up Button
             Button(
-                onClick = { navHost.navigate("signupscreen") },
+                onClick = { navHost.navigate("signupscreen"){
+
+                } },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
