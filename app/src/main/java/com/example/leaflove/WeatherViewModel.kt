@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 interface ApiServices {
@@ -20,7 +19,7 @@ interface ApiServices {
     ): WeatherResponse
 }
 
-class MainViewModel: ViewModel() {
+class WeatherViewModel: ViewModel() {
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl("https://api.openweathermap.org/data/2.5/")
         .addConverterFactory(GsonConverterFactory.create())
@@ -31,28 +30,14 @@ class MainViewModel: ViewModel() {
     private val _weatherState = mutableStateOf(WeatherResponse())
     var weatherState = _weatherState
 
-    var lat:Double = 14.123342;
-    var lon:Double = 7.5324341;
-
-    init{
-        try{
-            viewModelScope.launch{
-                fetchWeather()
-                Log.d("Test", weatherState.value.toString())
+    fun fetchWeather(lat: Double, lon: Double) {
+        viewModelScope.launch {
+            try {
+                _weatherState.value = weatherServices.getWeather(lat, lon)
+                Log.d("Weather Data", weatherState.value.toString())
+            } catch (e: Exception) {
+                e.message?.let { Log.e("Weather Error", it) }
             }
         }
-        catch(e: Exception) {
-            e.message?.let { Log.e("error coy: ", it) }
-        }
     }
-    suspend fun fetchWeather(){
-        try{
-            _weatherState.value = weatherServices.getWeather(this.lat, this.lon)
-        }
-        catch(e: Exception) {
-            e.message?.let { Log.e("error coy: ", it) }
-        }
-    }
-
-
 }

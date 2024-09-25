@@ -18,32 +18,38 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import java.util.Locale
 
-class LocationUtils(val context: Context) {
+class LocationUtils(
+    private val context: Context,
+    private val viewModel: LocationViewModel // Pass ViewModel here
+) {
+    private val _fusedLocationClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(context)
 
-    private val _fusedLocationClient: FusedLocationProviderClient
-            = LocationServices.getFusedLocationProviderClient(context)
+    // Define locationCallback as a property of the class
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            super.onLocationResult(locationResult)
+            locationResult.lastLocation?.let {
+                Log.d("goblok", "Location received: ${it.latitude}, ${it.longitude}")
+                val location = LocationData(latitude = it.latitude, longitude = it.longitude)
+
+                // Update location in ViewModel
+                viewModel.updateLocation(location)
+
+                // Get the human-readable address from the coordinates
+                val address = reverseGeocodeLocation(location)
+                viewModel.updateAddress(address)
+            }
+        }
+    }
 
     @SuppressLint("MissingPermission")
-    fun requestLocationUpdate(viewModel: LocationViewModel) {
+    fun requestLocationUpdate() {
         if (!hasLocationPermission(context)) {
             Log.e("LocationUtils", "Location permissions are not granted.")
             return
         }
 
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                locationResult.lastLocation?.let {
-                    Log.d("goblok", "Location received: ${it.latitude}, ${it.longitude}")
-                    val location = LocationData(latitude = it.latitude, longitude = it.longitude)
-                    viewModel.updateLocation(location)
-
-                    // Get the human-readable address from the coordinates
-                    val address = reverseGeocodeLocation(location)
-                    viewModel.updateAddress(address)
-                }
-            }
-        }
         val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000).build()
         _fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
@@ -53,6 +59,10 @@ class LocationUtils(val context: Context) {
             Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(context,
             Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    fun stopLocationUpdates() {
+        _fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
     fun reverseGeocodeLocation(location: LocationData): String {
@@ -73,3 +83,4 @@ class LocationUtils(val context: Context) {
         }
     }
 }
+
