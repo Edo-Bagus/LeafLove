@@ -100,10 +100,10 @@ fun mainScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                 modifier = Modifier
                     .shadow(
                         elevation = 10.dp,
-                        shape = RoundedCornerShape(screenWidth*0.3f),
+                        shape = RoundedCornerShape(screenWidth * 0.3f),
                         clip = false
                     )
-                    .width(screenWidth *0.2f),
+                    .width(screenWidth * 0.2f),
                 colors = ButtonDefaults.buttonColors(Color.White)
             ) {
                 Text(text = "Coin",
@@ -113,13 +113,20 @@ fun mainScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
             Button(
                 onClick = { /*TODO*/ },
                 modifier = Modifier
-                    .width(screenWidth*0.6f)) {
+                    .width(screenWidth*0.6f),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Gray
+                )) {
                 Text(text = "Search")
             }
             Spacer(modifier = Modifier.weight(1f))
             Button(onClick = { /*TODO*/ },
                 modifier = Modifier
-                    .wrapContentSize()) {
+                    .wrapContentSize(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = ButtonGreen
+                )) {
                 Icon(
                     painter = painterResource(R.drawable.baseline_person_24),
                     contentDescription = "Account",
