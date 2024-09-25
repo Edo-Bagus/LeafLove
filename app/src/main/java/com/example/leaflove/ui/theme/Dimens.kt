@@ -1,71 +1,44 @@
-package com.example.leaflove.ui.theme
+package com.kapps.leaflove.ui.theme
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-data class Dimens(
-    val extrasmall: Dp = 0.dp,
-    val small1: Dp = 0.dp,
-    val small2: Dp = 0.dp,
-    val small3: Dp = 0.dp,
-    val medium1: Dp = 0.dp,
-    val medium2: Dp = 0.dp,
-    val medium3: Dp = 0.dp,
-    val large: Dp = 0.dp,
-    val buttonHeight: Dp = 40.dp,
-    val logoSize: Dp = 42.dp
+data class Dimensions(
+    val small:Dp,
+    val smallMedium:Dp,
+    val medium:Dp,
+    val mediumLarge:Dp,
+    val large:Dp
 )
 
-val CompactSmallDimens = Dimens(
-    small1 = 6.dp,
-    small2 = 5.dp,
-    small3 = 8.dp,
-    medium1 = 15.dp,
-    medium2 = 26.dp,
-    medium3 = 30.dp,
-    large = 45.dp,
-    buttonHeight = 30.dp,
-    logoSize = 36.dp
+val smallDimensions = Dimensions(
+    small = 2.dp,
+    smallMedium = 4.dp,
+    medium = 6.dp,
+    mediumLarge = 9.dp,
+    large = 13.dp
 )
 
-val CompactMediumDimens = Dimens(
-    small1 = 8.dp,
-    small2 = 13.dp,
-    small3 = 17.dp,
-    medium1 = 25.dp,
-    medium2 = 30.dp,
-    medium3 = 35.dp,
-    large = 65.dp
+val compactDimensions = Dimensions(
+    small = 3.dp,
+    smallMedium = 5.dp,
+    medium = 8.dp,
+    mediumLarge = 11.dp,
+    large = 15.dp
 )
 
-val CompactDimens = Dimens(
-    small1 = 10.dp,
-    small2 = 15.dp,
-    small3 = 20.dp,
-    medium1 = 30.dp,
-    medium2 = 36.dp,
-    medium3 = 40.dp,
-    large = 80.dp
+val mediumDimensions = Dimensions(
+    small = 5.dp,
+    smallMedium = 7.dp,
+    medium = 10.dp,
+    mediumLarge = 13.dp,
+    large = 18.dp
 )
 
-val MediumDimens = Dimens(
-    small1 = 10.dp,
-    small2 = 15.dp,
-    small3 = 20.dp,
-    medium1 = 30.dp,
-    medium2 = 36.dp,
-    medium3 = 40.dp,
-    large = 110.dp,
-    logoSize = 55.dp
-)
-
-val ExpandedDimens = Dimens(
-    small1 = 15.dp,
-    small2 = 20.dp,
-    small3 = 25.dp,
-    medium1 = 35.dp,
-    medium2 = 30.dp,
-    medium3 = 45.dp,
-    large = 130.dp,
-    logoSize = 72.dp
+val largeDimensions = Dimensions(
+    small = 8.dp,
+    smallMedium = 11.dp,
+    medium = 15.dp,
+    mediumLarge = 20.dp,
+    large = 25.dp
 )

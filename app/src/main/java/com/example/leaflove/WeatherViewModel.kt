@@ -30,6 +30,8 @@ class WeatherViewModel: ViewModel() {
     private val _weatherState = mutableStateOf(WeatherResponse())
     var weatherState = _weatherState
 
+    private val _humidityState = mutableStateOf("")
+    var humidityState = _humidityState.value
     fun fetchWeather(lat: Double, lon: Double) {
         viewModelScope.launch {
             try {

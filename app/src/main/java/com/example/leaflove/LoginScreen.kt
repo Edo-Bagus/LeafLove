@@ -19,6 +19,7 @@ import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -43,7 +44,7 @@ import com.example.leaflove.ui.theme.ButtonGreen
 
 @Composable
 fun loginScreen(navHost: NavHostController) {
-    val image = painterResource(R.drawable.test)
+    val image = painterResource(R.drawable.backgroundlogin1)
     val image2 = painterResource(R.drawable.test2)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -53,46 +54,54 @@ fun loginScreen(navHost: NavHostController) {
         val screenWidth = maxWidth
         val screenHeight = maxHeight
 
+        // Determine if the screen is in landscape or portrait orientation
+        val isLandscape = screenWidth > screenHeight
 
-
-        // Adjust background images based on screen size
+        // Adjust background images based on screen size and orientation
         Box(
             modifier = Modifier
-                .offset(y = screenHeight * 0.8f) // Adjust Y offset dynamically
-                .height(screenHeight * 0.3f) // Scale the height based on screen height
-                .width(screenWidth * 0.4f)  // Scale the width based on screen width
+                .wrapContentSize()
+                .offset(y = if (isLandscape) screenHeight * 0.5f else screenHeight * 0.69f)
         ) {
-            Image(painter = image, contentDescription = "", modifier = Modifier.fillMaxSize())
+            Image(painter = image, contentDescription = "",
+                modifier = Modifier
+                    .width(screenWidth * 0.4f)
+                    .height(screenHeight * 0.38f)
+                        )
         }
-//        Box(
-//            modifier = Modifier
-//                .offset(x = screenWidth * 0.5f, y = screenHeight * 0.7f) // Adjust offset
-//                .height(screenHeight * 0.3f)
-//                .width(screenWidth * 0.4f)
-//        ) {
-//            Image(painter = image2, contentDescription = "", modifier = Modifier.fillMaxSize())
-//        }
 
-        // Main content area in Column
+        Box(
+            modifier = Modifier
+                .offset(x = screenWidth * 0.7f)
+                .wrapContentSize()
+        ) {
+            Image(
+                painter = image2, contentDescription = "",
+                modifier = Modifier
+                    .width(screenWidth * 0.3f)
+                    .height(screenHeight * 0.23f))
+        }
+
+        // Main content area
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),  // Add some horizontal padding
+                .padding(horizontal = screenWidth * 0.05f),  // Adjust padding relative to screen width
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center  // Center content vertically
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 fontWeight = FontWeight.Bold,
                 text = "Welcome to LeafLove",
-                fontSize = 24.sp
+                fontSize = if (isLandscape) 20.sp else 24.sp  // Adjust text size based on orientation
             )
-            Spacer(modifier = Modifier.height(24.dp))  // Space between title and fields
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Email input field
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(15.dp)
+                    .padding(horizontal = screenWidth * 0.05f) // Adjust padding dynamically
                     .background(color = Background, shape = RoundedCornerShape(50)),
                 value = email,
                 onValueChange = { email = it },
@@ -100,13 +109,13 @@ fun loginScreen(navHost: NavHostController) {
                 shape = RoundedCornerShape(50),
                 colors = OutlinedTextFieldDefaults.colors()
             )
-            Spacer(modifier = Modifier.height(16.dp))  // Space between email and password fields
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Password input field
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 15.dp)
+                    .padding(horizontal = screenWidth * 0.05f)
                     .background(color = Background, shape = RoundedCornerShape(50)),
                 value = password,
                 onValueChange = { password = it },
@@ -114,14 +123,14 @@ fun loginScreen(navHost: NavHostController) {
                 shape = RoundedCornerShape(50),
                 colors = OutlinedTextFieldDefaults.colors()
             )
-            Spacer(modifier = Modifier.height(16.dp))  // Space between password and button
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Sign In Button
             Button(
                 onClick = { navHost.navigate("mainscreen") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(15.dp),
+                    .padding(horizontal = screenWidth * 0.05f),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = ButtonGreen,
                     contentColor = Color.White
@@ -129,8 +138,7 @@ fun loginScreen(navHost: NavHostController) {
             ) {
                 Text(text = "Sign In")
             }
-
-            Spacer(modifier = Modifier.height(8.dp))  // Space between buttons
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Sign Up Button
             Button(
@@ -146,6 +154,7 @@ fun loginScreen(navHost: NavHostController) {
         }
     }
 }
+
 
 
 

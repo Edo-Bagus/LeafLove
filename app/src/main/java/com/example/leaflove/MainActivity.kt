@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.ui.theme.LeafLoveTheme
+import com.example.leaflove.ui.theme.rememberWindowSizeClass
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            LeafLoveTheme {
+            val window = rememberWindowSizeClass()
+            LeafLoveTheme (window){
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     LeafLove()
                 }
