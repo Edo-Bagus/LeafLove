@@ -2,6 +2,7 @@ package com.example.leaflove
 
 import Main
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -33,7 +34,8 @@ class MainActivity : ComponentActivity() {
 }
 @Composable
 fun LeafLove(){
-    val viewModel: MainViewModel = MainViewModel();
+    val mainViewModel: MainViewModel = MainViewModel();
+    val locViewModel: LocationViewModel = LocationViewModel();
     val navController = rememberNavController()
     
     NavHost(navController = navController, startDestination = "loginscreen") {
@@ -44,7 +46,7 @@ fun LeafLove(){
             registerScreen(navHost = navController)
         }
         composable("mainscreen"){
-            mainScreen(navHost = navController, viewModel)
+            mainScreen(navHost = navController, mainViewModel, locViewModel)
         }
     }
 
