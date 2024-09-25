@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -32,8 +33,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun LeafLove(){
     val navController = rememberNavController()
-    
-    NavHost(navController = navController, startDestination = "myplantscreen") {
+
+    NavHost(navController = navController, startDestination = "AccountScreen") {
         composable("loginscreen") {
             loginScreen(navController)
         }
@@ -45,6 +46,18 @@ fun LeafLove(){
         }
         composable("myplantscreen"){
             myPlantScreen(navHost = navController)
+        }
+        composable("StoreScreen"){
+            StoreScreen(navHost = navController)
+        }
+        composable("ARScreen"){
+            ARScreen(navHost = navController)
+        }
+        composable("TransactionScreen"){
+            TransactionScreen(navHost = navController)
+        }
+        composable("AccountScreen"){
+            AccountScreen(navHost = navController)
         }
     }
 
