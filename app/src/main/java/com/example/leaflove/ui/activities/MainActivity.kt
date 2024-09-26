@@ -1,6 +1,7 @@
 package com.example.leaflove.ui.activities
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.leaflove.BuildConfig
 import com.example.leaflove.ui.compose.ARScreen
 import com.example.leaflove.ui.compose.AccountScreen
 import com.example.leaflove.viemodel.LocationViewModel
@@ -28,6 +30,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Log.d("test", BuildConfig.WEATHER_API_KEY)
 
         setContent {
             val window = rememberWindowSizeClass()

@@ -1,4 +1,5 @@
 package com.example.leaflove.viemodel
+
 import com.example.leaflove.data.WeatherResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -8,14 +9,17 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.leaflove.BuildConfig
 import kotlinx.coroutines.launch
+
+val weatherApiKey = BuildConfig.WEATHER_API_KEY
 
 interface ApiServices {
     @GET("weather")
     suspend fun getWeather(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("appid") appid: String = "166200bb3414fdf4ba3a1ae33092d8fc"
+        @Query("appid") appid: String = weatherApiKey
     ): WeatherResponse
 }
 

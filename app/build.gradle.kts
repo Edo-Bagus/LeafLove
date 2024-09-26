@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -18,6 +20,19 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        //load the values from .properties file
+        val keystoreFile = project.rootProject.file("apikey.properties")
+        val properties = Properties()
+        properties.load(keystoreFile.inputStream())
+
+        //return empty key in case something goes wrong
+        val weatherApiKey = properties.getProperty("WEATHER_API_KEY") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "WEATHER_API_KEY",
+            value = weatherApiKey
+        )
     }
 
     buildTypes {
@@ -29,6 +44,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -37,6 +53,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
