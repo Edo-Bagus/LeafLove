@@ -1,4 +1,4 @@
-package com.example.leaflove
+package com.example.leaflove.services
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -9,6 +9,8 @@ import android.location.Geocoder
 import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.example.leaflove.data.LocationData
+import com.example.leaflove.viemodel.LocationViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest

@@ -1,3 +1,5 @@
+package com.example.leaflove.data
+
 data class WeatherResponse(
     val coord: Coord? = null,
     val weather: List<Weather>? = null,

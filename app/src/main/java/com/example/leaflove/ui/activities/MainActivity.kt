@@ -1,23 +1,26 @@
-package com.example.leaflove
+package com.example.leaflove.ui.activities
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.leaflove.ui.compose.ARScreen
+import com.example.leaflove.ui.compose.AccountScreen
+import com.example.leaflove.viemodel.LocationViewModel
+import com.example.leaflove.ui.compose.StoreScreen
+import com.example.leaflove.ui.compose.TransactionScreen
+import com.example.leaflove.viemodel.WeatherViewModel
+import com.example.leaflove.ui.compose.loginScreen
+import com.example.leaflove.ui.compose.mainScreen
+import com.example.leaflove.ui.compose.myPlantScreen
+import com.example.leaflove.ui.compose.registerScreen
 import com.example.leaflove.ui.theme.LeafLoveTheme
 import com.example.leaflove.ui.theme.rememberWindowSizeClass
 

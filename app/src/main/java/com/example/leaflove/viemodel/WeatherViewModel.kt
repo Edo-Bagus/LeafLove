@@ -1,5 +1,5 @@
-package com.example.leaflove
-import WeatherResponse
+package com.example.leaflove.viemodel
+import com.example.leaflove.data.WeatherResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET

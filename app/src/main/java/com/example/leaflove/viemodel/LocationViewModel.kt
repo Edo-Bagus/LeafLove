@@ -1,12 +1,11 @@
-package com.example.leaflove
+package com.example.leaflove.viemodel
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.leaflove.data.LocationData
 
 class LocationViewModel : ViewModel() {
     private val _locationState = mutableStateOf(LocationData(7.21312, 14.3213))
