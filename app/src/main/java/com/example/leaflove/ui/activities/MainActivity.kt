@@ -15,6 +15,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.BuildConfig
 import com.example.leaflove.ui.compose.ARScreen
 import com.example.leaflove.ui.compose.AccountScreen
+import com.example.leaflove.ui.compose.AchievmentScreen
+import com.example.leaflove.ui.compose.EncyclopediaPage1Screen
+import com.example.leaflove.ui.compose.EncyclopediaPage2Screen
+import com.example.leaflove.ui.compose.SettingsScreen
 import com.example.leaflove.viemodel.LocationViewModel
 import com.example.leaflove.ui.compose.StoreScreen
 import com.example.leaflove.ui.compose.TransactionScreen
@@ -80,6 +84,18 @@ fun LeafLove(){
         }
         composable("AccountScreen"){
             AccountScreen(navHost = navController)
+        }
+        composable("AchievmentScreen"){
+            AchievmentScreen(navHost = navController)
+        }
+        composable("SettingsScreen"){
+            SettingsScreen(navHost = navController)
+        }
+        composable("EncyclopediaPage1Screen"){
+            EncyclopediaPage1Screen(navHost = navController)
+        }
+        composable("EncyclopediaPage2Screen"){
+            EncyclopediaPage2Screen(navHost = navController)
         }
     }
     }

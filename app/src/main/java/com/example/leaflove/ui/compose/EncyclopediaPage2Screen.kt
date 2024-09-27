@@ -1,4 +1,4 @@
-package com.example.leaflove
+package com.example.leaflove.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
+import com.example.leaflove.R
 
 @Composable
 fun EncyclopediaPage2Screen(navHost: NavHostController){
