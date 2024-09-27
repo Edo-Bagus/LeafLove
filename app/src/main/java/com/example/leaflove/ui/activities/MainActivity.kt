@@ -25,6 +25,7 @@ import com.example.leaflove.ui.compose.myPlantScreen
 import com.example.leaflove.ui.compose.registerScreen
 import com.example.leaflove.ui.theme.LeafLoveTheme
 import com.example.leaflove.ui.theme.rememberWindowSizeClass
+import com.example.leaflove.viewmodel.PlantViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +55,7 @@ fun LeafLove(){
 //    if (isLoggedIn) {
     val weatherViewModel: WeatherViewModel = WeatherViewModel();
     val locViewModel: LocationViewModel = LocationViewModel();
+    val plantViewModel: PlantViewModel = PlantViewModel();
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "loginscreen") {
