@@ -1,10 +1,12 @@
 package com.example.leaflove.ui.activities
 
+import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -27,8 +29,16 @@ import com.example.leaflove.ui.theme.LeafLoveTheme
 import com.example.leaflove.ui.theme.rememberWindowSizeClass
 
 class MainActivity : ComponentActivity() {
+    private val requestCameraPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (!isGranted) {
+                // Handle permission denied (show a dialog or return)
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         enableEdgeToEdge()
         Log.d("test", BuildConfig.WEATHER_API_KEY)
 
