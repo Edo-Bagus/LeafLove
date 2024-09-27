@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -18,6 +20,19 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        //load the values from .properties file
+        val keystoreFile = project.rootProject.file("apikey.properties")
+        val properties = Properties()
+        properties.load(keystoreFile.inputStream())
+
+        //return empty key in case something goes wrong
+        val weatherApiKey = properties.getProperty("WEATHER_API_KEY") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "WEATHER_API_KEY",
+            value = weatherApiKey
+        )
     }
 
     buildTypes {
@@ -29,6 +44,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -37,6 +53,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -51,6 +68,14 @@ android {
 
 dependencies {
 
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -60,6 +85,10 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
