@@ -29,9 +29,9 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.services.LocationUtils
-import com.example.leaflove.viemodel.LocationViewModel
+import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.R
-import com.example.leaflove.viemodel.WeatherViewModel
+import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.theme.ButtonGreen
 
 @OptIn(ExperimentalMaterial3Api::class)

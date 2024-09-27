@@ -15,10 +15,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.BuildConfig
 import com.example.leaflove.ui.compose.ARScreen
 import com.example.leaflove.ui.compose.AccountScreen
-import com.example.leaflove.viemodel.LocationViewModel
+import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.ui.compose.StoreScreen
 import com.example.leaflove.ui.compose.TransactionScreen
-import com.example.leaflove.viemodel.WeatherViewModel
+import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.compose.loginScreen
 import com.example.leaflove.ui.compose.mainScreen
 import com.example.leaflove.ui.compose.myPlantScreen
