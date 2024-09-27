@@ -1,41 +1,28 @@
 package com.example.leaflove
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import com.example.leaflove.ui.theme.Background
 
 @Composable
-fun EncyclopediaPage1Screen(navHost: NavHostController){
+fun EncyclopediaPage2Screen(navHost: NavHostController){
     val image = painterResource(R.drawable.header)
     val image1 = painterResource(R.drawable.footerstore)
-    val image2 = painterResource(R.drawable.plantencyc)
-    val image3 = painterResource(R.drawable.topserach)
+    val image2 = painterResource(R.drawable.plantinfo)
+
     var username by remember { mutableStateOf("") }
     val columnsize = 420.dp
     val offsetmainmenu = 100.dp
@@ -48,7 +35,7 @@ fun EncyclopediaPage1Screen(navHost: NavHostController){
         Image(painter = image,
             contentDescription = "",
             modifier = Modifier
-            .fillMaxSize())
+                .fillMaxSize())
     }
 
 
@@ -58,17 +45,17 @@ fun EncyclopediaPage1Screen(navHost: NavHostController){
         .offset(y = 700.dp)
         .zIndex(1f)){
         Image(
-        painter = image1,
-        contentDescription = "",
-        modifier = Modifier
-            .fillMaxSize()
-    )}
+            painter = image1,
+            contentDescription = "",
+            modifier = Modifier
+                .fillMaxSize()
+        )}
 
     Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(500.dp)
-        .offset(y = 580.dp)
-        .zIndex(1f)) {
+        .fillMaxSize()
+        .height(1500.dp)
+        .offset(y = 50.dp)
+        .zIndex(0.9f)) {
         Image(
             painter = image2,
             contentDescription = "",
@@ -77,18 +64,7 @@ fun EncyclopediaPage1Screen(navHost: NavHostController){
         )
     }
 
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(600.dp)
-        .offset(y = (-20).dp)
-        .zIndex(0.9f)) {
-        Image(
-            painter = image3,
-            contentDescription = "",
-            modifier = Modifier
-                .fillMaxSize()
-        )
-    }
+
 
 
 

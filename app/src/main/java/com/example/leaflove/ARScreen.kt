@@ -49,7 +49,8 @@ fun ARScreen(navHost: NavHostController){
             .fillMaxWidth()
             .offset(y = -columnsize)
             .zIndex(1.0f)) {
-            Image(painter = image, contentDescription = "", modifier = Modifier
+            Image(painter = image, contentDescription = "",
+                modifier = Modifier
                 .fillMaxSize())
         }
 

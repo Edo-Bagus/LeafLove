@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 fun LeafLove(){
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "AccountScreen") {
+    NavHost(navController = navController, startDestination = "SettingsScreen") {
         composable("loginscreen") {
             loginScreen(navController)
         }
@@ -59,7 +59,21 @@ fun LeafLove(){
         composable("AccountScreen"){
             AccountScreen(navHost = navController)
         }
+        composable("AchievmentScreen"){
+            AchievmentScreen(navHost = navController)
+        }
+        composable("SettingsScreen"){
+            SettingsScreen(navHost = navController)
+        }
+        composable("SettingsScreen"){
+            SettingsScreen(navHost = navController)
+        }
+        composable("EncyclopediaPage1Screen"){
+            EncyclopediaPage1Screen(navHost = navController)
+        }
+        composable("EncyclopediaPage2Screen"){
+            EncyclopediaPage2Screen(navHost = navController)
+        }
+
     }
-
-
 }

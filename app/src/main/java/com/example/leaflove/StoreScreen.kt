@@ -85,7 +85,7 @@ fun StoreScreen(navHost: NavHostController){
         modifier = Modifier
             .fillMaxSize()
             .height(500.dp)
-            .offset(y = 20.dp)
+            .offset(y = 50.dp)
             .padding(start = 16.dp),
         horizontalAlignment = Alignment.Start)
     {

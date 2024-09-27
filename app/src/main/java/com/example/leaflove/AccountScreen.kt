@@ -36,6 +36,10 @@ fun AccountScreen(navHost: NavHostController){
     val image = painterResource(R.drawable.header)
     val image1 = painterResource(R.drawable.footerstore)
     val image2 = painterResource(R.drawable.backgroundgreen)
+    val image3 = painterResource(R.drawable.recenttransaction)
+    val image4 = painterResource(R.drawable.achievement)
+    val image5 = painterResource(R.drawable.settings)
+    val image6 = painterResource(R.drawable.about)
     var username by remember { mutableStateOf("") }
     val columnsize = 420.dp
     val offsetmainmenu = 100.dp
@@ -46,7 +50,6 @@ fun AccountScreen(navHost: NavHostController){
     ) {
         Box(modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
             .offset(y = -columnsize)
             .zIndex(1.1f)) {
             Image(painter = image,
@@ -66,6 +69,7 @@ fun AccountScreen(navHost: NavHostController){
                 modifier = Modifier.fillMaxSize()
             )
         }
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -79,6 +83,58 @@ fun AccountScreen(navHost: NavHostController){
             )
         }
 
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(500.dp)
+                .offset(y = 80.dp)
+                .zIndex(1f)) {
+            Image(
+                painter = image3,
+                contentDescription = "",
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(500.dp)
+                .offset(y = 130.dp)
+                .zIndex(1f)) {
+            Image(
+                painter = image4,
+                contentDescription = "",
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(500.dp)
+                .offset(y = 180.dp)
+                .zIndex(1f)) {
+            Image(
+                painter = image5,
+                contentDescription = "",
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(500.dp)
+                .offset(y = 230.dp)
+                .zIndex(1f)) {
+            Image(
+                painter = image6,
+                contentDescription = "",
+                modifier = Modifier.fillMaxSize()
+            )
+        }
 
 
 
