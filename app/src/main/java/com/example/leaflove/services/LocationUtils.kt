@@ -10,7 +10,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.example.leaflove.data.LocationData
-import com.example.leaflove.viemodel.LocationViewModel
+import com.example.leaflove.viewmodel.LocationViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest

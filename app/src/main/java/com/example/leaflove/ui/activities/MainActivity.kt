@@ -19,10 +19,10 @@ import com.example.leaflove.ui.compose.AchievmentScreen
 import com.example.leaflove.ui.compose.EncyclopediaPage1Screen
 import com.example.leaflove.ui.compose.EncyclopediaPage2Screen
 import com.example.leaflove.ui.compose.SettingsScreen
-import com.example.leaflove.viemodel.LocationViewModel
+import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.ui.compose.StoreScreen
 import com.example.leaflove.ui.compose.TransactionScreen
-import com.example.leaflove.viemodel.WeatherViewModel
+import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.compose.loginScreen
 import com.example.leaflove.ui.compose.mainScreen
 import com.example.leaflove.ui.compose.myPlantScreen
