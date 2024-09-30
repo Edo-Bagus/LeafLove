@@ -33,6 +33,13 @@ android {
             name = "WEATHER_API_KEY",
             value = weatherApiKey
         )
+
+        val plantApiKey = properties.getProperty("PLANT_API_KEY") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "PLANT_API_KEY",
+            value = plantApiKey
+        )
     }
 
     buildTypes {

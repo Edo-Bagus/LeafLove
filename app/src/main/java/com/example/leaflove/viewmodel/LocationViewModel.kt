@@ -1,4 +1,4 @@
-package com.example.leaflove.viemodel
+package com.example.leaflove.viewmodel
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
