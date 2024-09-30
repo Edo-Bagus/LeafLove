@@ -1,6 +1,6 @@
 package com.example.leaflove.data
 
-data class WeatherResponse(
+data class WeatherResponseModel(
     val coord: Coord? = null,
     val weather: List<Weather>? = null,
     val base: String? = null,

@@ -1,7 +1,7 @@
 package com.example.leaflove.services
 
 import com.example.leaflove.BuildConfig
-import com.example.leaflove.data.WeatherResponse
+import com.example.leaflove.data.WeatherResponseModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -15,7 +15,7 @@ interface OpenWeatherAPIService {
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("appid") appid: String = weatherApiKey
-    ): WeatherResponse
+    ): WeatherResponseModel
 
     companion object {
         private const val BASE_URL = "https://api.openweathermap.org/data/2.5/"

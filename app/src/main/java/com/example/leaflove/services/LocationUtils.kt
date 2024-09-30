@@ -9,7 +9,7 @@ import android.location.Geocoder
 import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.example.leaflove.data.LocationData
+import com.example.leaflove.data.LocationDataModel
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -33,7 +33,7 @@ class LocationUtils(
             super.onLocationResult(locationResult)
             locationResult.lastLocation?.let {
                 Log.d("goblok", "Location received: ${it.latitude}, ${it.longitude}")
-                val location = LocationData(latitude = it.latitude, longitude = it.longitude)
+                val location = LocationDataModel(latitude = it.latitude, longitude = it.longitude)
 
                 // Update location in ViewModel
                 viewModel.updateLocation(location)
@@ -67,7 +67,7 @@ class LocationUtils(
         _fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
-    fun reverseGeocodeLocation(location: LocationData): String {
+    fun reverseGeocodeLocation(location: LocationDataModel): String {
         return try {
             val geocoder = Geocoder(context, Locale.getDefault())
             val coordinate = LatLng(location.latitude, location.longitude)

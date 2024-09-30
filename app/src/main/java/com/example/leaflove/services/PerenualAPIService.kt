@@ -1,8 +1,7 @@
 package com.example.leaflove.services
 
 import com.example.leaflove.BuildConfig
-import com.example.leaflove.data.PlantListResponse
-import com.example.leaflove.data.WeatherResponse
+import com.example.leaflove.data.PlantListResponseModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -14,7 +13,7 @@ interface PerenualAPIService {
     @GET("species-list")
     suspend fun getPlantList(
         @Query("key") apiKey: String = plantApiKey
-    ): PlantListResponse
+    ): PlantListResponseModel
 
     companion object {
         private const val BASE_URL = "https://perenual.com/api/"

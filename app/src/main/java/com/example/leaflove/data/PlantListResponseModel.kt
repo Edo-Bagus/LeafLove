@@ -1,6 +1,6 @@
 package com.example.leaflove.data
 
-data class PlantListResponse (
+data class PlantListResponseModel (
     val data: List<PlantSpecies>? = null,
     val to: Int? = null,
     val per_page: Int? = null,
