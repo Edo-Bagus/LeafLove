@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.leaflove.data.LocationDataModel
+import com.example.leaflove.data.models.LocationDataModel
 
 class LocationViewModel : ViewModel() {
     private val _locationState = mutableStateOf(LocationDataModel(7.21312, 14.3213))

@@ -17,6 +17,7 @@ import com.example.leaflove.ui.compose.ARScreen
 import com.example.leaflove.ui.compose.AccountScreen
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.ui.compose.StoreScreen
+import com.example.leaflove.ui.compose.Testing
 import com.example.leaflove.ui.compose.TransactionScreen
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.compose.loginScreen
@@ -58,7 +59,7 @@ fun LeafLove(){
     val plantViewModel: PlantViewModel = PlantViewModel();
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "loginscreen") {
+    NavHost(navController = navController, startDestination = "test") {
         composable("loginscreen") {
             loginScreen(navController)
         }
@@ -82,6 +83,9 @@ fun LeafLove(){
         }
         composable("AccountScreen"){
             AccountScreen(navHost = navController)
+        }
+        composable("test") {
+            Testing(navHost = navController, plantViewModel)
         }
     }
     }

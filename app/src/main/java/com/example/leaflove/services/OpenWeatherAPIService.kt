@@ -1,7 +1,7 @@
 package com.example.leaflove.services
 
 import com.example.leaflove.BuildConfig
-import com.example.leaflove.data.WeatherResponseModel
+import com.example.leaflove.data.models.WeatherResponseModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET

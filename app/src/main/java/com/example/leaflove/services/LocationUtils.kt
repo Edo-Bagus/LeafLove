@@ -9,7 +9,7 @@ import android.location.Geocoder
 import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.example.leaflove.data.LocationDataModel
+import com.example.leaflove.data.models.LocationDataModel
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback

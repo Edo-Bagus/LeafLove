@@ -1,4 +1,4 @@
-package com.example.leaflove.data
+package com.example.leaflove.data.models
 
 data class LocationDataModel(
     val latitude: Double,

@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.leaflove.services.OpenWeatherAPIService
-import com.example.leaflove.data.WeatherResponseModel
+import com.example.leaflove.data.models.WeatherResponseModel
 import kotlinx.coroutines.launch
 
 class WeatherViewModel : ViewModel() {
