@@ -1,5 +1,6 @@
 package com.example.leaflove.ui.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -8,23 +9,27 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.BuildConfig
-import com.example.leaflove.ui.compose.ARScreen
-import com.example.leaflove.ui.compose.AccountScreen
-import com.example.leaflove.viewmodel.LocationViewModel
-import com.example.leaflove.ui.compose.StoreScreen
-import com.example.leaflove.ui.compose.TransactionScreen
-import com.example.leaflove.viewmodel.WeatherViewModel
-import com.example.leaflove.ui.compose.loginScreen
-import com.example.leaflove.ui.compose.mainScreen
-import com.example.leaflove.ui.compose.myPlantScreen
-import com.example.leaflove.ui.compose.registerScreen
+import com.example.leaflove.screen.MainScreen
+import com.example.leaflove.screen.account.AccountScreen
+import com.example.leaflove.screen.bottomNav.myPlantScreen
+import com.example.leaflove.screen.headerNav.TransactionScreen
+import com.example.leaflove.screen.loginscreen.loginScreen
+import com.example.leaflove.screen.loginscreen.registerScreen
+import com.example.leaflove.screen.storescreen.StoreScreen
 import com.example.leaflove.ui.theme.LeafLoveTheme
 import com.example.leaflove.ui.theme.rememberWindowSizeClass
+import com.example.leaflove.viewmodel.LocationViewModel
+import com.example.leaflove.viewmodel.WeatherViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +48,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 @Composable
-fun LeafLove(){
+//fun LeafLove(){
 //    val context = LocalContext.current
 //    val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
 //
@@ -52,37 +57,62 @@ fun LeafLove(){
 //
 //    // Display either Login or Main screen based on the login state
 //    if (isLoggedIn) {
-    val weatherViewModel: WeatherViewModel = WeatherViewModel();
-    val locViewModel: LocationViewModel = LocationViewModel();
+//    val weatherViewModel: WeatherViewModel = WeatherViewModel();
+//    val locViewModel: LocationViewModel = LocationViewModel();
+//    val navController = rememberNavController()
+//
+//    NavHost(navController = navController, startDestination = "mainscreen") {
+//        composable("loginscreen") {
+//            loginScreen(navController)
+//        }
+//        composable("signupscreen"){
+//            registerScreen(navHost = navController)
+//        }
+//        composable("mainscreen"){
+//            MainScreen()
+//        }
+//        composable("StoreScreen"){
+//            StoreScreen(navHost = navController)
+//        }
+//        composable("TransactionScreen"){
+//            TransactionScreen(navHost = navController)
+//        }
+//        composable("AccountScreen"){
+//            AccountScreen(navHost = navController)
+//        }
+//        }
+//    }
+//}
+
+fun LeafLove() {
+    val context = LocalContext.current
+    val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+
+    // Check if the user is already logged in
+    var isLoggedIn by remember { mutableStateOf(sharedPref.getBoolean("isLoggedIn", false)) }
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "loginscreen") {
+    // Display either Login or Main screen based on the login state
+//    NavHost(navController = navController, startDestination = if (isLoggedIn) "mainscreen" else "loginscreen") {
+
+        NavHost(navController = navController, startDestination = "mainscreen") {
         composable("loginscreen") {
             loginScreen(navController)
         }
-        composable("signupscreen"){
+        composable("signupscreen") {
             registerScreen(navHost = navController)
         }
-        composable("mainscreen"){
-            mainScreen(navHost = navController, weatherViewModel, locViewModel)
+        composable("mainscreen") {
+            MainScreen() // No navController needed to be passed here
         }
-        composable("myplantscreen"){
-            myPlantScreen(navHost = navController)
-        }
-        composable("StoreScreen"){
-            StoreScreen(navHost = navController)
-        }
-        composable("ARScreen"){
-            ARScreen(navHost = navController)
-        }
-        composable("TransactionScreen"){
-            TransactionScreen(navHost = navController)
-        }
-        composable("AccountScreen"){
-            AccountScreen(navHost = navController)
-        }
+
+//        composable("transaction") {
+//            TransactionScreen(navHost = navController)
+//        }
     }
-    }
+}
+
+
 
 
 //}
