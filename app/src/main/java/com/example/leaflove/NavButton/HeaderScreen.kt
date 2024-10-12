@@ -89,36 +89,17 @@ fun header(navHost: NavController, modifier: Modifier = Modifier, screenWidth: D
             singleLine = true
         )
 
-
-//        BasicTextField(
-//            value = search,
-//            onValueChange = {newtext -> search = newtext},
-//            modifier = Modifier
-//                .background(
-//                    color = Color.White,
-//                    shape = RoundedCornerShape((22.dp)
-//                    ))
-//                .indicatorLine(
-//                    enabled = true,
-//                    isError = false,
-//                    interactionSource = interaction
-//                )
-//                )
-
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
             onClick = {
-                try {
                     navHost.navigate("transaction") {
                         popUpTo(navHost.graph.startDestinationId) {
                             inclusive = true
                         }
                         launchSingleTop = true
                     }
-                } catch (e: Exception) {
-                    Log.e("NavigationError", "Failed to navigate: ${e.message}")
-                }
+
             },
             modifier = Modifier
                 .wrapContentSize()

@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -88,11 +89,11 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
             sheetContent = {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .heightIn(max = screenHeight * 0.86f),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(0.1f))
 
                     Box(
                         modifier = Modifier
@@ -123,7 +124,7 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
 
                     }
 
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(0.5f))
 
                     Row(
                         modifier = Modifier
@@ -140,7 +141,23 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                                 )
                                 .background(Color.White)
                                 .size(screenWidth * 0.2f)
-                        )
+                        ){
+                            Column (
+                                modifier = Modifier
+                                    .align(Alignment.Center),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ){
+                                Image(
+                                    painter = painterResource(R.drawable.cart),
+                                    contentDescription = "Store",
+                                    alignment = Alignment.Center,
+                                    modifier = Modifier.size(screenWidth * 0.1f)
+
+                                )
+                                Text(text = "Store")
+                            }
+                        }
                         Spacer(modifier = Modifier.weight(1f))
                         Box(
                             modifier = Modifier
@@ -166,7 +183,7 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                         Spacer(modifier = Modifier.weight(1f))
                     }
 
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(0.5f))
 
                     Row(
                         modifier = Modifier
@@ -204,7 +221,7 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
 
                     }
 
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(0.5f))
                     Box(
                         modifier = Modifier
                             .shadow(
@@ -221,7 +238,7 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                             modifier = Modifier
                                 .align(Alignment.Center))
                     }
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(0.5f))
                     Box(
                         modifier = Modifier
                             .shadow(
