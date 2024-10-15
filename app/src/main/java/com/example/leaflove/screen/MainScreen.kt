@@ -39,6 +39,7 @@ import com.example.leaflove.NavButton.BottomBarScreen
 import com.example.leaflove.NavButton.BottomNavGraph
 import com.example.leaflove.NavButton.header
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.AuthViewModel
 
 //@Composable
 //fun MainScreen() {
@@ -151,7 +152,7 @@ import com.example.leaflove.ui.theme.BasicGreen
 //}
 
 @Composable
-fun MainScreen() {
+fun MainScreen(authViewModel: AuthViewModel) {
     val navController = rememberNavController()
     val configuration = LocalConfiguration.current
 
@@ -271,5 +272,5 @@ fun AddItem(
 @Composable
 @Preview
 fun BottomNavPreview() {
-    MainScreen()
+    MainScreen(authViewModel = AuthViewModel())
 }

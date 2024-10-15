@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -57,16 +58,14 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
     LaunchedEffect(Unit) {
         if (locationUtils.hasLocationPermission(context)) {
             locationUtils.requestLocationUpdate()
+            weatherViewModel.fetchWeather(location.value.latitude, location.value.longitude)
+            Log.d("WTF", weatherViewModel.toString())
         } else {
             requestLocationPermissions(context)
         }
     }
 
-    location.value?.let { loc ->
-        LaunchedEffect(loc.latitude, loc.longitude) {
-            weatherViewModel.fetchWeather(loc.latitude, loc.longitude)
-        }
-    }
+
 
     DisposableEffect(Unit) {
         onDispose {
