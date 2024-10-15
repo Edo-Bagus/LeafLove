@@ -25,19 +25,28 @@ import com.example.leaflove.viewmodel.PlantViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.leaflove.data.models.PlantDetailResponseModel
+import com.example.leaflove.data.repositories.PlantRepository
+
+private lateinit var plantRepository: PlantRepository
 
 @Composable
 fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
+    var plantDetailText by remember { mutableStateOf<String>("")}
     val plantState = plantViewModel.plantState.value
+    val plantDetail = plantViewModel.plantDetail.value
     val coroutineScope = rememberCoroutineScope()
 
     val plantSpeciesDao = MyApp.getDatabase().plantSpeciesDao()
+    val plantDetailDao = MyApp.getDatabase().plantDetailDao()
+    plantRepository = PlantRepository(plantSpeciesDao, plantDetailDao)
 
     // State to hold the fetched plants
     var plantEntities by remember { mutableStateOf<List<PlantSpeciesEntity>>(emptyList()) }
 
     // Trigger fetching the plant list when the composable is launched
     LaunchedEffect(Unit) {
+        plantViewModel.fetchPlantDetailDummy()
         plantViewModel.fetchPlantListDummy()
     }
 
@@ -50,7 +59,7 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
         // Submit button to save plants to database
         Button(onClick = {
             coroutineScope.launch {
-                ButtonHandler(plantState, plantSpeciesDao)
+                SubmitButtonHandler(plantState, plantRepository)
             }
         }) {
             Text("Submit")
@@ -58,10 +67,10 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp)) // Add space between buttons
 
-        // Button to fetch and display the plants from the database
+//         Button to fetch and display the plants from the database
         Button(onClick = {
             coroutineScope.launch {
-                plantEntities = plantSpeciesDao.getAllPlants()
+                plantEntities = plantRepository.getAllPlants()
             }
         }) {
             Text("Show Plants")
@@ -79,19 +88,34 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
         } else {
             Text(text = "No plants found") // Message when no plants are present
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = {
+            coroutineScope.launch {
+                EnterButtonHandler(plantDetail, plantRepository)
+            }
+        }) {
+            Text("Enter")
+        }
     }
 }
 
-fun savePlantsToDatabase(plantList: List<PlantSpecies>) : List<PlantSpeciesEntity> {
+fun mapResponseToEntity(plantList: List<PlantSpecies>) : List<PlantSpeciesEntity> {
     val plantEntities = plantList.map { plant ->
         PlantMapper.plantToEntity(plant)
+
     }
     return plantEntities
 }
 
-suspend fun ButtonHandler(plantState: PlantListResponseModel, plantSpeciesDao: PlantSpeciesDao){
-    val plantEntities = plantState.data?.let { savePlantsToDatabase(it) }
+suspend fun SubmitButtonHandler(plantState: PlantListResponseModel, plantRepository: PlantRepository){
+    val plantEntities = plantState.data?.let { mapResponseToEntity(it) }
     if (plantEntities != null) {
-        plantSpeciesDao.insertAll(plantEntities)
+        plantRepository.insertPlants(plantEntities)
     }
+}
+
+suspend fun EnterButtonHandler(plantDetail: PlantDetailResponseModel, plantRepository: PlantRepository){
+
 }

@@ -4,21 +4,10 @@ import com.example.leaflove.data.converters.Converters
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import androidx.room.ForeignKey
 
-@Entity(
-    tableName = "plant_species",
-    foreignKeys = [
-        ForeignKey(
-            entity = PlantDetailEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["detailId"],
-            onDelete = ForeignKey.CASCADE  // or other option based on your requirement
-        )
-    ]
-)
+@Entity(tableName = "plant_detail")
 @TypeConverters(Converters::class)  // Use the converters to handle complex types
-data class PlantSpeciesEntity(
+data class PlantDetailEntity (
     @PrimaryKey val id: Int,
     val common_name: String?,
     val scientific_name: String?,  // We can store the List<String> as a JSON string
@@ -26,7 +15,5 @@ data class PlantSpeciesEntity(
     val cycle: String?,
     val watering: String?,
     val sunlight: String?,         // Also stored as JSON string
-    val default_image: String?,     // Store the DefaultImage object as a JSON string
-    val detailId: Int?             // New foreign key reference to PlantDetailEntity
+    val default_image: String?     // Store the DefaultImage object as a JSON string
 )
-

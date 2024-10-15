@@ -18,7 +18,8 @@ object PlantMapper {
             cycle = plant.cycle,
             watering = plant.watering,
             sunlight = Gson().toJson(plant.sunlight),
-            default_image = Gson().toJson(plant.default_image)
+            default_image = Gson().toJson(plant.default_image),
+            detailId = null
         )
     }
 
