@@ -23,7 +23,8 @@ import com.example.leaflove.viewmodel.WeatherViewModel
 fun BottomNavGraph(
     navController: NavHostController
 ) {
-
+    val weatherViewModel: WeatherViewModel = WeatherViewModel();
+    val locViewModel: LocationViewModel = LocationViewModel();
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp // Height of the screen in dp
 
@@ -38,9 +39,6 @@ fun BottomNavGraph(
     ) {
         composable(route = BottomBarScreen.Home.route)
         {
-
-            val weatherViewModel: WeatherViewModel = WeatherViewModel();
-            val locViewModel: LocationViewModel = LocationViewModel();
             HomeScreen(navHost = navController, weatherViewModel, locViewModel)
         }
         composable(route = BottomBarScreen.Camera.route)

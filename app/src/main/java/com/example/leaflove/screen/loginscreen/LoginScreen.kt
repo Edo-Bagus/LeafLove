@@ -1,5 +1,6 @@
 package com.example.leaflove.screen.loginscreen
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,12 +24,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -38,14 +42,27 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.leaflove.R
 import com.example.leaflove.ui.theme.Background
 import com.example.leaflove.ui.theme.ButtonGreen
+import com.example.leaflove.viewmodel.AuthState
+import com.example.leaflove.viewmodel.AuthViewModel
 
 
 @Composable
-fun loginScreen(navHost: NavHostController) {
+fun loginScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
     val image = painterResource(R.drawable.backgroundlogin1)
     val image2 = painterResource(R.drawable.test2)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    val authState = authViewModel.authState.observeAsState()
+
+    LaunchedEffect(authState.value) {
+        when(authState.value){
+            is AuthState.Authenticated -> navHost.navigate("mainscreen")
+            is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_LONG).show()
+            else -> Unit
+        }
+    }
 
     // Responsive layout using BoxWithConstraints
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -143,12 +160,7 @@ fun loginScreen(navHost: NavHostController) {
 
             Button(
                 onClick = {
-                    navHost.navigate("mainscreen") {
-                        popUpTo(navHost.graph.findStartDestination().id) {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
-                    }
+                    authViewModel.login(email, password)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

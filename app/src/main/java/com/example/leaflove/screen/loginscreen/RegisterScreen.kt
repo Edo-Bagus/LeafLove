@@ -23,6 +23,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,16 +37,20 @@ import androidx.compose.ui.unit.sp
 import com.example.leaflove.R
 import com.example.leaflove.ui.theme.Background
 import com.example.leaflove.ui.theme.ButtonGreen
+import com.example.leaflove.viewmodel.AuthViewModel
 
 
 @Composable
-fun registerScreen(navHost: NavHostController) {
+fun registerScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
     val image = painterResource(R.drawable.backgroundlogin1)
     val image2 = painterResource(R.drawable.test2)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var phone_num by remember { mutableStateOf("") }
+    var authState = authViewModel.authState.observeAsState()
+
+
 
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
@@ -143,7 +148,7 @@ fun registerScreen(navHost: NavHostController) {
                 label = { Text(text = "Phone Number") }
             )
             Button(
-                onClick = { navHost.navigate("mainscreen") },
+                onClick = { authViewModel.signup(email, password) },
                 modifier = Modifier
                     .fillMaxWidth(0.85f)
                     .padding(15.dp),
