@@ -17,12 +17,25 @@ import com.example.leaflove.data.models.PlantSpecies
 import com.example.leaflove.data.models.WateringBenchmark
 import com.example.leaflove.data.repositories.PlantRepository
 import com.example.leaflove.services.PerenualAPIService
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 
 class PlantViewModel: ViewModel() {
+
+    init {
+        fetchPlantList()
+    }
+
+    suspend fun initializeDAOPlant() {
+        coroutineScope {
+            if (plantSpeciesDao.checkIsEmpty()) {
+                insertPlantToRoom(_plantList.value);
+            }
+        }
+    }
 
     val plantSpeciesDao = MyApp.getDatabase().plantSpeciesDao()
     val plantDetailDao = MyApp.getDatabase().plantDetailDao()
@@ -32,6 +45,7 @@ class PlantViewModel: ViewModel() {
 
     private val _plantState = mutableStateOf(PlantListResponseModel())
     val plantState = _plantState
+
 
 
     private val _plantList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())

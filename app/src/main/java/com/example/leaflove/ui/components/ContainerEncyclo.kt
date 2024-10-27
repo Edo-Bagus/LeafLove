@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.leaflove.R
+import com.example.leaflove.data.entities.PlantSpeciesEntity
 
 data class encyclo(
     val nama: String,
@@ -34,7 +35,7 @@ data class encyclo(
 )
 
 @Composable
-fun PlantListItem(encyclo: encyclo) {
+fun PlantListItem(encyclo: PlantSpeciesEntity) {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
     )
@@ -49,25 +50,30 @@ fun PlantListItem(encyclo: encyclo) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically)
             {
-                Image(
-                    painter = painterResource(encyclo.image), // Replace with actual image
-                    contentDescription = "Plant Icon",
-                    modifier = Modifier.size(64.dp)
-                )
+                encyclo.default_image?.let {
+                    Text(
+                        text = it, // Replace with actual image
+                        modifier = Modifier.size(64.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Column {
-                    Text(
-                        text = encyclo.nama,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
-                    Text(
-                        text = encyclo.namalatin,
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
+                    encyclo.common_name?.let {
+                        Text(
+                            text = it,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                    }
+                    encyclo.scientific_name?.let {
+                        Text(
+                            text = it,
+                            fontSize = 14.sp,
+                            color = Color.Gray
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.weight(1f))

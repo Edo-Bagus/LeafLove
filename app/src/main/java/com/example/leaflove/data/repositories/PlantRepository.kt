@@ -15,6 +15,10 @@ class PlantRepository(private val plantSpeciesDao: PlantSpeciesDao, private val 
         return plantSpeciesDao.getAllPlants()
     }
 
+    suspend fun checkIsEmpty(): Boolean{
+        return plantSpeciesDao.checkIsEmpty()
+    }
+
     suspend fun insertPlantDetailAndLinkToSpecies(
         plantDetail: PlantDetailEntity,
         speciesId: Int,

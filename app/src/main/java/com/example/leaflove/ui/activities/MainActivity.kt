@@ -117,9 +117,6 @@ fun LeafLove(authViewModel: AuthViewModel) {
         composable("mainscreen") {
             MainScreen(appAuthViewModel) // No navController needed to be passed here
         }
-            composable("testing") {
-                Testing(navController, plantViewModel) // No navController needed to be passed here
-            }
 
 //        composable("transaction") {
 //            TransactionScreen(navHost = navController)

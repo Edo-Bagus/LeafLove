@@ -13,6 +13,7 @@ import com.example.leaflove.ui.screen.bottomNav.myPlantScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaMainScreen
 import com.example.leaflove.ui.screen.headerNav.TransactionScreen
 import com.example.leaflove.viewmodel.LocationViewModel
+import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 
 @Composable
@@ -23,6 +24,7 @@ fun BottomNavGraph(
     val locViewModel: LocationViewModel = LocationViewModel();
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp // Height of the screen in dp
+    val plant = PlantViewModel();
 
     // Set a responsive offset, for example, 10% of the screen height
     val responsiveOffset = screenHeight * 0.1f // Adjust the factor as needed
@@ -52,7 +54,7 @@ fun BottomNavGraph(
         }
         composable("searchscreen")
         {
-            EncyclopediaMainScreen(navHost = navController)
+            EncyclopediaMainScreen(navHost = navController, viewModel = plant)
         }
     }
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,17 +24,15 @@ import com.example.leaflove.R
 import com.example.leaflove.ui.components.PlantListItem
 import com.example.leaflove.ui.components.encyclo
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.PlantViewModel
 
 @Composable
-fun EncyclopediaMainScreen(navHost: NavHostController) {
-    val plants = listOf(
-        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
-        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
-        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
-        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
-        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
-        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
-    )
+fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel) {
+    LaunchedEffect(Unit) {
+        viewModel.initializeDAOPlant()
+        viewModel.fetchPlantListFromRoom()
+    }
+    val plants = viewModel.plantList.value
 
     BoxWithConstraints(
         modifier = Modifier
