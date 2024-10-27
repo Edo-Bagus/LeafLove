@@ -103,6 +103,12 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
 
+    implementation("androidx.camera:camera-core:1.1.0")
+    implementation("androidx.camera:camera-camera2:1.1.0")
+    implementation("androidx.camera:camera-lifecycle:1.1.0")
+    implementation("androidx.camera:camera-view:1.1.0")
+
+
     implementation(libs.androidx.core.ktx)
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.compose.foundation:foundation:1.2.0")
