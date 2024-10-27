@@ -42,6 +42,7 @@ fun myPlantScreen(navHost: NavHostController){
         Plant("Aloe Vera", "Healthy", R.drawable.contoh_tanaman),
         Plant("Cactus", "Needs Water", R.drawable.contoh_tanaman),
         Plant("Monstera", "Growing", R.drawable.contoh_tanaman),
+        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
         Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman)
     )
 

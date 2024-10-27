@@ -21,58 +21,60 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
 import com.example.leaflove.ui.components.PlantListItem
+import com.example.leaflove.ui.components.encyclo
 import com.example.leaflove.ui.theme.BasicGreen
 
 @Composable
 fun EncyclopediaMainScreen(navHost: NavHostController) {
+    val plants = listOf(
+        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
+        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
+        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
+        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
+        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
+        encyclo(nama = "Apaa", namalatin = "what", image = R.drawable.cart),
+    )
+
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .zIndex(0.8f)
     ) {
-        val screenWidth = maxWidth
         val screenHeight = maxHeight
+        val screenWidth = maxWidth
 
-        // Wrapping the entire content in a scrollable column
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()) // Allow scrolling if content overflows
+            modifier = Modifier.fillMaxSize()
         ) {
-            // Top section with green background and filter row
+            // Top green section
             Box(
                 modifier = Modifier
-                    .height(screenHeight * 0.5f) // Top section height
-                    .width(screenWidth)// Rounded bottom corners
-                    .background(Color.White)
-                    .clip(shape = RoundedCornerShape(0.dp, 0.dp, 50.dp, 0.dp))// Green background
+                    .height(screenHeight * 0.4f) // Occupies the top 40% of the screen
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(bottomEnd = 50.dp))
+                    .background(BasicGreen),
+                contentAlignment = Alignment.Center
             ) {
-                Box(modifier = Modifier
-                    .background(BasicGreen)
-                    .fillMaxSize())
-                {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        // Coin, Search bar, or any other top-level content can go here
-                        Text(
-                            text = "Top Search",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp,
-                            color = Color.White
-                        )
-                    }
+                Text(
+                    text = "Top Search",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    color = Color.White
+                )
+            }
+
+            // Scrollable plant list section
+            Column(
+                modifier = Modifier
+                    .weight(1f) // Take remaining space
+                    .verticalScroll(rememberScrollState())
+                    .offset(y = 28.dp)
+            ) {
+                plants.forEach { plant ->
+                    PlantListItem(encyclo = plant)
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-            Spacer(modifier = Modifier.height(35.dp))
-            PlantListItem(imageresID = R.drawable.cart, nama = "percobaan", description = "apaaaaaaaa") // Example plant item
-            Spacer(modifier = Modifier.height(8.dp))
-            PlantListItem(imageresID = R.drawable.outline_forest_24, nama = "nama tumbuhan ni", description = "napppaaaaaa") // Example plant item
         }
     }
 
@@ -85,7 +87,7 @@ fun EncyclopediaMainScreen(navHost: NavHostController) {
         val screenHeight = maxHeight
 
         // Wrapping the entire content in a scrollable column
-        Box(modifier = Modifier.offset(y = screenHeight * 0.45f))
+        Box(modifier = Modifier.offset(y = screenHeight * 0.33f))
         {
             CategoryFilterRow()
         }
@@ -97,7 +99,7 @@ fun CategoryFilterRow() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         CategoryChip(label = "All", count = 8, isSelected = true)
@@ -105,6 +107,7 @@ fun CategoryFilterRow() {
         CategoryChip(label = "Indoor", count = 4, isSelected = false)
     }
 }
+
 
 @Composable
 fun CategoryChip(label: String, count: Int, isSelected: Boolean) {
