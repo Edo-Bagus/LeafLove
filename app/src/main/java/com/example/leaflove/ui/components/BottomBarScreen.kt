@@ -1,4 +1,4 @@
-package com.example.leaflove.NavButton
+package com.example.leaflove.ui.components
 
 import com.example.leaflove.R
 

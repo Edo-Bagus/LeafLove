@@ -1,4 +1,4 @@
-package com.example.leaflove.screen.storescreen
+package com.example.leaflove.ui.screen.storescreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

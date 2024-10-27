@@ -1,21 +1,17 @@
-package com.example.leaflove.NavButton
+package com.example.leaflove.ui.components
 
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.leaflove.screen.Homepagescreen2
-import com.example.leaflove.screen.bottomNav.HomeScreen
-import com.example.leaflove.screen.bottomNav.ARScreen
-import com.example.leaflove.screen.bottomNav.myPlantScreen
-import com.example.leaflove.screen.headerNav.TransactionScreen
+import com.example.leaflove.ui.screen.bottomNav.HomeScreen
+import com.example.leaflove.ui.screen.bottomNav.ARScreen
+import com.example.leaflove.ui.screen.bottomNav.myPlantScreen
+import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaMainScreen
+import com.example.leaflove.ui.screen.headerNav.TransactionScreen
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 
@@ -32,7 +28,7 @@ fun BottomNavGraph(
     val responsiveOffset = screenHeight * 0.1f // Adjust the factor as needed
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Home.route,
+        startDestination = "searchscreen",
 //        modifier = Modifier
 //            .fillMaxSize()
 //            .offset(y = -responsiveOffset)
@@ -54,10 +50,9 @@ fun BottomNavGraph(
         {
             TransactionScreen(navHost = navController)
         }
-
-        composable("homepage2", enterTransition = { slideInVertically() })
+        composable("searchscreen")
         {
-            Homepagescreen2()
+            EncyclopediaMainScreen(navHost = navController)
         }
     }
 

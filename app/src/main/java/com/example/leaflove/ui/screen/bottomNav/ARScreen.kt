@@ -1,4 +1,4 @@
-package com.example.leaflove.screen.bottomNav
+package com.example.leaflove.ui.screen.bottomNav
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -1,4 +1,4 @@
-package com.example.leaflove.screen.loginscreen
+package com.example.leaflove.ui.screen.loginscreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
