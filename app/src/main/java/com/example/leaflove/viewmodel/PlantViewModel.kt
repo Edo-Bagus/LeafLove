@@ -61,6 +61,16 @@ class PlantViewModel: ViewModel() {
         }
     }
 
+    fun insertPlantToRoom(plantEntities: List<PlantSpeciesEntity>){
+        viewModelScope.launch {
+            try {
+                plantRepository.insertPlants(plantEntities)
+            } catch (e: Exception) {
+                e.message?.let { Log.e("Plant Error", it) }
+            }
+        }
+    }
+
     fun fetchPlantDetail(id: Int){
         viewModelScope.launch {
             try {

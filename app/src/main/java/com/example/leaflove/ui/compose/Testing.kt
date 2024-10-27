@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.example.leaflove.data.models.PlantDetailResponseModel
 import com.example.leaflove.data.repositories.PlantRepository
 
-private lateinit var plantRepository: PlantRepository
+
 
 @Composable
 fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
@@ -55,7 +55,7 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
         // Submit button to save plants to database
         Button(onClick = {
             coroutineScope.launch {
-                SubmitButtonHandler(plantState, plantRepository)
+                SubmitButtonHandler(plantViewModel, plantState)
             }
         }) {
             Text("Submit")
@@ -88,13 +88,13 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            coroutineScope.launch {
-                EnterButtonHandler(plantDetail, plantRepository)
-            }
-        }) {
-            Text("Enter")
-        }
+//        Button(onClick = {
+//            coroutineScope.launch {
+//                EnterButtonHandler(plantDetail, plantRepository)
+//            }
+//        }) {
+//            Text("Enter")
+//        }
     }
 }
 
@@ -106,10 +106,10 @@ fun mapResponseToEntity(plantList: List<PlantSpecies>) : List<PlantSpeciesEntity
     return plantEntities
 }
 
-suspend fun SubmitButtonHandler(plantState: PlantListResponseModel, plantRepository: PlantRepository){
+suspend fun SubmitButtonHandler(plantViewModel: PlantViewModel, plantState: PlantListResponseModel){
     val plantEntities = plantState.data?.let { mapResponseToEntity(it) }
     if (plantEntities != null) {
-        plantRepository.insertPlants(plantEntities)
+        plantViewModel.insertPlantToRoom(plantEntities)
     }
 }
 
