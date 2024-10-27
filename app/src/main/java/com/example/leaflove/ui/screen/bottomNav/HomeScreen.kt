@@ -1,4 +1,4 @@
-package com.example.leaflove.screen.bottomNav
+package com.example.leaflove.ui.screen.bottomNav
 
 import android.Manifest
 import android.app.Activity
@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +29,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -167,7 +169,23 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                                 )
                                 .background(Color.White)
                                 .size(screenWidth * 0.2f)
-                        )
+                        ){
+                            Column (
+                                modifier = Modifier
+                                    .align(Alignment.Center),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ){
+                                Image(
+                                    painter = painterResource(R.drawable.baseline_camera_alt_24_selected),
+                                    contentDescription = "Camera",
+                                    alignment = Alignment.Center,
+                                    modifier = Modifier.size(screenWidth * 0.1f)
+
+                                )
+                                Text(text = "AR")
+                            }
+                        }
                         Spacer(modifier = Modifier.weight(1f))
                         Box(
                             modifier = Modifier
@@ -178,7 +196,23 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                                 )
                                 .background(Color.White)
                                 .size(screenWidth * 0.2f)
-                        )
+                        ){
+                            Column (
+                                modifier = Modifier
+                                    .align(Alignment.Center),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ){
+                                Image(
+                                    painter = painterResource(R.drawable.baseline_forest_24_selected),
+                                    contentDescription = "Plant",
+                                    alignment = Alignment.Center,
+                                    modifier = Modifier.size(screenWidth * 0.1f)
+
+                                )
+                                Text(text = "My Plant")
+                            }
+                        }
                         Spacer(modifier = Modifier.weight(1f))
                     }
 
@@ -199,7 +233,27 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                                 )
                                 .background(Color.White)
                                 .size(screenWidth * 0.2f)
-                        )
+                        ){
+                            Column (
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .clickable
+                                    {
+                                        navHost.navigate("searchScreen")
+                                    },
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ){
+                                Image(
+                                    painter = painterResource(R.drawable.baseline_search_24),
+                                    contentDescription = "Ensiklopedia",
+                                    alignment = Alignment.Center,
+                                    modifier = Modifier.size(screenWidth * 0.1f)
+
+                                )
+                                Text(text = "Ensiklopedia", fontSize = 12.sp)
+                            }
+                        }
                         Spacer(modifier = Modifier.weight(1f))
                         Box(
                             modifier = Modifier
@@ -276,138 +330,6 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                     contentScale = ContentScale.Crop)
             }
         }
-        // Main content menu
-//        Box(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(screenHeight * 0.6f)
-//                .offset(y = screenHeight * 0.5f)
-//                .zIndex(0.9f)
-//                .clip(
-//                    RoundedCornerShape(
-//                        topStart = screenWidth * 0.1f,
-//                        topEnd = screenWidth * 0.1f
-//                    )
-//                )
-//        ) {
-//            Box( //Box yang ingin diswipe
-//                modifier = Modifier
-//                    .background(Color.White)
-//                    .size(screenWidth, screenHeight * 0.5f)
-//                    .pointerInput (Unit) {
-//                        detectVerticalDragGestures { change, dragAmount ->  change.consumeAllChanges()
-//                        if (dragAmount < 0){
-//                            navHost.navigate("homepage2")
-//                        }
-//                        }
-//                    },
-//            ) {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxSize(),
-//                    verticalArrangement = Arrangement.Center,
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    Spacer(modifier = Modifier.weight(1f))
-//
-//                    Box(
-//                        modifier = Modifier
-//                            .shadow(
-//                                elevation = 10.dp,
-//                                shape = RoundedCornerShape(20.dp),
-//                                clip = false
-//                            )
-//                            .background(ButtonGreen)
-//                            .width(screenWidth * 0.8f)
-//                            .height(screenHeight * 0.1f)
-//                            .align(Alignment.CenterHorizontally)
-//                    ) {
-//                        Row (modifier = Modifier
-//                            .align(Alignment.Center) ) {
-//                            Spacer(modifier = Modifier.weight(1f))
-//                            Text(text = cuaca,
-//                                color = Color.White
-//                            )
-//                            Spacer(modifier = Modifier.weight(1f))
-//                            Text(text = humidity.toString(),
-//                                color = Color.White)
-//                            Spacer(modifier = Modifier.weight(1f))
-//                            Text(text = tempCelciusString + "˚C",
-//                                color = Color.White)
-//                            Spacer(modifier = Modifier.weight(1f))
-//                        }
-//
-//                    }
-//
-//                    Spacer(modifier = Modifier.weight(1f))
-//
-//                    Row(
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        Spacer(modifier = Modifier.weight(1f))
-//                        Box(
-//                            modifier = Modifier
-//                                .shadow(
-//                                    elevation = 10.dp,
-//                                    shape = RoundedCornerShape(20.dp),
-//                                    clip = false
-//                                )
-//                                .background(Color.White)
-//                                .size(screenWidth * 0.2f)
-//                        )
-//                        Spacer(modifier = Modifier.weight(1f))
-//                        Box(
-//                            modifier = Modifier
-//                                .shadow(
-//                                    elevation = 10.dp,
-//                                    shape = RoundedCornerShape(20.dp),
-//                                    clip = false
-//                                )
-//                                .background(Color.White)
-//                                .size(screenWidth * 0.2f)
-//                        )
-//                        Spacer(modifier = Modifier.weight(1f))
-//                        Box(
-//                            modifier = Modifier
-//                                .shadow(
-//                                    elevation = 10.dp,
-//                                    shape = RoundedCornerShape(20.dp),
-//                                    clip = false
-//                                )
-//                                .background(Color.White)
-//                                .size(screenWidth * 0.2f)
-//                        )
-//                        Spacer(modifier = Modifier.weight(1f))
-//                    }
-//
-//                    Spacer(modifier = Modifier.weight(1f))
-//
-//                    Box(
-//                        modifier = Modifier
-//                            .shadow(
-//                                elevation = 10.dp,
-//                                shape = RoundedCornerShape(20.dp),
-//                                clip = false
-//                            )
-//                            .background(Color.White)
-//                            .width(screenWidth * 0.8f)
-//                            .height(screenHeight * 0.1f)
-//                            .align(Alignment.CenterHorizontally)
-//                    ) {
-//                        Text(text = "No Achievement",
-//                            modifier = Modifier
-//                                .align(Alignment.Center))
-//                    }
-//
-//                    Spacer(modifier = Modifier.weight(1f))
-//
-//
-//                }
-//            }
-//
-//        }
     }
 }
 

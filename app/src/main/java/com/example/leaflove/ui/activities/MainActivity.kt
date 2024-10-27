@@ -20,13 +20,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.BuildConfig
-import com.example.leaflove.screen.MainScreen
-import com.example.leaflove.screen.account.AccountScreen
-import com.example.leaflove.screen.bottomNav.myPlantScreen
-import com.example.leaflove.screen.headerNav.TransactionScreen
-import com.example.leaflove.screen.loginscreen.loginScreen
-import com.example.leaflove.screen.loginscreen.registerScreen
-import com.example.leaflove.screen.storescreen.StoreScreen
+import com.example.leaflove.ui.screen.MainScreen
+import com.example.leaflove.ui.screen.account.AccountScreen
+import com.example.leaflove.ui.screen.bottomNav.myPlantScreen
+import com.example.leaflove.ui.screen.headerNav.TransactionScreen
+import com.example.leaflove.ui.screen.loginscreen.loginScreen
+import com.example.leaflove.ui.screen.loginscreen.registerScreen
+import com.example.leaflove.ui.screen.storescreen.StoreScreen
 import com.example.leaflove.ui.theme.LeafLoveTheme
 import com.example.leaflove.ui.theme.rememberWindowSizeClass
 import com.example.leaflove.viewmodel.AuthViewModel
@@ -103,7 +103,7 @@ fun LeafLove(authViewModel: AuthViewModel) {
     // Display either Login or Main screen based on the login state
 //    NavHost(navController = navController, startDestination = if (isLoggedIn) "mainscreen" else "loginscreen") {
 
-        NavHost(navController = navController, startDestination = "loginscreen") {
+        NavHost(navController = navController, startDestination = "mainscreen") {
         composable("loginscreen") {
             loginScreen(navController, appAuthViewModel)
         }
