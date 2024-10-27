@@ -34,7 +34,7 @@ import com.example.leaflove.data.repositories.PlantRepository
 fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
     var plantDetailText by remember { mutableStateOf<String>("")}
     val plantState = plantViewModel.plantState.value
-    val plantDetail = plantViewModel.plantDetail.value
+
     val coroutineScope = rememberCoroutineScope()
 
     // State to hold the fetched plants
@@ -42,7 +42,6 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
 
     // Trigger fetching the plant list when the composable is launched
     LaunchedEffect(Unit) {
-        plantViewModel.fetchPlantDetailDummy()
         plantViewModel.fetchPlantList()
     }
 
