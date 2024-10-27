@@ -99,6 +99,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
 
+    //Link to Image
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
 
     implementation(libs.androidx.core.ktx)
     implementation("androidx.compose.material3:material3:1.2.0")
