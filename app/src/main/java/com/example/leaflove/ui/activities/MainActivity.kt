@@ -27,10 +27,12 @@ import com.example.leaflove.screen.headerNav.TransactionScreen
 import com.example.leaflove.screen.loginscreen.loginScreen
 import com.example.leaflove.screen.loginscreen.registerScreen
 import com.example.leaflove.screen.storescreen.StoreScreen
+import com.example.leaflove.ui.compose.Testing
 import com.example.leaflove.ui.theme.LeafLoveTheme
 import com.example.leaflove.ui.theme.rememberWindowSizeClass
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.LocationViewModel
+import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -94,6 +96,7 @@ class MainActivity : ComponentActivity() {
 
 fun LeafLove(authViewModel: AuthViewModel) {
     val appAuthViewModel = authViewModel;
+    val plantViewModel = PlantViewModel();
     val context = LocalContext.current
     val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
     // Check if the user is already logged in
@@ -103,7 +106,7 @@ fun LeafLove(authViewModel: AuthViewModel) {
     // Display either Login or Main screen based on the login state
 //    NavHost(navController = navController, startDestination = if (isLoggedIn) "mainscreen" else "loginscreen") {
 
-        NavHost(navController = navController, startDestination = "loginscreen") {
+        NavHost(navController = navController, startDestination = "testing") {
         composable("loginscreen") {
             loginScreen(navController, appAuthViewModel)
         }
@@ -113,6 +116,9 @@ fun LeafLove(authViewModel: AuthViewModel) {
         composable("mainscreen") {
             MainScreen(appAuthViewModel) // No navController needed to be passed here
         }
+            composable("testing") {
+                Testing(navController, plantViewModel) // No navController needed to be passed here
+            }
 
 //        composable("transaction") {
 //            TransactionScreen(navHost = navController)

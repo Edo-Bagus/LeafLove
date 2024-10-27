@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.leaflove.MyApp
+import com.example.leaflove.data.entities.PlantSpeciesEntity
 import com.example.leaflove.data.models.DefaultImage
 import com.example.leaflove.data.models.DepthWaterRequirement
 import com.example.leaflove.data.models.Dimensions
@@ -13,11 +15,19 @@ import com.example.leaflove.data.models.PlantDetailResponseModel
 import com.example.leaflove.data.models.PlantListResponseModel
 import com.example.leaflove.data.models.PlantSpecies
 import com.example.leaflove.data.models.WateringBenchmark
+import com.example.leaflove.data.repositories.PlantRepository
 import com.example.leaflove.services.PerenualAPIService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
+
 class PlantViewModel: ViewModel() {
+
+    val plantSpeciesDao = MyApp.getDatabase().plantSpeciesDao()
+    val plantDetailDao = MyApp.getDatabase().plantDetailDao()
+    private var plantRepository = PlantRepository(plantSpeciesDao, plantDetailDao)
+
     private val plantServices: PerenualAPIService = PerenualAPIService.create()
 
     private val _plantState = mutableStateOf(PlantListResponseModel())
@@ -26,11 +36,25 @@ class PlantViewModel: ViewModel() {
     private val _plantDetail = mutableStateOf(PlantDetailResponseModel())
     val plantDetail = _plantDetail
 
+    private val _plantList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())
+    val plantList = _plantList
+
     fun fetchPlantList() {
         viewModelScope.launch {
             try {
                 val response = plantServices.getPlantList()
                 _plantState.value = response
+            } catch (e: Exception) {
+                e.message?.let { Log.e("Plant Error", it) }
+            }
+        }
+    }
+
+    fun fetchPlantListFromRoom() {
+        viewModelScope.launch {
+            try {
+                val plantsFromRoom = plantRepository.getAllPlants()
+                _plantList.value = plantsFromRoom
             } catch (e: Exception) {
                 e.message?.let { Log.e("Plant Error", it) }
             }

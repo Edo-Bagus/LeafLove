@@ -37,17 +37,13 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
     val plantDetail = plantViewModel.plantDetail.value
     val coroutineScope = rememberCoroutineScope()
 
-    val plantSpeciesDao = MyApp.getDatabase().plantSpeciesDao()
-    val plantDetailDao = MyApp.getDatabase().plantDetailDao()
-    plantRepository = PlantRepository(plantSpeciesDao, plantDetailDao)
-
     // State to hold the fetched plants
-    var plantEntities by remember { mutableStateOf<List<PlantSpeciesEntity>>(emptyList()) }
+    var plantEntities = plantViewModel.plantList.value
 
     // Trigger fetching the plant list when the composable is launched
     LaunchedEffect(Unit) {
         plantViewModel.fetchPlantDetailDummy()
-        plantViewModel.fetchPlantListDummy()
+        plantViewModel.fetchPlantList()
     }
 
     // Use Column to arrange elements vertically
@@ -70,7 +66,7 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
 //         Button to fetch and display the plants from the database
         Button(onClick = {
             coroutineScope.launch {
-                plantEntities = plantRepository.getAllPlants()
+                plantViewModel.fetchPlantListFromRoom()
             }
         }) {
             Text("Show Plants")
@@ -81,10 +77,11 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
         // Display the fetched plant entries
         if (plantEntities.isNotEmpty()) {
             // Display the plant entities
-            for (plant in plantEntities) {
-                Text(text = "Plant: ${plant.common_name}") // Adjust according to your entity fields
-                Spacer(modifier = Modifier.height(4.dp)) // Space between plant entries
-            }
+//            for (plant in plantEntities) {
+//                Text(text = "Plant: ${plant.scientific_name}") // Adjust according to your entity fields
+//                Spacer(modifier = Modifier.height(4.dp)) // Space between plant entries
+//            }
+            plantEntities[0].default_image?.let { Text(text = it) }
         } else {
             Text(text = "No plants found") // Message when no plants are present
         }
