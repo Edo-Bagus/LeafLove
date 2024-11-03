@@ -19,6 +19,10 @@ class PlantRepository(private val plantSpeciesDao: PlantSpeciesDao, private val 
         return plantSpeciesDao.checkIsEmpty()
     }
 
+    suspend fun insertPlantDetail(plantDetail: PlantDetailEntity): Long{
+        return plantDetailDao.insertPlantDetail(plantDetail)
+    }
+
     suspend fun insertPlantDetailAndLinkToSpecies(
         plantDetail: PlantDetailEntity,
         speciesId: Int,

@@ -16,11 +16,11 @@ data class PlantDetailResponseModel(
     val hardiness: Hardiness = Hardiness(),
     val hardiness_location: HardinessLocation = HardinessLocation(),
     val watering: String = "",
-    val depth_water_requirement: DepthWaterRequirement = DepthWaterRequirement(),
+    val depth_water_requirement: Any = DepthWaterRequirement(),
     val volume_water_requirement: List<String> = emptyList(),
     val watering_period: String? = null,
     val watering_general_benchmark: WateringBenchmark = WateringBenchmark(),
-    val plant_anatomy: List<String> = emptyList(),
+    val plant_anatomy: List<PlantAnatomy> = emptyList(),
     val sunlight: List<String> = emptyList(),
     val pruning_month: List<String> = emptyList(),
     val pruning_count: List<String> = emptyList(),
@@ -85,4 +85,9 @@ data class DepthWaterRequirement(
 data class WateringBenchmark(
     val value: String = "",
     val unit: String = ""
+)
+
+data class PlantAnatomy(
+    val part: String,
+    val color: List<String>,
 )

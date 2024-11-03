@@ -1,5 +1,6 @@
 package com.example.leaflove.ui.screen.encyclopedia
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -31,6 +32,7 @@ fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel
     LaunchedEffect(Unit) {
         viewModel.initializeDAOPlant()
         viewModel.fetchPlantListFromRoom()
+        Log.d("Test", viewModel.plantList.toString())
     }
     val plants = viewModel.plantList.value
 

@@ -65,7 +65,7 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
 //         Button to fetch and display the plants from the database
         Button(onClick = {
             coroutineScope.launch {
-                plantViewModel.fetchPlantListFromRoom()
+                plantViewModel.fetchPlantDetails(2)
             }
         }) {
             Text("Show Plants")
@@ -108,7 +108,7 @@ fun mapResponseToEntity(plantList: List<PlantSpecies>) : List<PlantSpeciesEntity
 suspend fun SubmitButtonHandler(plantViewModel: PlantViewModel, plantState: PlantListResponseModel){
     val plantEntities = plantState.data?.let { mapResponseToEntity(it) }
     if (plantEntities != null) {
-        plantViewModel.insertPlantToRoom(plantEntities)
+        plantViewModel.insertPlantToRoom()
     }
 }
 

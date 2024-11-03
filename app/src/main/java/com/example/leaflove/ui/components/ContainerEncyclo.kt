@@ -1,11 +1,14 @@
 package com.example.leaflove.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,8 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.leaflove.R
 import com.example.leaflove.data.entities.PlantSpeciesEntity
+import com.example.leaflove.data.models.DefaultImage
+import com.google.gson.Gson
 
 data class encyclo(
     val nama: String,
@@ -51,10 +57,14 @@ fun PlantListItem(encyclo: PlantSpeciesEntity) {
             Row(verticalAlignment = Alignment.CenterVertically)
             {
                 encyclo.default_image?.let {
-                    Text(
-                        text = it, // Replace with actual image
-                        modifier = Modifier.size(64.dp)
-                    )
+                    Log.d("Check Image", it)
+                    if(it == "null"){
+                        Image(painter = painterResource(R.drawable.backgroundlogin1) , modifier = Modifier.size(64.dp), contentDescription = null)
+                    } else {
+                        val data = convertIntoImage(it)
+                        Image(painter = rememberAsyncImagePainter(data), modifier = Modifier.size(64.dp), contentDescription = null)
+
+                    }
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -89,4 +99,10 @@ fun PlantListItem(encyclo: PlantSpeciesEntity) {
             Spacer(modifier = Modifier.height(16.dp))
     }
     }
+}
+
+fun convertIntoImage(jsonString: String): String? {
+    val data = Gson().fromJson(jsonString, DefaultImage::class.java)
+    val image = data.thumbnail;
+    return image
 }

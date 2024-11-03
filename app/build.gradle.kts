@@ -102,6 +102,8 @@ dependencies {
     //Link to Image
     implementation("io.coil-kt:coil-compose:2.4.0")
 
+    //String to json
+    implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("androidx.camera:camera-core:1.1.0")
     implementation("androidx.camera:camera-camera2:1.1.0")
