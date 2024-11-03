@@ -28,6 +28,6 @@ data class DefaultImage(
     val original_url: String? = null,
     val regular_url: String? = null,
     val medium_url: String? = null,
-    val small_url: String? = null,
+    val small_url: String? = "https://www.svgrepo.com/show/505400/image-1.svg",
     val thumbnail: String? = null
 )

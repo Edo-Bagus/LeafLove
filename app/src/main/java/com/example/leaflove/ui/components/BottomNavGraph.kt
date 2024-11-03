@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.leaflove.ui.compose.Testing
 import com.example.leaflove.ui.screen.bottomNav.HomeScreen
 import com.example.leaflove.ui.screen.bottomNav.ARScreen
 import com.example.leaflove.ui.screen.bottomNav.myPlantScreen
@@ -46,6 +47,9 @@ fun BottomNavGraph(
         composable(route = BottomBarScreen.MyPlant.route)
         {
             myPlantScreen(navHost = navController)
+        }
+        composable("testing"){
+            Testing(navHost = navController, plant)
         }
 
         composable("transaction")

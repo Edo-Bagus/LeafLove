@@ -1,11 +1,17 @@
 package com.example.leaflove.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.leaflove.MyApp
+import com.example.leaflove.data.entities.PlantDetailEntity
 import com.example.leaflove.data.entities.PlantSpeciesEntity
+import com.example.leaflove.data.map.PlantDetailMapper.plantDetailToEntity
+import com.example.leaflove.data.map.PlantMapper.plantToEntity
+import com.example.leaflove.data.map.PlantMapper.plantToEntityList
 import com.example.leaflove.data.models.DefaultImage
 import com.example.leaflove.data.models.DepthWaterRequirement
 import com.example.leaflove.data.models.Dimensions
@@ -31,8 +37,10 @@ class PlantViewModel: ViewModel() {
 
     suspend fun initializeDAOPlant() {
         coroutineScope {
-            if (plantSpeciesDao.checkIsEmpty()) {
-                insertPlantToRoom(_plantList.value);
+            if (plantRepository.checkIsEmpty()) {
+                Log.d("Check DB",plantRepository.checkIsEmpty().toString())
+                fetchPlantList();
+                insertPlantToRoom();
             }
         }
     }
@@ -43,10 +51,12 @@ class PlantViewModel: ViewModel() {
 
     private val plantServices: PerenualAPIService = PerenualAPIService.create()
 
+
     private val _plantState = mutableStateOf(PlantListResponseModel())
     val plantState = _plantState
 
-
+    private val _plantDetail = mutableStateOf(PlantDetailEntity())
+    val plantDetail: State<PlantDetailEntity> = _plantDetail
 
     private val _plantList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())
     val plantList = _plantList
@@ -62,6 +72,7 @@ class PlantViewModel: ViewModel() {
         }
     }
 
+
     fun fetchPlantListFromRoom() {
         viewModelScope.launch {
             try {
@@ -73,10 +84,17 @@ class PlantViewModel: ViewModel() {
         }
     }
 
-    fun insertPlantToRoom(plantEntities: List<PlantSpeciesEntity>){
+    fun insertPlantToRoom(){
         viewModelScope.launch {
             try {
-                plantRepository.insertPlants(plantEntities)
+                var mappedPlantEntity = plantState.value.data
+                var result : List<PlantSpeciesEntity>? = emptyList();
+                if (mappedPlantEntity != null) {
+                   result = plantToEntityList(mappedPlantEntity)
+                }
+                if (result != null) {
+                    plantRepository.insertPlants(result)
+                }
             } catch (e: Exception) {
                 e.message?.let { Log.e("Plant Error", it) }
             }
@@ -149,6 +167,29 @@ class PlantViewModel: ViewModel() {
         }
     }
 
+    fun fetchPlantDetails(id: Int = 2){
+        viewModelScope.launch {
+            try{
+               val response = plantServices.getPlantDetail(id)
+               insertIntoPlantDetailsRoom(response)
+            } catch (e: Exception){
+            e.message?.let{ Log.e("Plant Detail Error", it)}
+            }
+        }
+
+    }
+    fun insertIntoPlantDetailsRoom(plantDetailResponse: PlantDetailResponseModel){
+        viewModelScope.launch{
+            try{
+                val mappedPlantDetail = plantDetailToEntity(plantDetailResponse);
+                plantRepository.insertPlantDetail(mappedPlantDetail);
+                Log.d("Test masukin",mappedPlantDetail.toString())
+            } catch (e: Exception) {
+                e.message?.let{ Log.e("Plant Detail Error", it)}
+
+            }
+        }
+    }
 
 
 }

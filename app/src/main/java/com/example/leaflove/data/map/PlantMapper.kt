@@ -23,6 +23,24 @@ object PlantMapper {
         )
     }
 
+    fun plantToEntityList(plants: List<PlantSpecies>): List<PlantSpeciesEntity>{
+        var plantList:List<PlantSpeciesEntity> = emptyList();
+        for(plant in plants){
+            plantList += PlantSpeciesEntity(
+                id = plant.id,
+                common_name = plant.common_name,
+                scientific_name = Gson().toJson(plant.scientific_name),
+                other_name = Gson().toJson(plant.other_name),
+                cycle = plant.cycle,
+                watering = plant.watering,
+                sunlight = Gson().toJson(plant.sunlight),
+                default_image = Gson().toJson(plant.default_image),
+                detailId = null
+            )
+        }
+        return plantList;
+    }
+
     fun entityToPlant(plantEntity: PlantSpeciesEntity): PlantSpecies {
         return PlantSpecies(
             id = plantEntity.id,

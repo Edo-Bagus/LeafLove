@@ -10,7 +10,7 @@ import com.example.leaflove.data.entities.PlantDetailEntity
 import com.example.leaflove.data.entities.PlantSpeciesEntity
 
 
-@Database(entities = [PlantSpeciesEntity::class, PlantDetailEntity::class], version = 1)
+@Database(entities = [PlantSpeciesEntity::class, PlantDetailEntity::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun plantSpeciesDao(): PlantSpeciesDao

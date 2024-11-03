@@ -17,4 +17,8 @@ interface PlantDetailDao {
     // Update the detailId in the PlantSpeciesEntity
     @Query("UPDATE plant_species SET detailId = :newDetailId WHERE id = :speciesId")
     suspend fun updatePlantSpeciesWithDetailId(speciesId: Int, newDetailId: Int)
+
+    @Query("SELECT (SELECT COUNT (*) FROM plant_detail) == 0")
+    suspend fun checkIsEmpty(): Boolean
+
 }

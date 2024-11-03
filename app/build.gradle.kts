@@ -102,6 +102,8 @@ dependencies {
     //Link to Image
     implementation("io.coil-kt:coil-compose:2.4.0")
 
+    //String to json
+    implementation("com.google.code.gson:gson:2.10.1")
 
     implementation(libs.androidx.core.ktx)
     implementation("androidx.compose.material3:material3:1.2.0")

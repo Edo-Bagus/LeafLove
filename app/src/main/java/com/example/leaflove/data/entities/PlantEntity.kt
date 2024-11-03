@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import androidx.room.ForeignKey
+import com.example.leaflove.data.models.DefaultImage
 
 @Entity(
     tableName = "plant_species",
