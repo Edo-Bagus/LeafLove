@@ -30,10 +30,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
+import com.example.leaflove.data.entities.PlantDetailEntity
 import com.example.leaflove.ui.theme.BasicGreen
 
 @Composable
-fun EncyclopediaDetailScreen(navHost: NavHostController)
+fun EncyclopediaDetailScreen(navHost: NavHostController, plantDetailEntity: PlantDetailEntity)
 {
     BoxWithConstraints (
         modifier = Modifier
@@ -64,15 +65,15 @@ fun EncyclopediaDetailScreen(navHost: NavHostController)
             {
                 Column (modifier = Modifier
                     .offset(x = screenWidth * 0.1f, y = screenHeight * 0.1f)){
-                    Text(text = "Nama", color = Color.White, fontSize = 24.sp)
+                    Text(text = "Nama ${plantDetailEntity.common_name}", color = Color.White, fontSize = 24.sp)
                     Spacer(modifier = Modifier.weight(0.1f))
-                    Text(text = "Deskripsi", color = Color.White)
+                    Text(text = "Deskripsi ${plantDetailEntity.description}", color = Color.White)
                     Spacer(modifier = Modifier.weight(0.1f))
                     Text(text = "Tips", color = Color.White, fontSize = 24.sp)
                     Spacer(modifier = Modifier.weight(0.1f))
-                    Text(text = "Volume Water Requirement", color = Color.White)
-                    Text(text = "Place indoor/outdoor", color = Color.White)
-                    Text(text = "Sunlight", color = Color.White)
+                    Text(text = "Volume Water Requirement ${plantDetailEntity.volume_water_requirement}", color = Color.White)
+                    Text(text = "Place indoor/outdoor ${plantDetailEntity.indoor}", color = Color.White)
+                    Text(text = "Sunlight ${plantDetailEntity.sunlight}", color = Color.White)
                     Spacer(modifier = Modifier.weight(0.5f))
                     Button(
                         onClick = { /*TODO*/ },

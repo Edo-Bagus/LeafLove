@@ -32,7 +32,7 @@ fun BottomNavGraph(
     val responsiveOffset = screenHeight * 0.1f // Adjust the factor as needed
     NavHost(
         navController = navController,
-        startDestination = "detailscreen",
+        startDestination = "searchscreen",
 //        modifier = Modifier
 //            .fillMaxSize()
 //            .offset(y = -responsiveOffset)
@@ -64,7 +64,7 @@ fun BottomNavGraph(
         
         composable("detailscreen")
         {  
-            EncyclopediaDetailScreen(navHost = navController)
+            EncyclopediaDetailScreen(navHost = navController, plant.plantDetail.value)
         }
     }
 

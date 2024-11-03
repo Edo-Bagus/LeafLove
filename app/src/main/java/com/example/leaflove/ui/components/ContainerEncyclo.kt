@@ -28,10 +28,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.leaflove.R
 import com.example.leaflove.data.entities.PlantSpeciesEntity
 import com.example.leaflove.data.models.DefaultImage
+import com.example.leaflove.viewmodel.PlantViewModel
 import com.google.gson.Gson
 
 data class encyclo(
@@ -41,7 +44,7 @@ data class encyclo(
 )
 
 @Composable
-fun PlantListItem(encyclo: PlantSpeciesEntity) {
+fun PlantListItem(encyclo: PlantSpeciesEntity, plantViewModel: PlantViewModel, navHost: NavHostController) {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
     )
@@ -56,6 +59,7 @@ fun PlantListItem(encyclo: PlantSpeciesEntity) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically)
             {
+
                 encyclo.default_image?.let {
                     Log.d("Check Image", it)
                     if(it == "null"){
@@ -88,14 +92,14 @@ fun PlantListItem(encyclo: PlantSpeciesEntity) {
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                IconButton(onClick = { /* TODO: Handle Next Icon Click */ }) {
+                IconButton(onClick = { fetchPlantDetailsFromRoom(encyclo.id, plantViewModel, navHost) }) {
                     Icon(
                         painter = painterResource(R.drawable.baseline_search_24),
                         contentDescription = "Next"
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
     }
     }
@@ -105,4 +109,10 @@ fun convertIntoImage(jsonString: String): String? {
     val data = Gson().fromJson(jsonString, DefaultImage::class.java)
     val image = data.thumbnail;
     return image
+}
+
+fun fetchPlantDetailsFromRoom(id: Int, plant: PlantViewModel, navHost: NavHostController){
+    plant.fetchPlantDetails(id)
+    navHost.navigate("detailscreen")
+    Log.d("Test plant detail", plant.plantDetail.toString())
 }

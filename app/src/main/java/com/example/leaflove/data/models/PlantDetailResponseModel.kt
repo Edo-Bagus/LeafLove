@@ -23,7 +23,7 @@ data class PlantDetailResponseModel(
     val plant_anatomy: List<PlantAnatomy> = emptyList(),
     val sunlight: List<String> = emptyList(),
     val pruning_month: List<String> = emptyList(),
-    val pruning_count: List<String> = emptyList(),
+    val pruning_count: Any? = null,
     val seeds: Int = 0,
     val maintenance: String? = null,
     val care_guides: String = "",
@@ -90,4 +90,9 @@ data class WateringBenchmark(
 data class PlantAnatomy(
     val part: String,
     val color: List<String>,
+)
+
+data class PruningCount(
+    val amount: Int,
+    val interval: String
 )

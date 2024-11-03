@@ -21,4 +21,9 @@ interface PlantDetailDao {
     @Query("SELECT (SELECT COUNT (*) FROM plant_detail) == 0")
     suspend fun checkIsEmpty(): Boolean
 
+    @Query("SELECT (SELECT COUNT (*) FROM plant_detail WHERE id = :speciesId ) == 0")
+    suspend fun checkIsFilled(speciesId: Int): Boolean
+
+    @Query("SELECT * FROM plant_detail WHERE id = :speciesId")
+    suspend fun getPlantDetail(speciesId: Int):PlantDetailEntity
 }

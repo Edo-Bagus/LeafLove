@@ -170,8 +170,14 @@ class PlantViewModel: ViewModel() {
     fun fetchPlantDetails(id: Int = 2){
         viewModelScope.launch {
             try{
-               val response = plantServices.getPlantDetail(id)
-               insertIntoPlantDetailsRoom(response)
+                if(!plantRepository.checkIsFilledPlantDetail(id)){
+
+                    _plantDetail.value = plantRepository.getPlantDetails(id)
+                    Log.d("test ambil", _plantDetail.value.toString()   )
+                } else {
+                    val response = plantServices.getPlantDetail(id)
+                    insertIntoPlantDetailsRoom(response)
+                }
             } catch (e: Exception){
             e.message?.let{ Log.e("Plant Detail Error", it)}
             }

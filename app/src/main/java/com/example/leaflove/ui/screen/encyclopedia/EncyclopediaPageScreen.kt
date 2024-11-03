@@ -72,7 +72,7 @@ fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel
                     .offset(y = 28.dp)
             ) {
                 plants.forEach { plant ->
-                    PlantListItem(encyclo = plant)
+                    PlantListItem(encyclo = plant, viewModel, navHost)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }

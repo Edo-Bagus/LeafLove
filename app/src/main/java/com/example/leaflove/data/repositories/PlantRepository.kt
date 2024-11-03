@@ -1,5 +1,6 @@
 package com.example.leaflove.data.repositories
 
+import android.util.Log
 import com.example.leaflove.data.dao.PlantDetailDao
 import com.example.leaflove.data.dao.PlantSpeciesDao
 import com.example.leaflove.data.entities.PlantDetailEntity
@@ -21,6 +22,15 @@ class PlantRepository(private val plantSpeciesDao: PlantSpeciesDao, private val 
 
     suspend fun insertPlantDetail(plantDetail: PlantDetailEntity): Long{
         return plantDetailDao.insertPlantDetail(plantDetail)
+    }
+
+    suspend fun checkIsFilledPlantDetail(id: Int):Boolean {
+        Log.d("test ambil", plantDetailDao.checkIsFilled(id).toString())
+        return plantDetailDao.checkIsFilled(id);
+    }
+
+    suspend fun getPlantDetails(id: Int):PlantDetailEntity{
+        return plantDetailDao.getPlantDetail(id);
     }
 
     suspend fun insertPlantDetailAndLinkToSpecies(
