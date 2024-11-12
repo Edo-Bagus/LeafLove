@@ -5,13 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.leaflove.services.OpenWeatherAPIService
-import com.example.leaflove.data.WeatherResponse
+import com.example.leaflove.data.models.WeatherResponseModel
 import kotlinx.coroutines.launch
 
 class WeatherViewModel : ViewModel() {
     private val weatherServices: OpenWeatherAPIService = OpenWeatherAPIService.create()
 
-    private val _weatherState = mutableStateOf(WeatherResponse())
+    private val _weatherState = mutableStateOf(WeatherResponseModel())
     val weatherState = _weatherState
 
     private val _humidityState = mutableStateOf("")
