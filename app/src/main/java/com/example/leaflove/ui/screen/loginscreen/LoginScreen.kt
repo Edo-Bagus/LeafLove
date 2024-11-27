@@ -54,7 +54,7 @@ fun loginScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-    val authState = authViewModel.authState.observeAsState()
+    val authState = authViewModel.authState
 
     LaunchedEffect(authState.value) {
         when(authState.value){

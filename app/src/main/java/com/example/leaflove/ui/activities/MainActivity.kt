@@ -87,7 +87,7 @@ fun LeafLove(authViewModel: AuthViewModel) {
 //    NavHost(navController = navController, startDestination = if (isLoggedIn) "mainscreen" else "loginscreen") {
 
 
-        NavHost(navController = navController, startDestination = "mainscreen") {
+        NavHost(navController = navController, startDestination = "loginscreen") {
 
         composable("loginscreen") {
             loginScreen(navController, appAuthViewModel)

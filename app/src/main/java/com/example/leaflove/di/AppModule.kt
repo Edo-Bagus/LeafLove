@@ -39,8 +39,8 @@ var appModule = module {
     }
 
     // Provide the ViewModels, injecting the repository
-    viewModel { AuthViewModel() } // If AuthViewModel needs dependencies, pass them here
-    viewModel { PlantViewModel(get(), get()) } // Injecting PlantRepository into PlantViewModel
-    viewModel { LocationViewModel() }
-    viewModel { WeatherViewModel() }
+    single { AuthViewModel() } // If AuthViewModel needs dependencies, pass them here
+    single { PlantViewModel(get(), get()) } // Injecting PlantRepository into PlantViewModel
+    single { LocationViewModel() }
+    single { WeatherViewModel() }
 }

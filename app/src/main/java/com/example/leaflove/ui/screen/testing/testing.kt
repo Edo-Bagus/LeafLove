@@ -14,8 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.leaflove.data.models.UserDataModel
+import com.example.leaflove.viewmodel.PlantViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.DocumentSnapshot
+import org.koin.androidx.compose.koinViewModel
 
 val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 

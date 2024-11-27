@@ -1,5 +1,6 @@
 package com.example.leaflove.ui.screen.plantscreen
 
+import android.util.Log
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -56,11 +57,18 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
+import com.example.leaflove.data.models.MyPlantModel
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.AuthViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 @Composable
 fun addmyplant(navHost: NavHostController)
 {
+    var authViewModel: AuthViewModel = koinViewModel()
+
     var customfont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),
         Font(R.font.baloo_bold, weight = FontWeight.Bold))
@@ -192,7 +200,9 @@ fun addmyplant(navHost: NavHostController)
                 Spacer(modifier = Modifier.weight(1f))
 
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        Log.d("Firestore", authViewModel.userData.value.toString())
+                        authViewModel.updateuserMyPlant(newMyPlant = MyPlantModel(plant_name = nameofplant.text)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .offset(x = -(width * 0.04f))

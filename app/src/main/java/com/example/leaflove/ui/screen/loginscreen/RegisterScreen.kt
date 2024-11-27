@@ -1,5 +1,6 @@
 package com.example.leaflove.ui.screen.loginscreen
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.leaflove.R
 import com.example.leaflove.ui.theme.Background
 import com.example.leaflove.ui.theme.ButtonGreen
+import com.example.leaflove.viewmodel.AuthState
 import com.example.leaflove.viewmodel.AuthViewModel
 
 
@@ -48,9 +52,16 @@ fun registerScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
     var password by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var phone_num by remember { mutableStateOf("") }
-    var authState = authViewModel.authState.observeAsState()
+    var authState = authViewModel.authState
+    val context = LocalContext.current
 
-
+    LaunchedEffect(authState.value) {
+        when(authState.value){
+            is AuthState.Authenticated -> navHost.navigate("mainscreen")
+            is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_LONG).show()
+            else -> Unit
+        }
+    }
 
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
