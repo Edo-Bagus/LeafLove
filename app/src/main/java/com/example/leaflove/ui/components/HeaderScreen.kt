@@ -22,7 +22,7 @@ import com.example.leaflove.R
 import com.example.leaflove.ui.theme.BasicGreen
 
 @Composable
-fun header(navHost: NavController, modifier: Modifier = Modifier, screenWidth: Dp, screenHeight: Dp) {
+fun Header(navController: NavController, modifier: Modifier = Modifier, screenWidth: Dp, screenHeight: Dp) {
     var search by remember { mutableStateOf("") }
 
     Row(
@@ -58,7 +58,7 @@ fun header(navHost: NavController, modifier: Modifier = Modifier, screenWidth: D
                 .clip(RoundedCornerShape(50))
                 .background(Color.Black)
                 .clickable {
-                    navHost.navigate("searchScreen") // Navigate on click
+                    navController.navigate("searchScreen") // Navigate on click
                 }
         ) {
             TextField(
@@ -94,8 +94,8 @@ fun header(navHost: NavController, modifier: Modifier = Modifier, screenWidth: D
 
         Button(
             onClick = {
-                    navHost.navigate("transaction") {
-                        popUpTo(navHost.graph.startDestinationId) {
+                    navController.navigate("account") {
+                        popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
                         launchSingleTop = true

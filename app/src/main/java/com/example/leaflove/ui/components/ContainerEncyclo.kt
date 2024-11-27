@@ -82,8 +82,13 @@ fun PlantListItem(encyclo: PlantSpeciesEntity, plantViewModel: PlantViewModel, n
                         )
                     }
                     encyclo.scientific_name?.let {
+                        val cleanedText = it.replace(Regex("\\\\u[0-9A-Fa-f]{4}"), "") // Removes \uXXXX escape sequences
+                            .replace(Regex("\\[|\\]"), "") // Removes square brackets
+                            .replace(Regex("\\s+"), " ") // Replaces multiple spaces with a single space
+                            .trim() // Removes leading and trailing spaces
+
                         Text(
-                            text = it,
+                            text = cleanedText,
                             fontSize = 14.sp,
                             color = Color.Gray
                         )

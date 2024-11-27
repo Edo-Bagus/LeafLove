@@ -177,6 +177,7 @@ class PlantViewModel: ViewModel() {
                 } else {
                     val response = plantServices.getPlantDetail(id)
                     insertIntoPlantDetailsRoom(response)
+                    _plantDetail.value = plantRepository.getPlantDetails(id)
                 }
             } catch (e: Exception){
             e.message?.let{ Log.e("Plant Detail Error", it)}
