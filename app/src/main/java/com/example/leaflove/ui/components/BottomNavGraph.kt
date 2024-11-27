@@ -1,6 +1,5 @@
 package com.example.leaflove.ui.components
 
-import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -14,6 +13,7 @@ import com.example.leaflove.ui.screen.bottomNav.myPlantScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaDetailScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaMainScreen
 import com.example.leaflove.ui.screen.headerNav.TransactionScreen
+import com.example.leaflove.ui.screen.testing.TestingScreen
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
@@ -32,7 +32,7 @@ fun BottomNavGraph(
     val responsiveOffset = screenHeight * 0.1f // Adjust the factor as needed
     NavHost(
         navController = navController,
-        startDestination = "searchscreen",
+        startDestination = "testingscreen",
 //        modifier = Modifier
 //            .fillMaxSize()
 //            .offset(y = -responsiveOffset)
@@ -64,7 +64,10 @@ fun BottomNavGraph(
         
         composable("detailscreen")
         {  
-            EncyclopediaDetailScreen(navHost = navController, plant.plantDetail.value)
+            EncyclopediaDetailScreen(navHost = navController, plant.plantDetail)
+        }
+        composable("testingscreen"){
+            TestingScreen(navController)
         }
     }
 

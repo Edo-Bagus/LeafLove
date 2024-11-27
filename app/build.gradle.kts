@@ -79,6 +79,7 @@ android {
 dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.firebase.firestore.ktx)
     ksp(libs.androidx.room.compiler)
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
