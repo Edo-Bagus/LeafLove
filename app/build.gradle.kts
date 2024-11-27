@@ -82,6 +82,20 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     ksp(libs.androidx.room.compiler)
 
+// Koin Core
+    implementation(libs.koin.core)
+
+    // Koin for Android
+    implementation(libs.koin.android)
+
+    // Koin for Jetpack Compose
+    implementation(libs.koin.androidx.compose)
+
+
+
+    // Optional: Koin for Navigation (if you're using Jetpack Navigation)
+    implementation(libs.koin.androidx.navigation)
+
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")

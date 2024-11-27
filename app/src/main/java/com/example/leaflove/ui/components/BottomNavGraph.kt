@@ -17,16 +17,17 @@ import com.example.leaflove.ui.screen.testing.TestingScreen
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun BottomNavGraph(
     navController: NavHostController
 ) {
-    val weatherViewModel: WeatherViewModel = WeatherViewModel();
-    val locViewModel: LocationViewModel = LocationViewModel();
+    val weatherViewModel: WeatherViewModel = koinViewModel();
+    val locViewModel: LocationViewModel = koinViewModel();
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp // Height of the screen in dp
-    val plant = PlantViewModel();
+    val plant = koinViewModel<PlantViewModel>();
 
     // Set a responsive offset, for example, 10% of the screen height
     val responsiveOffset = screenHeight * 0.1f // Adjust the factor as needed
