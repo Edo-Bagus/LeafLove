@@ -1,6 +1,5 @@
 package com.example.leaflove.ui.screen.encyclopedia
 
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,10 +17,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,14 +30,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
 import com.example.leaflove.data.entities.PlantDetailEntity
 import com.example.leaflove.ui.theme.BasicGreen
 
 @Composable
-fun EncyclopediaDetailScreen(navHost: NavHostController, plantDetailEntity: PlantDetailEntity)
+fun EncyclopediaDetailScreen(navHost: NavHostController, plantDetailEntity: State<PlantDetailEntity>)
 {
     BoxWithConstraints (
         modifier = Modifier
@@ -69,32 +67,15 @@ fun EncyclopediaDetailScreen(navHost: NavHostController, plantDetailEntity: Plan
             {
                 Column (modifier = Modifier
                     .offset(x = screenWidth * 0.1f, y = screenHeight * 0.1f)){
-                    Text(text = "${plantDetailEntity.common_name}",
-                        color = Color.White,
-                        fontSize = 24.sp,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(0.dp,10.dp,10.dp,0.dp),
-                        textAlign = TextAlign.Justify,
-                        maxLines = 2,
-                        softWrap = false,
-                        overflow = TextOverflow.Ellipsis)
-
+                    Text(text = "Nama ${plantDetailEntity.value.common_name}", color = Color.White, fontSize = 24.sp)
                     Spacer(modifier = Modifier.weight(0.1f))
-                    Text(text = "${plantDetailEntity.description}",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(0.dp,10.dp,10.dp,0.dp),
-                        textAlign = TextAlign.Justify)
-
+                    Text(text = "Deskripsi ${plantDetailEntity.value.description}", color = Color.White)
                     Spacer(modifier = Modifier.weight(0.1f))
                     Text(text = "Tips", color = Color.White, fontSize = 24.sp)
                     Spacer(modifier = Modifier.weight(0.1f))
-                    Text(text = "Volume Water Requirement ${plantDetailEntity.volume_water_requirement}", color = Color.White)
-                    Text(text = "Place indoor/outdoor ${plantDetailEntity.indoor}", color = Color.White)
-                    Text(text = "Sunlight ${plantDetailEntity.sunlight}", color = Color.White)
+                    Text(text = "Volume Water Requirement ${plantDetailEntity.value.volume_water_requirement}", color = Color.White)
+                    Text(text = "Place indoor/outdoor ${plantDetailEntity.value.indoor}", color = Color.White)
+                    Text(text = "Sunlight ${plantDetailEntity.value.sunlight}", color = Color.White)
                     Spacer(modifier = Modifier.weight(0.5f))
                     Button(
                         onClick = { /*TODO*/ },

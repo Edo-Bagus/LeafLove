@@ -6,27 +6,20 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.leaflove.data.database.AppDatabase
+import com.example.leaflove.di.appModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
 class MyApp : Application() {
-    companion object {
-        private lateinit var instance: MyApp
-        fun getDatabase(): AppDatabase {
-            return instance.database
-        }
-    }
-
-    private lateinit var database: AppDatabase
 
     override fun onCreate() {
         super.onCreate()
-        instance = this // Initialize the singleton instance
-        // Initialize the Room database here
-        database = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "plant-database"
-        ).build()
+
+        // Start Koin
+        startKoin {
+            androidContext(this@MyApp) // Provide the application context
+            modules(appModule) // Load your Koin modules
+        }
     }
 
-    // Provide a method to access the DAO
-    fun getPlantSpeciesDao() = database.plantSpeciesDao()
 }

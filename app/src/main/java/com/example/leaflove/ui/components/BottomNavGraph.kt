@@ -1,6 +1,5 @@
 package com.example.leaflove.ui.components
 
-import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -14,17 +13,22 @@ import com.example.leaflove.ui.screen.bottomNav.MyPlantScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaDetailScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaMainScreen
 import com.example.leaflove.ui.screen.headerNav.TransactionScreen
+import com.example.leaflove.ui.screen.testing.TestingScreen
 import com.example.leaflove.ui.screen.storescreen.StoreScreen
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
-    // Initialize view models
-    val weatherViewModel = WeatherViewModel()
-    val locationViewModel = LocationViewModel()
-    val plantViewModel = PlantViewModel()
+fun BottomNavGraph(
+    navController: NavHostController
+) {
+    val weatherViewModel: WeatherViewModel = koinViewModel();
+    val locViewModel: LocationViewModel = koinViewModel();
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp // Height of the screen in dp
+    val plant = koinViewModel<PlantViewModel>();
 
     // Get screen height for potential responsive design (currently unused)
     val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
@@ -35,13 +39,9 @@ fun BottomNavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = BottomBarScreen.Home.route
     ) {
-        // Home screen
-        composable(route = BottomBarScreen.Home.route) {
-            HomeScreen(
-                navHost = navController,
-                weatherViewModel = weatherViewModel,
-                locationViewModel = locationViewModel
-            )
+        composable(route = BottomBarScreen.Home.route)
+        {
+            HomeScreen(navHost = navController, weatherViewModel, locViewModel)
         }
 
         // Augmented Reality (Camera) screen
@@ -58,18 +58,14 @@ fun BottomNavGraph(navController: NavHostController) {
         {
             StoreScreen()
         }
-
-        // Encyclopedia main screen
-        composable(route = "searchscreen") {
-            EncyclopediaMainScreen(navHost = navController, viewModel = plantViewModel)
+        composable("searchscreen")
+        {
+            EncyclopediaMainScreen(navHost = navController, viewModel = plant)
         }
-
-        // Encyclopedia detail screen
-        composable(route = "detailscreen") {
-            EncyclopediaDetailScreen(
-                navHost = navController,
-                plantDetailEntity = plantViewModel.plantDetail.value
-            )
+        
+        composable("detailscreen")
+        {  
+            EncyclopediaDetailScreen(navHost = navController, plant.plantDetail.value)
         }
 
         // Account screen

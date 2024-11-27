@@ -22,6 +22,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.BuildConfig
+import com.example.leaflove.data.dao.PlantDetailDao_Impl
+import com.example.leaflove.data.dao.PlantSpeciesDao_Impl
+import com.example.leaflove.ui.components.Plant
 import com.example.leaflove.ui.screen.MainScreen
 import com.example.leaflove.ui.screen.account.AccountScreen
 import com.example.leaflove.ui.screen.bottomNav.MyPlantScreen
@@ -38,6 +41,10 @@ import com.example.leaflove.viewmodel.WeatherViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.annotation.KoinInternalApi
+import org.koin.viewmodel.resolveViewModel
+
 
 class MainActivity : ComponentActivity() {
     private val requestCameraPermissionLauncher =
@@ -65,10 +72,11 @@ class MainActivity : ComponentActivity() {
 
 
 }
+@OptIn(KoinInternalApi::class)
 @Composable
 fun LeafLove(authViewModel: AuthViewModel) {
-    val appAuthViewModel = authViewModel;
-    val plantViewModel = PlantViewModel();
+    val appAuthViewModel = koinViewModel<AuthViewModel>();
+    val plantViewModel:PlantViewModel = koinViewModel();
     val context = LocalContext.current
     val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
     // Check if the user is already logged in
