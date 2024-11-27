@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,6 +45,9 @@ fun MyPlantScreen(navHost: NavHostController){
         Plant("Cactus", "Needs Water", R.drawable.contoh_tanaman),
         Plant("Monstera", "Growing", R.drawable.contoh_tanaman),
         Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
+        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
+        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
+        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
         Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman)
     )
 
@@ -59,18 +64,14 @@ fun MyPlantScreen(navHost: NavHostController){
         ) {
             Column {
                 Text(
-                    text = "Hai",
+                    text = "My Plant",
+                    fontWeight = FontWeight.Bold,
                     color = BasicGreen,
                     fontSize = 32.sp,
                     modifier = Modifier.offset(x = screenWidth * 0.1f)
-                )
-                Text(
-                    text = "Week 1",
-                    color = Color.LightGray,
-                    fontSize = 18.sp,
-                    modifier = Modifier.offset(x = screenWidth * 0.1f)
-                )
 
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 Row {
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = "Temperature")
@@ -78,6 +79,16 @@ fun MyPlantScreen(navHost: NavHostController){
                     Text(text = "Weather")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = "Humidity")
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Row {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = "23*")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = "rain")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = "12")
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }

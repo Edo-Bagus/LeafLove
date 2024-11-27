@@ -27,16 +27,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.leaflove.R
 
-// Data class untuk Plant
-data class Plant(
+data class Store(
     val nama: String,
-    val status: String,
+    val price: String,
     val image: Int
 )
 
 // Fungsi untuk menampilkan satu kartu Plant
 @Composable
-fun MyPlantCard(plant: Plant, screenHeight: Dp, screenWidth: Dp) {
+fun StoreCard(store: Store, screenHeight: Dp, screenWidth: Dp) {
     Column(
         modifier = Modifier
             .padding(8.dp)
@@ -45,8 +44,6 @@ fun MyPlantCard(plant: Plant, screenHeight: Dp, screenWidth: Dp) {
     ) {
         Box(
             modifier = Modifier
-
-
                 .shadow(
                     elevation = 1.dp,
                     shape = RoundedCornerShape(10.dp),
@@ -69,25 +66,29 @@ fun MyPlantCard(plant: Plant, screenHeight: Dp, screenWidth: Dp) {
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Bottom,
 
-            ) {
+                ) {
                 Image(
                     painter = painterResource(R.drawable.contoh_tanaman),
                     contentDescription = null,
                     modifier = Modifier.size(height = screenHeight * 0.15f,width= screenWidth * 0.30f ))
 
-                Text(text = plant.nama,
+                Text(text = store.nama,
                     color = Color.Black,
                     fontSize = 18.sp,
                     textAlign = TextAlign.Start,
                     fontFamily = FontFamily.SansSerif)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = plant.status,
+                    text = store.price,
                     color = Color.Gray,
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Start,
-                    fontFamily = FontFamily.Default
-                )
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.End,
+                    fontFamily = FontFamily.Default,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.End)
+                        .padding(end = 8.dp)
+                    )
             }
         }
     }
@@ -96,22 +97,22 @@ fun MyPlantCard(plant: Plant, screenHeight: Dp, screenWidth: Dp) {
 
 // Fungsi untuk menampilkan grid dari PlantCard
 @Composable
-fun MyPlantGrid(plants: List<Plant>, screenHeight: Dp, screenWidth: Dp) {
+fun StoreGrid(stores: List<Store>, screenHeight: Dp, screenWidth: Dp) {
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2), // Menampilkan 2 kolom
-            contentPadding = PaddingValues(8.dp)
-        ) {
-            items(plants) { plant ->
-                MyPlantCard(plant = plant, screenHeight, screenWidth)
-            }
-
-            item {
-
-                // Menambahkan ruang ekstra setelah grid
-                Spacer(modifier = Modifier.height(100.dp))  // Ini memberikan ruang ekstra di bagian bawah
-            }
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2), // Menampilkan 2 kolom
+        contentPadding = PaddingValues(8.dp)
+    ) {
+        items(stores) { store ->
+            StoreCard(store = store, screenHeight, screenWidth)
         }
+
+        item {
+
+            // Menambahkan ruang ekstra setelah grid
+            Spacer(modifier = Modifier.height(100.dp))  // Ini memberikan ruang ekstra di bagian bawah
+        }
+    }
 
 
 }
