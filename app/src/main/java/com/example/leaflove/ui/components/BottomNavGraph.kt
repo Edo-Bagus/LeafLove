@@ -13,6 +13,7 @@ import com.example.leaflove.ui.screen.bottomNav.MyPlantScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaDetailScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaMainScreen
 import com.example.leaflove.ui.screen.headerNav.TransactionScreen
+import com.example.leaflove.ui.screen.plantscreen.addmyplant
 import com.example.leaflove.ui.screen.testing.TestingScreen
 import com.example.leaflove.ui.screen.storescreen.StoreScreen
 import com.example.leaflove.viewmodel.LocationViewModel
@@ -66,6 +67,11 @@ fun BottomNavGraph(
         composable("detailscreen")
         {  
             EncyclopediaDetailScreen(navHost = navController, plant.plantDetail)
+        }
+
+        composable("addmyplant")
+        {
+            addmyplant(navHost = navController)
         }
 
         // Account screen
