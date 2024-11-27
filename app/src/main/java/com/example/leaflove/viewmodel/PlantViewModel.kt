@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.leaflove.MyApp
+import com.example.leaflove.data.dao.PlantDetailDao
+import com.example.leaflove.data.dao.PlantSpeciesDao
 import com.example.leaflove.data.entities.PlantDetailEntity
 import com.example.leaflove.data.entities.PlantSpeciesEntity
 import com.example.leaflove.data.map.PlantDetailMapper.plantDetailToEntity
@@ -29,7 +31,9 @@ import kotlinx.coroutines.launch
 
 
 
-class PlantViewModel: ViewModel() {
+class PlantViewModel(private val plantSpeciesDao: PlantSpeciesDao,
+                     private val plantDetailDao: PlantDetailDao
+): ViewModel() {
 
     init {
         fetchPlantList()
@@ -45,8 +49,7 @@ class PlantViewModel: ViewModel() {
         }
     }
 
-    val plantSpeciesDao = MyApp.getDatabase().plantSpeciesDao()
-    val plantDetailDao = MyApp.getDatabase().plantDetailDao()
+
     private var plantRepository = PlantRepository(plantSpeciesDao, plantDetailDao)
 
     private val plantServices: PerenualAPIService = PerenualAPIService.create()
@@ -177,6 +180,7 @@ class PlantViewModel: ViewModel() {
                 } else {
                     val response = plantServices.getPlantDetail(id)
                     insertIntoPlantDetailsRoom(response)
+                    _plantDetail.value = plantRepository.getPlantDetails(id)
                 }
             } catch (e: Exception){
             e.message?.let{ Log.e("Plant Detail Error", it)}

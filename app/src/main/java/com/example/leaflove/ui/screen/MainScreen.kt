@@ -1,5 +1,6 @@
 package com.example.leaflove.ui.screen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,31 +36,37 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.ui.components.BottomBarScreen
 import com.example.leaflove.ui.components.BottomNavGraph
-import com.example.leaflove.ui.components.header
+import com.example.leaflove.ui.components.Header
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.AuthViewModel
 
 @Composable
 fun MainScreen(authViewModel: AuthViewModel) {
+    // Create NavController for navigation
     val navController = rememberNavController()
     val configuration = LocalConfiguration.current
 
+    // Screen dimensions for responsive design
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
 
-    Box(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
-
-        // Content (bottom of the hierarchy)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+    ) {
+        // Main content: Navigation graph
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .zIndex(0f)
+                .zIndex(0f) // Base layer for the navigation content
         ) {
-            BottomNavGraph(navController)
+            BottomNavGraph(navController = navController)
         }
 
-        header(
-            navHost = navController,
+        // Header component (optional, above navigation content)
+        Header(
+            navController = navController,
             modifier = Modifier
                 .zIndex(2f)
                 .fillMaxWidth()
@@ -68,39 +75,40 @@ fun MainScreen(authViewModel: AuthViewModel) {
             screenHeight = screenHeight
         )
 
-        // BottomBar
+        // Bottom navigation bar
         BottomBar(
             navController = navController,
             modifier = Modifier
                 .zIndex(2f)
                 .align(Alignment.BottomCenter),
-            screenheight = screenHeight
+            screenHeight = screenHeight
         )
     }
 }
 
 @Composable
-fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier, screenheight:Dp) {
+fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier, screenHeight: Dp) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.Camera,
         BottomBarScreen.MyPlant
     )
 
-    val navStackBackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navStackBackEntry?.destination
+    // Observe current navigation destination
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry?.destination
 
     Row(
         modifier = modifier
-//            .padding(10.dp)
             .background(Color.White)
             .fillMaxWidth()
-            .height(screenheight*0.1f), // Sesuaikan tinggi dari BottomBar
+            .height(screenHeight * 0.1f), // Dynamic height adjustment
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Add items dynamically for each screen
         screens.forEach { screen ->
-            AddItem(
+            BottomBarItem(
                 screen = screen,
                 currentDestination = currentDestination,
                 navController = navController
@@ -110,43 +118,43 @@ fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier, s
 }
 
 @Composable
-fun AddItem(
+fun BottomBarItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
-    val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+    // Check if the current screen is selected
+    val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
-    val background =
-        if (selected) BasicGreen else Color.Transparent
-
-    val contentColor =
-        if (selected) Color.White else Color.Black
+    val backgroundColor = if (isSelected) BasicGreen else Color.Transparent
+    val contentColor = if (isSelected) Color.White else Color.Black
 
     Box(
         modifier = Modifier
             .height(40.dp)
             .clip(CircleShape)
-            .background(background)
-            .clickable(onClick = {
+            .background(backgroundColor)
+            .clickable {
+                // Navigate to the selected screen
                 navController.navigate(screen.route) {
                     popUpTo(navController.graph.findStartDestination().id)
-                    launchSingleTop = true
+                    launchSingleTop = true // Avoid multiple instances of the same screen
                 }
-            })
+            }
     ) {
         Row(
-            modifier = Modifier
-                .padding(10.dp),
+            modifier = Modifier.padding(10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            // Display icon
             Icon(
-                painter = painterResource(id = if (selected) screen.icon_focused else screen.icon),
-                contentDescription = "icon",
+                painter = painterResource(id = if (isSelected) screen.iconFocused else screen.icon),
+                contentDescription = "${screen.title} icon",
                 tint = contentColor
             )
-            AnimatedVisibility(visible = selected) {
+            // Display text only if selected
+            AnimatedVisibility(visible = isSelected) {
                 Text(
                     text = screen.title,
                     color = contentColor
@@ -155,6 +163,7 @@ fun AddItem(
         }
     }
 }
+
 
 
 @Composable

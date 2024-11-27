@@ -1,8 +1,10 @@
 package com.example.leaflove.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.leaflove.data.models.UserDataModel
 import com.google.firebase.auth.FirebaseAuth
 
 class AuthViewModel: ViewModel() {
@@ -10,6 +12,7 @@ class AuthViewModel: ViewModel() {
 
     private val _authState = MutableLiveData<AuthState>()
     val authState: LiveData<AuthState> = _authState
+
 
     fun checkAuthStatus(){
         if(auth.currentUser == null){

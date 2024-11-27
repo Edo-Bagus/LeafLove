@@ -1,6 +1,7 @@
 package com.example.leaflove.ui.screen.bottomNav
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,8 @@ import io.github.sceneview.rememberNodes
 import io.github.sceneview.rememberOnGestureListener
 import io.github.sceneview.rememberView
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,16 +57,13 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
 
-private const val kModelFile = "models/trees.glb"
 
 @Composable
-fun ARScreen(navHost: NavHostController){
-    // A surface container using the 'background' color from the theme
+fun ARScreen() {
+    Log.d("Cek Model", "hola")
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
-        // The destroy calls are automatically made when their disposable effect leaves
-        // the composition or its key changes.
         val engine = rememberEngine()
         val modelLoader = rememberModelLoader(engine)
         val materialLoader = rememberMaterialLoader(engine)
@@ -73,11 +73,19 @@ fun ARScreen(navHost: NavHostController){
         val collisionSystem = rememberCollisionSystem(view)
 
         var planeRenderer by remember { mutableStateOf(true) }
-
         var trackingFailureReason by remember {
             mutableStateOf<TrackingFailureReason?>(null)
         }
         var frame by remember { mutableStateOf<Frame?>(null) }
+        var modelPlaced by remember { mutableStateOf(false) }
+        var selectedModel by remember { mutableStateOf("") } // No model selected initially
+
+        val context = LocalContext.current
+        val modelFiles = remember {
+            // Use context.assets to list the files in the "models" folder
+            context.assets.list("models")?.filter { it.endsWith(".glb") }?.map { "models/$it" } ?: emptyList()
+        }
+
         ARScene(
             modifier = Modifier.fillMaxSize(),
             childNodes = childNodes,
@@ -102,23 +110,11 @@ fun ARScreen(navHost: NavHostController){
             },
             onSessionUpdated = { session, updatedFrame ->
                 frame = updatedFrame
-
-                if (childNodes.isEmpty()) {
-                    updatedFrame.getUpdatedPlanes()
-                        .firstOrNull { it.type == Plane.Type.HORIZONTAL_UPWARD_FACING }
-                        ?.let { it.createAnchorOrNull(it.centerPose) }?.let { anchor ->
-                            childNodes += createAnchorNode(
-                                engine = engine,
-                                modelLoader = modelLoader,
-                                materialLoader = materialLoader,
-                                anchor = anchor
-                            )
-                        }
-                }
             },
             onGestureListener = rememberOnGestureListener(
                 onSingleTapConfirmed = { motionEvent, node ->
-                    if (node == null) {
+                    // Ensure a model is selected before allowing placement
+                    if (node == null && !modelPlaced && selectedModel.isNotEmpty()) {
                         val hitResults = frame?.hitTest(motionEvent.x, motionEvent.y)
                         hitResults?.firstOrNull {
                             it.isValid(
@@ -132,41 +128,98 @@ fun ARScreen(navHost: NavHostController){
                                     engine = engine,
                                     modelLoader = modelLoader,
                                     materialLoader = materialLoader,
-                                    anchor = anchor
+                                    anchor = anchor,
+                                    selectedModel = selectedModel // Pass the selected model
                                 )
+                                modelPlaced = true // Mark the model as placed
                             }
                     }
                 })
         )
+
+        var expanded by remember { mutableStateOf(false) }
+
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+        ) {
+            Button(onClick = { expanded = true }) { // Toggle dropdown visibility
+                Text(text = if (selectedModel.isEmpty()) "Select Model" else selectedModel)
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                modelFiles.forEach { model ->
+                    DropdownMenuItem(
+                        text = { Text(model) },
+                        onClick = {
+                            selectedModel = model
+                            expanded = false // Close dropdown after selection
+                        }
+                    )
+                }
+            }
+        }
+
         Text(
             modifier = Modifier
-                .systemBarsPadding()
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
-                .padding(top = 16.dp, start = 32.dp, end = 32.dp),
+                .padding(
+                    top = 72.dp, // Adjust padding to account for both header and dropdown
+                    start = 32.dp,
+                    end = 32.dp
+                ),
             textAlign = TextAlign.Center,
             fontSize = 28.sp,
             color = Color.White,
             text = trackingFailureReason?.let {
                 it.getDescription(LocalContext.current)
             } ?: if (childNodes.isEmpty()) {
-                "Point your phone down at an empty space, and move it around slowly"
+                if (selectedModel.isEmpty()) {
+                    "Select a model to begin"
+                } else {
+                    "Point your phone down at an empty space, and move it around slowly"
+                }
             } else {
                 "Tap anywhere to add model"
             }
         )
+
+        // Add a button to remove the placed model
+        if (modelPlaced) {
+            Button(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(16.dp),
+                onClick = {
+                    childNodes.clear() // Remove all child nodes (models)
+                    planeRenderer = true // Re-enable plane renderer for placement
+                    modelPlaced = false // Reset placement status
+                }
+            ) {
+                Text(text = "Remove Model")
+            }
+        }
     }
 }
 
+// Updated function to accept the selected model
 fun createAnchorNode(
     engine: Engine,
     modelLoader: ModelLoader,
     materialLoader: MaterialLoader,
-    anchor: Anchor
+    anchor: Anchor,
+    selectedModel: String
 ): AnchorNode {
     val anchorNode = AnchorNode(engine = engine, anchor = anchor)
+    Log.d("Cek Model", selectedModel)
     val modelNode = ModelNode(
-        modelInstance = modelLoader.createModelInstance(kModelFile),
+        modelInstance = modelLoader.createModelInstance(selectedModel),
         // Scale to fit in a 0.5 meters cube
         scaleToUnits = 0.5f
     ).apply {
@@ -192,3 +245,4 @@ fun createAnchorNode(
     }
     return anchorNode
 }
+
