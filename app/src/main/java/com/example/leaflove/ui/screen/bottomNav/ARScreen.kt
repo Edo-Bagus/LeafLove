@@ -1,4 +1,4 @@
-package com.example.leaflove.ui.compose
+package com.example.leaflove.ui.screen.bottomNav
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
