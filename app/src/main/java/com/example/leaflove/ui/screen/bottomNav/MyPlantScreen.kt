@@ -34,7 +34,7 @@ import com.example.leaflove.ui.components.Plant
 import com.example.leaflove.ui.theme.BasicGreen
 
 @Composable
-fun myPlantScreen(navHost: NavHostController){
+fun MyPlantScreen(navHost: NavHostController){
     val image3 = painterResource(R.drawable.menumyplant)
     val image4 = painterResource(R.drawable.footermyplant)
     var username by remember { mutableStateOf("") }

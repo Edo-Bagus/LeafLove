@@ -24,7 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.leaflove.BuildConfig
 import com.example.leaflove.ui.screen.MainScreen
 import com.example.leaflove.ui.screen.account.AccountScreen
-import com.example.leaflove.ui.screen.bottomNav.myPlantScreen
+import com.example.leaflove.ui.screen.bottomNav.MyPlantScreen
 import com.example.leaflove.ui.screen.headerNav.TransactionScreen
 import com.example.leaflove.ui.screen.loginscreen.loginScreen
 import com.example.leaflove.ui.screen.loginscreen.registerScreen
@@ -52,7 +52,6 @@ class MainActivity : ComponentActivity() {
         requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         enableEdgeToEdge()
         val authviewmodel = AuthViewModel();
-        Log.d("test", BuildConfig.WEATHER_API_KEY)
 
         setContent {
             val window = rememberWindowSizeClass()
@@ -67,42 +66,6 @@ class MainActivity : ComponentActivity() {
 
 }
 @Composable
-//fun LeafLove(){
-//    val context = LocalContext.current
-//    val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-//
-//    // Check if the user is already logged in
-//    var isLoggedIn by remember { mutableStateOf(sharedPref.getBoolean("isLoggedIn", false)) }
-//
-//    // Display either Login or Main screen based on the login state
-//    if (isLoggedIn) {
-//    val weatherViewModel: WeatherViewModel = WeatherViewModel();
-//    val locViewModel: LocationViewModel = LocationViewModel();
-//    val navController = rememberNavController()
-//
-//    NavHost(navController = navController, startDestination = "mainscreen") {
-//        composable("loginscreen") {
-//            loginScreen(navController)
-//        }
-//        composable("signupscreen"){
-//            registerScreen(navHost = navController)
-//        }
-//        composable("mainscreen"){
-//            MainScreen()
-//        }
-//        composable("StoreScreen"){
-//            StoreScreen(navHost = navController)
-//        }
-//        composable("TransactionScreen"){
-//            TransactionScreen(navHost = navController)
-//        }
-//        composable("AccountScreen"){
-//            AccountScreen(navHost = navController)
-//        }
-//        }
-//    }
-//}
-
 fun LeafLove(authViewModel: AuthViewModel) {
     val appAuthViewModel = authViewModel;
     val plantViewModel = PlantViewModel();

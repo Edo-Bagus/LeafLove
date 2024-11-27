@@ -4,12 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -21,11 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.consumeAllChanges
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -39,17 +33,16 @@ import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.R
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.theme.ButtonGreen
-import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, locViewModel: LocationViewModel) {
+fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel) {
 
 
     val context = LocalContext.current
-    val locationUtils = remember { LocationUtils(context, locViewModel) }
-    val location = locViewModel.locationState
+    val locationUtils = remember { LocationUtils(context, locationViewModel) }
+    val location = locationViewModel.locationState
 
     val cuaca = weatherViewModel.weatherState.value.weather?.firstOrNull()?.main ?: "No weather data"
     val humidity = weatherViewModel.weatherState.value.main?.humidity ?: "Test"
@@ -61,7 +54,6 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
         if (locationUtils.hasLocationPermission(context)) {
             locationUtils.requestLocationUpdate()
             weatherViewModel.fetchWeather(location.value.latitude, location.value.longitude)
-            Log.d("WTF", weatherViewModel.toString())
         } else {
             requestLocationPermissions(context)
         }
@@ -145,7 +137,11 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                         ){
                             Column (
                                 modifier = Modifier
-                                    .align(Alignment.Center),
+                                    .align(Alignment.Center)
+                                    .clickable
+                                    {
+                                        navHost.navigate("transaction")
+                                    },
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ){
@@ -172,7 +168,11 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                         ){
                             Column (
                                 modifier = Modifier
-                                    .align(Alignment.Center),
+                                    .align(Alignment.Center)
+                                    .clickable
+                                    {
+                                        navHost.navigate("camera")
+                                    },
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ){
@@ -199,7 +199,11 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                         ){
                             Column (
                                 modifier = Modifier
-                                    .align(Alignment.Center),
+                                    .align(Alignment.Center)
+                                    .clickable
+                                    {
+                                        navHost.navigate("my_plant")
+                                    },
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ){

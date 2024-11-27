@@ -1,16 +1,15 @@
 package com.example.leaflove.ui.components
 
-import androidx.compose.animation.slideInVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.leaflove.ui.compose.Testing
-import com.example.leaflove.ui.screen.bottomNav.HomeScreen
+import com.example.leaflove.ui.screen.account.AccountScreen
 import com.example.leaflove.ui.screen.bottomNav.ARScreen
-import com.example.leaflove.ui.screen.bottomNav.myPlantScreen
+import com.example.leaflove.ui.screen.bottomNav.HomeScreen
+import com.example.leaflove.ui.screen.bottomNav.MyPlantScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaDetailScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaMainScreen
 import com.example.leaflove.ui.screen.headerNav.TransactionScreen
@@ -19,54 +18,61 @@ import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 
 @Composable
-fun BottomNavGraph(
-    navController: NavHostController
-) {
-    val weatherViewModel: WeatherViewModel = WeatherViewModel();
-    val locViewModel: LocationViewModel = LocationViewModel();
-    val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp // Height of the screen in dp
-    val plant = PlantViewModel();
+fun BottomNavGraph(navController: NavHostController) {
+    // Initialize view models
+    val weatherViewModel = WeatherViewModel()
+    val locationViewModel = LocationViewModel()
+    val plantViewModel = PlantViewModel()
 
-    // Set a responsive offset, for example, 10% of the screen height
-    val responsiveOffset = screenHeight * 0.1f // Adjust the factor as needed
+    // Get screen height for potential responsive design (currently unused)
+    val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
+    val responsiveOffset = screenHeightDp * 0.1f
+
+    // Define navigation graph
     NavHost(
         navController = navController,
-        startDestination = "searchscreen",
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .offset(y = -responsiveOffset)
+        startDestination = BottomBarScreen.Home.route
     ) {
-        composable(route = BottomBarScreen.Home.route)
-        {
-            HomeScreen(navHost = navController, weatherViewModel, locViewModel)
+        // Home screen
+        composable(route = BottomBarScreen.Home.route) {
+            HomeScreen(
+                navHost = navController,
+                weatherViewModel = weatherViewModel,
+                locationViewModel = locationViewModel
+            )
         }
-        composable(route = BottomBarScreen.Camera.route)
-        {
+
+        // Augmented Reality (Camera) screen
+        composable(route = BottomBarScreen.Camera.route) {
             ARScreen(navHost = navController)
         }
-        composable(route = BottomBarScreen.MyPlant.route)
-        {
-            myPlantScreen(navHost = navController)
-        }
-        composable("testing"){
-            Testing(navHost = navController, plant)
+
+        // My Plants screen
+        composable(route = BottomBarScreen.MyPlant.route) {
+            MyPlantScreen(navHost = navController)
         }
 
-        composable("transaction")
-        {
+        // Transaction screen
+        composable(route = "transaction") {
             TransactionScreen(navHost = navController)
         }
-        composable("searchscreen")
-        {
-            EncyclopediaMainScreen(navHost = navController, viewModel = plant)
+
+        // Encyclopedia main screen
+        composable(route = "searchscreen") {
+            EncyclopediaMainScreen(navHost = navController, viewModel = plantViewModel)
         }
-        
-        composable("detailscreen")
-        {  
-            EncyclopediaDetailScreen(navHost = navController, plant.plantDetail.value)
+
+        // Encyclopedia detail screen
+        composable(route = "detailscreen") {
+            EncyclopediaDetailScreen(
+                navHost = navController,
+                plantDetailEntity = plantViewModel.plantDetail.value
+            )
+        }
+
+        // Account screen
+        composable(route = "account"){
+            AccountScreen(navHost = navController)
         }
     }
-
-
 }
