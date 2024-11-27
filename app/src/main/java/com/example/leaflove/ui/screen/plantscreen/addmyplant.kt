@@ -62,12 +62,13 @@ import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.AuthViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.compose.koinInject
 
 
 @Composable
 fun addmyplant(navHost: NavHostController)
 {
-    var authViewModel: AuthViewModel = koinViewModel()
+    var authViewModel: AuthViewModel = koinInject()
 
     var customfont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),

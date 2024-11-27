@@ -13,6 +13,7 @@ import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 
@@ -39,8 +40,9 @@ var appModule = module {
     }
 
     // Provide the ViewModels, injecting the repository
-    single { AuthViewModel() } // If AuthViewModel needs dependencies, pass them here
-    single { PlantViewModel(get(), get()) } // Injecting PlantRepository into PlantViewModel
+    single { AuthViewModel()} // If AuthViewModel needs dependencies, pass them here
+    single { PlantViewModel(get()) } // Injecting PlantRepository into PlantViewModel
     single { LocationViewModel() }
     single { WeatherViewModel() }
+
 }

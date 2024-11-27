@@ -31,9 +31,7 @@ import kotlinx.coroutines.launch
 
 
 
-class PlantViewModel(private val plantSpeciesDao: PlantSpeciesDao,
-                     private val plantDetailDao: PlantDetailDao
-): ViewModel() {
+class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() {
 
     init {
         fetchPlantList()
@@ -50,7 +48,6 @@ class PlantViewModel(private val plantSpeciesDao: PlantSpeciesDao,
     }
 
 
-    private var plantRepository = PlantRepository(plantSpeciesDao, plantDetailDao)
 
     private val plantServices: PerenualAPIService = PerenualAPIService.create()
 

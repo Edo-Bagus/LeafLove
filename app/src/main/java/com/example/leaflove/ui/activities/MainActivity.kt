@@ -41,6 +41,7 @@ import com.example.leaflove.viewmodel.WeatherViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.annotation.KoinInternalApi
 import org.koin.viewmodel.resolveViewModel
@@ -62,9 +63,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val window = rememberWindowSizeClass()
-            LeafLoveTheme (window){
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LeafLove(authviewmodel)
+            LeafLoveTheme (window) {
+                KoinAndroidContext {
+                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                        LeafLove(authviewmodel)
+                    }
                 }
             }
         }
