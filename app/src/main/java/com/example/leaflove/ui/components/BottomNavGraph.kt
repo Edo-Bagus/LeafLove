@@ -65,7 +65,7 @@ fun BottomNavGraph(
         
         composable("detailscreen")
         {  
-            EncyclopediaDetailScreen(navHost = navController, plant.plantDetail.value)
+            EncyclopediaDetailScreen(navHost = navController, plant.plantDetail)
         }
 
         // Account screen
