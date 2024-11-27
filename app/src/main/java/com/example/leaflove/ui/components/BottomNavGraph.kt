@@ -44,7 +44,7 @@ fun BottomNavGraph(navController: NavHostController) {
 
         // Augmented Reality (Camera) screen
         composable(route = BottomBarScreen.Camera.route) {
-            ARScreen(navHost = navController)
+            ARScreen()
         }
 
         // My Plants screen
