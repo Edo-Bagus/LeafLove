@@ -38,7 +38,7 @@ fun BottomNavGraph(
     // Define navigation graph
     NavHost(
         navController = navController,
-        startDestination = "addmyplant"
+        startDestination = BottomBarScreen.Home.route
     ) {
         composable(route = BottomBarScreen.Home.route)
         {
