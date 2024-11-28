@@ -44,13 +44,13 @@ fun ModelARCard(encyclo: PlantSpeciesEntity, screenHeight: Dp, screenWidth: Dp) 
             .height(sizeOuter)
             .width(sizeOuter)
             .background(Color.White)
-            .padding(paddingCenter)  // Padding luar untuk aesthetics
+            .padding(paddingCenter)
     ) {
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
                 .size(sizeInner)
-                .align(Alignment.Center)  // Menggunakan align untuk menengahkan
+                .align(Alignment.Center)
         ) {
             encyclo.default_image?.let { imageUrl ->
                 Log.d("Check Image", imageUrl)
