@@ -43,6 +43,7 @@ import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.theme.ButtonGreen
 import com.example.leaflove.utils.calculatePlantAgeInDays
+import com.example.leaflove.utils.formatDate
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.google.firebase.Timestamp
 import org.koin.compose.koinInject
@@ -59,7 +60,6 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
 
     val authViewModel = koinInject<AuthViewModel>()
 
-    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     val plants = mutableListOf<Plant>()
     for(plant in authViewModel.userData.value?.my_plants!!){
@@ -68,8 +68,8 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
             nama = plant.plant_name,
             status = status.name,
             image = R.drawable.contoh_tanaman,
-            to_water = dateFormatter.format(plant.plant_to_be_watered.toDate()),
-            last_water = dateFormatter.format(plant.plant_last_watered.toDate()),
+            to_water = formatDate(plant.plant_to_be_watered),
+            last_water = formatDate(plant.plant_last_watered),
             age = calculatePlantAgeInDays(plant.plant_age)
         ))
     }

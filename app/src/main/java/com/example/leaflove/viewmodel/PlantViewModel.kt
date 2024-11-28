@@ -84,6 +84,7 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
                 val inputStream = context.assets.open("FunFacts.json")
                 val jsonString = inputStream.bufferedReader().use { it.readText() }
                 val funFactList: List<String> = Gson().fromJson(jsonString, object : TypeToken<List<String>>() {}.type)
+                Log.d("Tes: ", funFactList.toString())
                 _funFacts.value = funFactList
                 Log.d("FunFacts", "Fun facts loaded: ${_funFacts.value.size}")
             } catch (e: Exception) {

@@ -36,6 +36,7 @@ import com.example.leaflove.ui.theme.LeafLoveTheme
 import com.example.leaflove.ui.theme.rememberWindowSizeClass
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.LocationViewModel
+import com.example.leaflove.viewmodel.MyPlantViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -83,6 +84,7 @@ fun LeafLove(authViewModel: AuthViewModel) {
     val locViewModel: LocationViewModel = koinViewModel();
     val appAuthViewModel = koinViewModel<AuthViewModel>();
     val plantViewModel:PlantViewModel = koinViewModel();
+    val myPlantViewModel:MyPlantViewModel = koinViewModel()
     val context = LocalContext.current
     val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
     // Check if the user is already logged in

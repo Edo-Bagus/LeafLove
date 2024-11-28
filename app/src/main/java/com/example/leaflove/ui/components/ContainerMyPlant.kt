@@ -1,8 +1,10 @@
 package com.example.leaflove.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -25,7 +27,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
 import com.example.leaflove.R
+import com.example.leaflove.viewmodel.AuthViewModel
+import org.koin.compose.koinInject
 
 // Data class untuk Plant
 data class Plant(
@@ -39,12 +45,20 @@ data class Plant(
 
 // Fungsi untuk menampilkan satu kartu Plant
 @Composable
-fun MyPlantCard(plant: Plant, screenHeight: Dp, screenWidth: Dp) {
+fun MyPlantCard(navHost: NavHostController, plant: Plant, screenHeight: Dp, screenWidth: Dp) {
+    var authViewModel = koinInject<AuthViewModel>()
+
     Column(
         modifier = Modifier
             .padding(8.dp)
             .offset(x = screenWidth * 0.01f)
             .clip(RoundedCornerShape(20.dp))
+            .clickable {
+                // Navigate to the detail page with plant name as an argument
+                Log.d("Tess: ", authViewModel.userData.value?.my_plants?.find { it.plant_name == plant.nama }.toString())
+                authViewModel.selectedPlant.value = authViewModel.userData.value?.my_plants?.find { it.plant_name == plant.nama }
+                navHost.navigate("myplantdetail")
+            }
     ) {
         Box(
             modifier = Modifier
@@ -99,14 +113,14 @@ fun MyPlantCard(plant: Plant, screenHeight: Dp, screenWidth: Dp) {
 
 // Fungsi untuk menampilkan grid dari PlantCard
 @Composable
-fun MyPlantGrid(plants: List<Plant>, screenHeight: Dp, screenWidth: Dp) {
+fun MyPlantGrid(navHost: NavHostController, plants: List<Plant>, screenHeight: Dp, screenWidth: Dp) {
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2), // Menampilkan 2 kolom
             contentPadding = PaddingValues(8.dp)
         ) {
             items(plants) { plant ->
-                MyPlantCard(plant = plant, screenHeight, screenWidth)
+                MyPlantCard(navHost, plant, screenHeight, screenWidth)
             }
 
             item {

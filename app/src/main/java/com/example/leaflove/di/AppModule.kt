@@ -6,9 +6,11 @@ import com.example.leaflove.data.dao.PlantDetailDao_Impl
 import com.example.leaflove.data.dao.PlantSpeciesDao
 import com.example.leaflove.data.dao.PlantSpeciesDao_Impl
 import com.example.leaflove.data.database.AppDatabase
+import com.example.leaflove.data.models.MyPlantModel
 import com.example.leaflove.data.repositories.PlantRepository
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.LocationViewModel
+import com.example.leaflove.viewmodel.MyPlantViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 import org.koin.android.ext.koin.androidContext
@@ -44,5 +46,6 @@ var appModule = module {
     single { PlantViewModel(get()) } // Injecting PlantRepository into PlantViewModel
     single { LocationViewModel() }
     single { WeatherViewModel() }
+    single { MyPlantViewModel(get())}
 
 }

@@ -23,6 +23,9 @@ class AuthViewModel : ViewModel() {
     private val _userData = mutableStateOf<UserDataModel?>(null)
     val userData: MutableState<UserDataModel?> = _userData
 
+    private val _selectedPlant = mutableStateOf<MyPlantModel?>(null)
+    val selectedPlant: MutableState<MyPlantModel?> = _selectedPlant
+
     fun checkAuthStatus() {
         if (auth.currentUser == null) {
             _authState.value = AuthState.Unauthenticated
@@ -43,6 +46,7 @@ class AuthViewModel : ViewModel() {
                 if (task.isSuccessful) {
                     _authState.value = AuthState.Authenticated
                     fetchUserData(email)
+                    Log.d("Firestore", "User data fetched: ${_userData.value}")
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
@@ -98,14 +102,15 @@ class AuthViewModel : ViewModel() {
                         // Manually handle the `my_plants` field if needed
                         val myPlantsList = mutableListOf<MyPlantModel>()
                         val plants = document.get("my_plants") as? List<Map<String, Any>>
+                        Log.d("Firestore", "Plants: $plants")
                         plants?.forEach { plantMap ->
                             val plant = MyPlantModel(
                                 plant_name = plantMap["plant_name"] as? String ?: "",
                                 plant_age = plantMap["plant_age"] as? Timestamp ?: Timestamp.now(),
                                 plant_last_watered = plantMap["plant_last_watered"] as? Timestamp ?: Timestamp.now(),
                                 plant_to_be_watered = plantMap["plant_to_be_watered"] as? Timestamp ?: Timestamp.now(),
-                                plant_fk = plantMap["plant_fk"] as? Int ?: 1,
-                                plant_status = plantMap["plant_status"] as? Int ?: 1
+                                plant_fk = (plantMap["plant_fk"] as? Number)?.toInt() ?: 1,
+                                plant_status = (plantMap["plant_status"] as? Number)?.toInt() ?: 1
                             )
                             myPlantsList.add(plant)
                         }

@@ -56,4 +56,11 @@ fun parseStringList(input: String): List<String> {
     }
 }
 
+fun formatDate(timestamp: Timestamp): String {
+    val instant = timestamp.toDate().toInstant()
+    val date = java.util.Date.from(instant)
+    val dateFormat = java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault())
+    return dateFormat.format(date)
+}
+
 

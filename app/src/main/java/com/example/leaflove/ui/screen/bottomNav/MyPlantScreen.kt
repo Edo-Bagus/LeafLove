@@ -136,7 +136,7 @@ fun MyPlantScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel
                 }
             } else {
                 // Display plants grid
-                MyPlantGrid(plants = plants, screenHeight, screenWidth)
+                MyPlantGrid(navHost, plants = plants, screenHeight, screenWidth)
             }        }
     }
 }
