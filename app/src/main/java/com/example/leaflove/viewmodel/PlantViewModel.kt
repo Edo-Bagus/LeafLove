@@ -209,5 +209,33 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         }
     }
 
+    fun sortPlantList(by: String = "common_name", ascending: Boolean = true) {
+        viewModelScope.launch {
+            try {
+                val sortedPlants = when (by) {
+                    "common_name" -> {
+                        if (ascending) {
+                            plantRepository.getAllPlants().sortedBy { it.common_name }
+                        } else {
+                            plantRepository.getAllPlants().sortedByDescending { it.common_name }
+                        }
+                    }
+                    "scientific_name" -> {
+                        if (ascending) {
+                            plantRepository.getAllPlants().sortedBy { it.scientific_name }
+                        } else {
+                            plantRepository.getAllPlants().sortedByDescending { it.scientific_name }
+                        }
+                    }
+                    else -> _plantList.value // Default: do not sort
+                }
+                _plantList.value = sortedPlants
+            } catch (e: Exception) {
+                e.message?.let { Log.e("Sort Error", it) }
+            }
+        }
+    }
+
+
 
 }
