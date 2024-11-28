@@ -62,6 +62,38 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
     private val _plantList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())
     val plantList = _plantList
 
+    private val _plantSearchList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())
+    val plantSearchList = _plantSearchList
+
+    private val _plantSelectedItem = mutableStateOf<PlantSpeciesEntity?>(null)
+    val plantSelectedItem = _plantSelectedItem
+
+    fun fetchPlantSearchList(query: String){
+        viewModelScope.launch{
+            try{
+                if(query.isBlank()){
+                    clearSearchResults()
+                } else {
+                    _plantSearchList.value = plantRepository.searchSuggestionPlant(query)
+                }
+                    Log.d("plantsearch", _plantSearchList.value.toString())
+
+            } catch (e : Exception){
+                    e.message?.let {Log.e("Plant Error", it)}
+            }
+        }
+    }
+
+
+
+    fun clearSearchResults() {
+        _plantSearchList.value = emptyList()
+    }
+
+
+    fun selectItem(plantSpeciesEntity: PlantSpeciesEntity){
+        _plantSelectedItem.value = plantSpeciesEntity
+    }
 
     fun fetchPlantList() {
         viewModelScope.launch {
