@@ -10,6 +10,7 @@ import com.example.leaflove.data.models.MyPlantModel
 import com.example.leaflove.data.models.UserDataModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.rpc.context.AttributeContext.Auth
 
@@ -137,6 +138,53 @@ class AuthViewModel : ViewModel() {
             updatetoDatabase()
         } else {
             Log.e("Auth", "No user data available to update")
+        }
+    }
+
+    fun updateUserMyPlantLast_Watered(newMyPlant: MyPlantModel){
+        // Reference to the user's document
+        val userRef: DocumentReference? = userData.value?.email?.let {
+            db.collection("users").document(
+                it
+            )
+        }
+
+        // Fetch the document to get the current state of the myPlants array
+        if (userRef != null) {
+            userRef.get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val myPlants = document.get("my_plants") as? List<Map<String, Any>> ?: emptyList()
+
+                        // Find the plant to update
+                        val updatedPlants = myPlants.map { plant ->
+                            if (plant["plant_name"] == newMyPlant.plant_name) {
+                                // Create a new map with the updated last_watered field
+                                plant.toMutableMap().apply {
+                                    this["plant_last_watered"] = Timestamp.now()
+                                }
+                            } else {
+                                plant
+                            }
+                        }
+
+                        // Update the user's document with the modified myPlants array
+                        userRef.update("my_plants", updatedPlants)
+                            .addOnSuccessListener {
+                                // Success
+                                Log.d("Firebase", "Plant updated successfully")
+                            }
+                            .addOnFailureListener { exception ->
+                                // Failure
+                                Log.w("Firebase", "Error updating plant", exception)
+                            }
+                    } else {
+                        Log.w("Firebase", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("Firebase", "Error getting document", exception)
+                }
         }
     }
 
