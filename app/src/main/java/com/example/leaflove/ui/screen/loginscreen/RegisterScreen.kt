@@ -159,7 +159,7 @@ fun registerScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
                 label = { Text(text = "Phone Number") }
             )
             Button(
-                onClick = { authViewModel.signup(email, password) },
+                onClick = { authViewModel.signup(email, password, username) },
                 modifier = Modifier
                     .fillMaxWidth(0.85f)
                     .padding(15.dp),

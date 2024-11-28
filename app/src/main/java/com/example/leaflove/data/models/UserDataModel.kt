@@ -5,6 +5,7 @@ import com.example.leaflove.data.entities.PlantDetailEntity
 import com.google.firebase.Timestamp
 
 data class UserDataModel(
+    val username: String = "",
     val email: String = "", // Default to an empty string
     val password: String = "", // Default to an empty string
     var my_plants: MutableList<MyPlantModel> = mutableListOf() // Default to an empty list

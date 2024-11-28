@@ -49,7 +49,7 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun signup(email: String, password: String) {
+    fun signup(email: String, password: String, username: String) {
         if (email.isEmpty() || password.isEmpty()) {
             _authState.value = AuthState.Error("Email or password is empty")
             return
@@ -59,7 +59,7 @@ class AuthViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _authState.value = AuthState.Authenticated
-                    saveUserToDatabase(email, password) // Save user data to Firestore
+                    saveUserToDatabase(email, password, username) // Save user data to Firestore
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
@@ -72,8 +72,8 @@ class AuthViewModel : ViewModel() {
         _userData.value = null // Clear user data on sign out
     }
 
-    private fun saveUserToDatabase(email: String, password: String) {
-        val userData = UserDataModel(email, password, mutableListOf())
+    private fun saveUserToDatabase(email: String, password: String, username: String) {
+        val userData = UserDataModel(username, email, password, mutableListOf())
         db.collection("users")
             .document(email) // Use email as the document ID
             .set(userData)

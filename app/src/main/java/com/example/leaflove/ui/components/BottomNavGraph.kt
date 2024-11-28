@@ -1,5 +1,7 @@
 package com.example.leaflove.ui.components
 
+import CameraPermissionScreen
+import CameraScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -38,7 +40,7 @@ fun BottomNavGraph(
     // Define navigation graph
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Home.route
+        startDestination = "camerascreen"
     ) {
         composable(route = BottomBarScreen.Home.route)
         {
@@ -80,6 +82,9 @@ fun BottomNavGraph(
         // Account screen
         composable(route = "account"){
             AccountScreen(navHost = navController)
+        }
+        composable(route = "camerascreen"){
+            CameraPermissionScreen(navController)
         }
     }
 }
