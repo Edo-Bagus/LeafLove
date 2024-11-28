@@ -14,6 +14,7 @@ import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaDetailScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaMainScreen
 import com.example.leaflove.ui.screen.headerNav.TransactionScreen
 import com.example.leaflove.ui.screen.plantscreen.addmyplant
+import com.example.leaflove.ui.screen.plantscreen.myplantdetail
 import com.example.leaflove.ui.screen.testing.TestingScreen
 import com.example.leaflove.ui.screen.storescreen.StoreScreen
 import com.example.leaflove.viewmodel.LocationViewModel
@@ -30,6 +31,7 @@ fun BottomNavGraph(
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp // Height of the screen in dp
+    val plant = koinViewModel<PlantViewModel>();
 
     // Get screen height for potential responsive design (currently unused)
     val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
@@ -80,6 +82,11 @@ fun BottomNavGraph(
         // Account screen
         composable(route = "account"){
             AccountScreen(navHost = navController)
+        }
+
+        composable(route = "myplantdetail")
+        {
+            myplantdetail(navController)
         }
     }
 }
