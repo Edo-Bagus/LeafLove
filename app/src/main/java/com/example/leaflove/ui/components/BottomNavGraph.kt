@@ -40,7 +40,7 @@ fun BottomNavGraph(
     val responsiveOffset = screenHeight * 0.1f // Adjust the factor as needed
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Camera.route,
+        startDestination = BottomBarScreen.Home.route,
 //        modifier = Modifier
 //            .fillMaxSize()
 //            .offset(y = -responsiveOffset)

@@ -22,6 +22,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -31,6 +34,7 @@ import androidx.navigation.NavHostController
 import com.example.leaflove.services.LocationUtils
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.R
+import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.theme.ButtonGreen
 
@@ -40,6 +44,10 @@ import com.example.leaflove.ui.theme.ButtonGreen
 fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel) {
 
 
+    var customfont = FontFamily(
+        Font(R.font.baloo_font, weight = FontWeight.Normal),
+        Font(R.font.baloo_bold, weight = FontWeight.Bold)
+    )
     val context = LocalContext.current
     val locationUtils = remember { LocationUtils(context, locationViewModel) }
     val location = locationViewModel.locationState
@@ -327,6 +335,31 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                     .background(Color.Black)
                     .fillMaxSize()
             ) {
+                Button(
+                    onClick = { navHost.navigate("addmyplant") },
+                    modifier = Modifier
+                        .zIndex(1f)
+                        .offset(x = screenWidth * 0.02f, y = screenHeight * 0.2f)
+                        .height(screenHeight * 0.08f)
+                        .shadow(
+                            elevation = 8.dp, // Tinggi bayangan
+                            shape = RoundedCornerShape(10.dp), // Sama dengan radius sudut tombol
+                            clip = false // Tidak memotong konten berdasarkan bentuk
+                        ),
+                    colors = ButtonColors(
+                        contentColor = BasicGreen,
+                        containerColor = Color.White,
+                        disabledContentColor = BasicGreen,
+                        disabledContainerColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(10.dp)
+                    ) {
+                    Text(
+                        text = " + Add your plant",
+                        fontFamily = customfont,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp)
+                }
                 Image(
                     painter = painterResource(R.drawable.mainmenubg),
                     contentDescription = "Background",
@@ -339,7 +372,8 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                     contentDescription = "Contoh Tanaman",
                     modifier = Modifier
                         .zIndex(1f)
-                        .size(size = screenHeight)
+                        .size(size = screenHeight * 0.5f)
+                        .offset(x = screenWidth * 0.3f, y = screenHeight * 0.03f)
                 )
             }
         }
