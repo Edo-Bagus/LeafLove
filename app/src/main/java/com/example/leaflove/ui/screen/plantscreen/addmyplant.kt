@@ -58,6 +58,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
 import com.example.leaflove.data.models.MyPlantModel
+import com.example.leaflove.ui.components.SearchBar
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
@@ -69,8 +70,10 @@ import org.koin.compose.koinInject
 @Composable
 fun addmyplant(navHost: NavHostController)
 {
-    var authViewModel: AuthViewModel = koinInject()
-    var plantViewModel: PlantViewModel = koinInject()
+    val authViewModel: AuthViewModel = koinInject()
+    val plantViewModel: PlantViewModel = koinInject()
+    val searchResults = plantViewModel.plantSearchList
+
 
     var customfont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),
@@ -81,7 +84,7 @@ fun addmyplant(navHost: NavHostController)
     }
 
     var typeofplant by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf("")
     }
 
     BoxWithConstraints (modifier = Modifier.fillMaxSize()){
@@ -148,6 +151,8 @@ fun addmyplant(navHost: NavHostController)
                 )
 
                 Spacer(modifier = Modifier.weight(0.1f))
+
+
                 Text(
                     text = "Type of your plant",
                     fontFamily = customfont,
@@ -159,57 +164,37 @@ fun addmyplant(navHost: NavHostController)
                     modifier = Modifier
                         .offset(x = -(width * 0.04f))
                         .padding(horizontal = width * 0.01f)
+                        .zIndex(0.5f)
+                        .height(height = (height*0.3f))
                 ){
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(height * 0.07f)
-                            .clip(RoundedCornerShape(50))
-                            .border(width = 1.dp, color = Color.Black, RoundedCornerShape(50))
-                            .offset(x = width * 0.04f)
-                    ) {
 
-                        TextField(
-                            value = typeofplant,
-                            onValueChange = { newText -> typeofplant = newText },
-                            placeholder = {
-                                Text(
-                                    text = "Search your plant",
-                                    color = Color.LightGray
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(R.drawable.search_icon),
-                                    contentDescription = "Search"
-                                )
-                            },
-                            modifier = Modifier.fillMaxSize(), // Ensures TextField fills the Box
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = Color.White,
-                                unfocusedContainerColor = Color.White,
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                cursorColor = Color.Black
-                            ),
-                            textStyle = LocalTextStyle.current.copy(
-                                fontSize = 16.sp,
-                                color = Color.Black
-                            ),
-                            singleLine = true
-                        )
-                    }
+                    SearchBar(
+                        onQueryChange = { query ->
+                            plantViewModel.fetchPlantSearchList(query)
+                            if(query == ""){
+                                plantViewModel.clearSearchResults()
+                            }
+                        },
+                        searchResults = searchResults
+                    )
+
                 }
-                Spacer(modifier = Modifier.weight(1f))
 
                 Button(
                     onClick = {
                         Log.d("Firestore", authViewModel.userData.value.toString())
-                        authViewModel.updateuserMyPlant(newMyPlant = MyPlantModel(plant_name = nameofplant.text)) },
+                        authViewModel.updateuserMyPlant(
+                            newMyPlant = MyPlantModel(
+                                plant_name = nameofplant.text,
+                                plant_fk = plantViewModel.plantSelectedItem.value?.id ?: 1
+                            )
+                        )},
+
                     modifier = Modifier
                         .fillMaxWidth()
-                        .offset(x = -(width * 0.04f))
-                        .padding(horizontal = width * 0.01f),
+                        .offset(x = -(width * 0.04f), y = 50.dp)
+                        .padding(horizontal = width * 0.01f, )
+                        .zIndex(0.9f),
                     colors = ButtonColors(
                         contentColor = Color.White,
                         containerColor = BasicGreen,
@@ -229,4 +214,5 @@ fun addmyplant(navHost: NavHostController)
             }
         }
     }
+
 }

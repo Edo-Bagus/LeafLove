@@ -56,10 +56,21 @@ fun loginScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
 
     val authState = authViewModel.authState
 
-    LaunchedEffect(authState.value) {
-        when(authState.value){
-            is AuthState.Authenticated -> navHost.navigate("mainscreen")
-            is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_LONG).show()
+
+    LaunchedEffect(authState.value, authViewModel.userData) {
+        when (authState.value) {
+            is AuthState.Authenticated -> {
+                if (authViewModel.userData != mutableStateOf(null)) {
+                    navHost.navigate("mainscreen")
+                }
+            }
+            is AuthState.Error -> {
+                Toast.makeText(
+                    context,
+                    (authState.value as AuthState.Error).message,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
             else -> Unit
         }
     }

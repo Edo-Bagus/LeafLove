@@ -33,6 +33,10 @@ class PlantRepository(private val plantSpeciesDao: PlantSpeciesDao, private val 
         return plantDetailDao.getPlantDetail(id);
     }
 
+    suspend fun searchSuggestionPlant(query: String):List<PlantSpeciesEntity>{
+        return plantSpeciesDao.searchSuggestionPlant(query)
+    }
+
     suspend fun insertPlantDetailAndLinkToSpecies(
         plantDetail: PlantDetailEntity,
         speciesId: Int,
