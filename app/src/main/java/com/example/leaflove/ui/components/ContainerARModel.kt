@@ -56,7 +56,7 @@ fun ModelARCard(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
                 .size(sizeInner)
-                .align(Alignment.Center)  // Menggunakan align untuk menengahkan
+                .align(Alignment.Center)
         ) {
             encyclo.default_image?.let { imageUrl ->
                 Log.d("Check Image", imageUrl)

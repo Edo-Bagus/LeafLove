@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -35,6 +36,7 @@ import com.example.leaflove.services.LocationUtils
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.R
 import com.example.leaflove.ui.components.Plant
+import com.example.leaflove.data.entities.PlantDetailEntity
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.theme.ButtonGreen
@@ -46,6 +48,7 @@ import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.Locale
+import com.example.leaflove.viewmodel.PlantViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -304,7 +307,7 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                                 .width(screenWidth * 0.5f)
                                 .height(screenHeight * 0.1f)
                         ){
-                            Text(text = "No Achievement",
+                            Text(text = "Funfact",
                                 modifier = Modifier
                                     .align(Alignment.Center))
                         }
@@ -322,43 +325,77 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                             )
                             .background(Color.White)
                             .width(screenWidth * 0.8f)
-                            .height(screenHeight * 0.1f)
+                            .height(screenHeight * 0.2f)
                             .align(Alignment.CenterHorizontally)
                     ) {
-                        if (plant != null){
-                            Row (modifier = Modifier
-                                .align(Alignment.Center) ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize() // Pastikan Row mengisi seluruh area
+                        ) {
+                            Spacer(modifier = Modifier.weight(0.1f))
+
+                            Box(
+                                modifier = Modifier
+                                    .shadow(
+                                        elevation = 10.dp,
+                                        shape = RoundedCornerShape(10.dp),
+                                        clip = false
+                                    )
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(Color.White)
+                                    .size(screenWidth * 0.3f)
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.contoh_tanaman),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.weight(0.1f))
+
+                            Column (
+                                modifier = Modifier.width(screenWidth * 0.2f)
+                            ) {
                                 Spacer(modifier = Modifier.weight(1f))
-                                Text(text = plant.nama)
+                                Text(
+                                    text = "Nama dari tumbuhan",
+                                    fontFamily = customfont,
+                                    fontWeight = FontWeight.Normal
+                                )
                                 Spacer(modifier = Modifier.weight(1f))
-                                Text(text = plant.status)
-                                Spacer(modifier = Modifier.weight(1f))
-                                plant.age?.let { Text(text = it) }
+                                Text(
+                                    text = "Umur : Tua",
+                                    fontFamily = customfont,
+                                    fontWeight = FontWeight.Normal
+                                )
                                 Spacer(modifier = Modifier.weight(1f))
                             }
-                        }else{
-                            Text(text = "No My Plant Data Available",
-                                modifier = Modifier
-                                    .align(Alignment.Center))
+
+                            Spacer(modifier = Modifier.weight(0.1f))
+
+                            Column (
+                                modifier = Modifier.width(screenWidth * 0.2f)
+                            ){
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(
+                                    text = "Apa",
+                                    fontFamily = customfont,
+                                    fontWeight = FontWeight.Normal)
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(
+                                    text = "Apa",
+                                    fontFamily = customfont,
+                                    fontWeight = FontWeight.Normal)
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
+
+                            Spacer(modifier = Modifier.weight(0.1f))
                         }
                     }
-                    Spacer(modifier = Modifier.weight(0.5f))
-                    Box(
-                        modifier = Modifier
-                            .shadow(
-                                elevation = 10.dp,
-                                shape = RoundedCornerShape(20.dp),
-                                clip = false
-                            )
-                            .background(Color.White)
-                            .width(screenWidth * 0.8f)
-                            .height(screenHeight * 0.1f)
-                            .align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(text = "Fun Fact",
-                            modifier = Modifier
-                                .align(Alignment.Center))
-                    }
+
 
                     Spacer(modifier = Modifier.weight(1.5f))
 
@@ -392,7 +429,7 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                         disabledContainerColor = Color.White
                     ),
                     shape = RoundedCornerShape(10.dp)
-                    ) {
+                ) {
                     Text(
                         text = " + Add your plant",
                         fontFamily = customfont,
