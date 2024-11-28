@@ -86,8 +86,8 @@ fun ARScreen(plantViewModel: PlantViewModel) {
             }
             var frame by remember { mutableStateOf<Frame?>(null) }
             var modelPlaced by remember { mutableStateOf(false) }
-            var selectedModel by remember { mutableStateOf(plantDetail.id.toString()) }
-            var selectedModelName by remember { mutableStateOf(plantDetail.common_name.toString()) }// No model selected initially
+            var selectedModel by remember { mutableStateOf("models/" + plantDetail.id.toString() + ".glb") }
+            var selectedModelName by remember { mutableStateOf(plantDetail.common_name ?: "") }
 
             val context = LocalContext.current
             val modelFiles = remember {
@@ -189,7 +189,7 @@ fun ARScreen(plantViewModel: PlantViewModel) {
                 text = trackingFailureReason?.let {
                     it.getDescription(LocalContext.current)
                 } ?: if (childNodes.isEmpty()) {
-                    if (selectedModel.isEmpty()) {
+                    if (selectedModelName.isEmpty()) {
                         "Select a model to begin"
                     } else {
                         "Model: ${selectedModelName} \n Point your phone down at an empty space, and move it around slowly"
