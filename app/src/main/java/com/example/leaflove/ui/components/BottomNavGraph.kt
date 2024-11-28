@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.leaflove.ui.screen.account.AboutScreen
 import com.example.leaflove.ui.screen.account.AccountScreen
 import com.example.leaflove.ui.screen.bottomNav.ARScreen
 import com.example.leaflove.ui.screen.bottomNav.HomeScreen
@@ -81,5 +82,10 @@ fun BottomNavGraph(
         composable(route = "account"){
             AccountScreen(navHost = navController)
         }
+
+        composable(route = "about"){
+            AboutScreen(navHost = navController)
+        }
+
     }
 }
