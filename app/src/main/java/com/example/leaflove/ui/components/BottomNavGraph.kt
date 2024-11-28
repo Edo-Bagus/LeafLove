@@ -16,6 +16,7 @@ import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaDetailScreen
 import com.example.leaflove.ui.screen.encyclopedia.EncyclopediaMainScreen
 import com.example.leaflove.ui.screen.headerNav.TransactionScreen
 import com.example.leaflove.ui.screen.plantscreen.addmyplant
+import com.example.leaflove.ui.screen.plantscreen.myplantdetail
 import com.example.leaflove.ui.screen.testing.TestingScreen
 import com.example.leaflove.ui.screen.storescreen.StoreScreen
 import com.example.leaflove.viewmodel.LocationViewModel
@@ -40,7 +41,7 @@ fun BottomNavGraph(
     val responsiveOffset = screenHeight * 0.1f // Adjust the factor as needed
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Home.route,
+        startDestination = "myplantdetail",
 //        modifier = Modifier
 //            .fillMaxSize()
 //            .offset(y = -responsiveOffset)
@@ -80,6 +81,11 @@ fun BottomNavGraph(
         // Account screen
         composable(route = "account"){
             AccountScreen(navHost = navController)
+        }
+
+        composable(route = "myplantdetail")
+        {
+            myplantdetail(navController)
         }
     }
 }
