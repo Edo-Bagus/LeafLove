@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,6 +41,7 @@ import com.example.leaflove.ui.theme.BasicGreen
 
 @Composable
 fun AccountScreen(navHost: NavHostController){
+    val image1 = painterResource(R.drawable.ilham)
     var username by remember { mutableStateOf("") }
     val columnsize = 420.dp
     val offsetmainmenu = 100.dp
@@ -56,7 +58,7 @@ fun AccountScreen(navHost: NavHostController){
         ) {
             Box(
                 modifier = Modifier
-                    .height(screenHeight * 0.4f) // Mengisi 40% bagian atas layar
+                    .height(screenHeight * 0.3f) // Mengisi 40% bagian atas layar
                     .fillMaxWidth()
                     .background(BasicGreen),
                 contentAlignment = Alignment.Center
@@ -70,9 +72,18 @@ fun AccountScreen(navHost: NavHostController){
                 ){
                     Box(
                         modifier = Modifier
-                            .size(100.dp) // Ukuran kotak
-                            .background(Color.White) // Warna kotak
+                            .size(100.dp)
                     )
+                    {
+                        Image(
+                            painter = painterResource(id = R.drawable.ilham),
+                            contentDescription = "Image Ilham",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(125.dp)
+                                .clip(RoundedCornerShape(75.dp))
+                        )
+                    }
 
                     Spacer(modifier = Modifier.width(16.dp)) // Spasi antara kotak dan teks
 
@@ -101,18 +112,30 @@ fun AccountScreen(navHost: NavHostController){
 
 
         Button(
-                onClick = { /*TODO*/ },
+                onClick = { navHost.navigate("about") },
                 modifier = Modifier
-                    .padding(20.dp, 350.dp, 40.dp, 0.dp),
+                    .padding(20.dp, 250.dp, 40.dp, 0.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
             ) {
                 Text(
-                    text = "Log Out",
+                    text = "About Us",
                     color = Color.Black
                 )
             }
+        Button(
+            onClick = { /*TODO*/ },
+            modifier = Modifier
+                .padding(20.dp, 300.dp, 40.dp, 0.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
+
+        ) {
+            Text(
+                text = "Log Out",
+                color = Color.Black
+            )
         }
     }
+}
 
 
 
