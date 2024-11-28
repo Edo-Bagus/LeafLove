@@ -153,11 +153,33 @@ fun addmyplant(navHost: NavHostController)
                 Spacer(modifier = Modifier.weight(0.1f))
 
 
+                Button(onClick = {navHost.navigate("camerascreen")},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(x = -(width * 0.04f))
+                        .padding(horizontal = width * 0.01f, )
+                        .zIndex(0.9f),
+                    colors = ButtonColors(
+                        contentColor = Color.White,
+                        containerColor = BasicGreen,
+                        disabledContentColor = BasicGreen,
+                        disabledContainerColor = Color.White
+                    )
+                ){
+
+                    Text(text = "Add Pictures",
+                        fontFamily = customfont,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = with(LocalDensity.current) { (width * 0.05f).toSp() }
+                    )
+                }
+
                 Text(
                     text = "Type of your plant",
                     fontFamily = customfont,
                     fontSize = with(LocalDensity.current) { (width * 0.05f).toSp() },
                 )
+
                 Spacer(modifier = Modifier.weight(0.05f))
 
                 Box(
@@ -186,7 +208,8 @@ fun addmyplant(navHost: NavHostController)
                         authViewModel.updateuserMyPlant(
                             newMyPlant = MyPlantModel(
                                 plant_name = nameofplant.text,
-                                plant_fk = plantViewModel.plantSelectedItem.value?.id ?: 1
+                                plant_fk = plantViewModel.plantSelectedItem.value?.id ?: 1,
+                                plant_image_url = plantViewModel.plantImageUploadUrl.value
                             )
                         )},
 

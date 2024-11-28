@@ -68,6 +68,9 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
     private val _plantSelectedItem = mutableStateOf<PlantSpeciesEntity?>(null)
     val plantSelectedItem = _plantSelectedItem
 
+    private val _plantImageUploadUrl = mutableStateOf<String>("https://media.istockphoto.com/id/1380361370/photo/decorative-banana-plant-in-concrete-vase-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=eYADMQ9dXTz1mggdfn_exN2gY61aH4fJz1lfMomv6o4=")
+    val plantImageUploadUrl = _plantImageUploadUrl
+
     fun fetchPlantSearchList(query: String){
         viewModelScope.launch{
             try{
@@ -129,6 +132,9 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         }
     }
 
+    fun setImageUploadUrl(url: String){
+        _plantImageUploadUrl.value = url;
+    }
 
     fun filterPlantList(query: String) {
         viewModelScope.launch {

@@ -64,7 +64,7 @@ fun MyPlantScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel
     val plants = mutableListOf<Plant>()
         for(plant in authViewModel.userData.value?.my_plants!!){
             val status = Status.values().find { it.rating == plant.plant_status } ?: Status.Mediocre
-            plants.add(Plant(nama = plant.plant_name, status = status.name, image = R.drawable.contoh_tanaman))
+            plants.add(Plant(nama = plant.plant_name, status = status.name, image = plant.plant_image_url))
         }
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {

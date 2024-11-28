@@ -91,6 +91,7 @@ dependencies {
     // Koin for Jetpack Compose
     implementation(libs.koin.androidx.compose)
 
+    implementation("com.cloudinary:cloudinary-android:3.0.2")
 
 
     // Optional: Koin for Navigation (if you're using Jetpack Navigation)

@@ -25,13 +25,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import coil.compose.rememberAsyncImagePainter
 import com.example.leaflove.R
 
 // Data class untuk Plant
 data class Plant(
     val nama: String,
     val status: String,
-    val image: Int,
+    val image: String,
     val to_water: String? = null,
     val last_water: String? = null,
     val age: String? = null
@@ -74,7 +75,7 @@ fun MyPlantCard(plant: Plant, screenHeight: Dp, screenWidth: Dp) {
 
             ) {
                 Image(
-                    painter = painterResource(R.drawable.contoh_tanaman),
+                    painter = rememberAsyncImagePainter(plant.image),
                     contentDescription = null,
                     modifier = Modifier.size(height = screenHeight * 0.15f,width= screenWidth * 0.30f ))
 

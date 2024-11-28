@@ -100,6 +100,7 @@ class AuthViewModel : ViewModel() {
                         val plants = document.get("my_plants") as? List<Map<String, Any>>
                         plants?.forEach { plantMap ->
                             val plant = MyPlantModel(
+                                plant_image_url = plantMap["plant_image_url"] as? String ?: "https://media.istockphoto.com/id/1380361370/photo/decorative-banana-plant-in-concrete-vase-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=eYADMQ9dXTz1mggdfn_exN2gY61aH4fJz1lfMomv6o4=",
                                 plant_name = plantMap["plant_name"] as? String ?: "",
                                 plant_age = plantMap["plant_age"] as? Timestamp ?: Timestamp.now(),
                                 plant_last_watered = plantMap["plant_last_watered"] as? Timestamp ?: Timestamp.now(),
