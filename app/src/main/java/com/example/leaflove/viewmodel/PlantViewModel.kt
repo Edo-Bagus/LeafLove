@@ -19,6 +19,7 @@ import com.example.leaflove.data.models.DepthWaterRequirement
 import com.example.leaflove.data.models.Dimensions
 import com.example.leaflove.data.models.Hardiness
 import com.example.leaflove.data.models.HardinessLocation
+import com.example.leaflove.data.models.MyPlantDetailModel
 import com.example.leaflove.data.models.PlantDetailResponseModel
 import com.example.leaflove.data.models.PlantListResponseModel
 import com.example.leaflove.data.models.PlantSpecies
@@ -60,6 +61,7 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
 
     private val _plantList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())
     val plantList = _plantList
+
 
     fun fetchPlantList() {
         viewModelScope.launch {
@@ -134,6 +136,9 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         }
 
     }
+
+
+
     fun insertIntoPlantDetailsRoom(plantDetailResponse: PlantDetailResponseModel){
         viewModelScope.launch{
             try{

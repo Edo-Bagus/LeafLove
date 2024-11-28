@@ -36,6 +36,14 @@ import com.example.leaflove.ui.components.Plant
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
+import com.example.leaflove.viewmodel.AuthViewModel
+import org.koin.compose.koinInject
+
+enum class Status(val rating: Int) {
+    Good(1),
+    Mediocre(2),
+    Bad(3);
+}
 
 @Composable
 fun MyPlantScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel){
@@ -50,16 +58,14 @@ fun MyPlantScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel
     val image3 = painterResource(R.drawable.menumyplant)
     val image4 = painterResource(R.drawable.footermyplant)
     var username by remember { mutableStateOf("") }
-    val plants = listOf(
-        Plant("Aloe Vera", "Healthy", R.drawable.contoh_tanaman),
-        Plant("Cactus", "Needs Water", R.drawable.contoh_tanaman),
-        Plant("Monstera", "Growing", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman)
-    )
+    val authViewModel = koinInject<AuthViewModel>()
+
+
+    val plants = mutableListOf<Plant>()
+        for(plant in authViewModel.userData.value?.my_plants!!){
+            val status = Status.values().find { it.rating == plant.plant_status } ?: Status.Mediocre
+            plants.add(Plant(nama = plant.plant_name, status = status.name, image = R.drawable.contoh_tanaman))
+        }
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         val screenHeight = maxHeight
