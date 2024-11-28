@@ -330,8 +330,17 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                 Image(
                     painter = painterResource(R.drawable.mainmenubg),
                     contentDescription = "Background",
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .zIndex(0.1f),
                     contentScale = ContentScale.Crop)
+                Image(
+                    painter = painterResource(R.drawable.contoh_tanaman),
+                    contentDescription = "Contoh Tanaman",
+                    modifier = Modifier
+                        .zIndex(1f)
+                        .size(size = screenHeight)
+                )
             }
         }
     }
