@@ -60,6 +60,7 @@ import com.example.leaflove.R
 import com.example.leaflove.data.models.MyPlantModel
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.AuthViewModel
+import com.example.leaflove.viewmodel.PlantViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.compose.koinInject
@@ -69,6 +70,7 @@ import org.koin.compose.koinInject
 fun addmyplant(navHost: NavHostController)
 {
     var authViewModel: AuthViewModel = koinInject()
+    var plantViewModel: PlantViewModel = koinInject()
 
     var customfont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),

@@ -30,9 +30,6 @@ import com.example.leaflove.viewmodel.PlantViewModel
 
 @Composable
 fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel) {
-    LaunchedEffect(Unit) {
-        viewModel.initializeDAOPlant()
-    }
     val plants = viewModel.plantList.value
 
     DisposableEffect(Unit) {

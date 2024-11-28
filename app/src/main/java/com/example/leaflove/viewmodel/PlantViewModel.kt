@@ -28,7 +28,7 @@ import com.example.leaflove.services.PerenualAPIService
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
+import kotlin.math.log
 
 
 class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() {
@@ -36,10 +36,15 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
     suspend fun initializeDAOPlant() {
         coroutineScope {
             if (plantRepository.checkIsEmpty()) {
-                Log.d("Check DB",plantRepository.checkIsEmpty().toString())
                 fetchPlantList();
-                insertPlantToRoom();
             }
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            initializeDAOPlant()
+            fetchPlantListFromRoom()
         }
     }
 
@@ -60,7 +65,18 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         viewModelScope.launch {
             try {
                 val response = plantServices.getPlantList()
+
+
                 _plantState.value = response
+                var mappedPlantEntity = plantState.value.data
+                var result : List<PlantSpeciesEntity>? = emptyList();
+                if (mappedPlantEntity != null) {
+                    result = plantToEntityList(mappedPlantEntity)
+                }
+                if (result != null) {
+                    plantRepository.insertPlants(result)
+                }
+                Log.d("Tess", _plantState.value.toString())
             } catch (e: Exception) {
                 e.message?.let { Log.e("Plant Error", it) }
             }
@@ -73,23 +89,6 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
             try {
                 val plantsFromRoom = plantRepository.getAllPlants()
                 _plantList.value = plantsFromRoom
-            } catch (e: Exception) {
-                e.message?.let { Log.e("Plant Error", it) }
-            }
-        }
-    }
-
-    fun insertPlantToRoom(){
-        viewModelScope.launch {
-            try {
-                var mappedPlantEntity = plantState.value.data
-                var result : List<PlantSpeciesEntity>? = emptyList();
-                if (mappedPlantEntity != null) {
-                   result = plantToEntityList(mappedPlantEntity)
-                }
-                if (result != null) {
-                    plantRepository.insertPlants(result)
-                }
             } catch (e: Exception) {
                 e.message?.let { Log.e("Plant Error", it) }
             }
@@ -120,13 +119,14 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         viewModelScope.launch {
             try{
                 if(!plantRepository.checkIsFilledPlantDetail(id)){
-
+                    Log.d("Cek", (!plantRepository.checkIsFilledPlantDetail(id)).toString())
                     _plantDetail.value = plantRepository.getPlantDetails(id)
                     Log.d("test ambil", _plantDetail.value.toString()   )
                 } else {
+                    Log.d("Cek", (!plantRepository.checkIsFilledPlantDetail(id)).toString())
                     val response = plantServices.getPlantDetail(id)
+                    _plantDetail.value = plantDetailToEntity(response)
                     insertIntoPlantDetailsRoom(response)
-                    _plantDetail.value = plantRepository.getPlantDetails(id)
                 }
             } catch (e: Exception){
             e.message?.let{ Log.e("Plant Detail Error", it)}

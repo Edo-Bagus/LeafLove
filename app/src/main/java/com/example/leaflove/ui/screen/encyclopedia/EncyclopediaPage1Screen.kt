@@ -1,5 +1,6 @@
 package com.example.leaflove.ui.screen.encyclopedia
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -38,15 +39,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.leaflove.R
 import com.example.leaflove.data.entities.PlantDetailEntity
+import com.example.leaflove.ui.components.convertIntoImage
 import com.example.leaflove.ui.screen.storescreen.StoreScreen
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.PlantViewModel
 import org.w3c.dom.Text
 
 @Composable
-fun EncyclopediaDetailScreen(navHost: NavHostController, plantDetailEntity: State<PlantDetailEntity>)
+fun EncyclopediaDetailScreen(navHost: NavHostController, plantViewModel: PlantViewModel)
 {
+    val plantDetailEntity = plantViewModel.plantDetail
     BoxWithConstraints (
         modifier = Modifier
             .fillMaxSize()
@@ -63,11 +68,16 @@ fun EncyclopediaDetailScreen(navHost: NavHostController, plantDetailEntity: Stat
             Box (modifier = Modifier
                 .width(screenWidth * 0.35f)
                 .align(Alignment.CenterVertically)){
-                Image(
-                    painter = painterResource(R.drawable.contoh_tanaman),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
-                )
+                plantDetailEntity.value.default_image?.let {
+                    Log.d("Check Image", it)
+                    if(it == "null"){
+                        Image(painter = painterResource(R.drawable.backgroundlogin1) , modifier = Modifier.size(128.dp), contentDescription = null)
+                    } else {
+                        val data = convertIntoImage(it)
+                        Image(painter = rememberAsyncImagePainter(data), modifier = Modifier.size(128.dp), contentDescription = null)
+
+                    }
+                }
             }
 
             // Detail kanan
@@ -127,7 +137,7 @@ fun EncyclopediaDetailScreen(navHost: NavHostController, plantDetailEntity: Stat
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = { navHost.navigate("camera") },
                         modifier = Modifier
                             .width(screenWidth * 0.5f)
                             .height(screenHeight * 0.05f),

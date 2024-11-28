@@ -112,7 +112,7 @@ fun PlantListItem(encyclo: PlantSpeciesEntity, plantViewModel: PlantViewModel, n
 
 fun convertIntoImage(jsonString: String): String? {
     val data = Gson().fromJson(jsonString, DefaultImage::class.java)
-    val image = data.thumbnail;
+    val image = data.regular_url;
     return image
 }
 

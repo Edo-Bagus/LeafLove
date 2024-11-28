@@ -1,14 +1,10 @@
 package com.example.leaflove.ui.screen.bottomNav
 
-import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,11 +20,9 @@ import com.google.android.filament.Engine
 import com.google.ar.core.Anchor
 import com.google.ar.core.Config
 import com.google.ar.core.Frame
-import com.google.ar.core.Plane
 import com.google.ar.core.TrackingFailureReason
 import io.github.sceneview.ar.ARScene
 import io.github.sceneview.ar.arcore.createAnchorOrNull
-import io.github.sceneview.ar.arcore.getUpdatedPlanes
 import io.github.sceneview.ar.arcore.isValid
 import io.github.sceneview.ar.getDescription
 import io.github.sceneview.ar.node.AnchorNode
@@ -50,16 +43,14 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.navigation.NavHostController
-import com.example.leaflove.R
+import com.example.leaflove.viewmodel.PlantViewModel
 
 
 @Composable
-fun ARScreen() {
+fun ARScreen(plantViewModel: PlantViewModel) {
+    val plantDetail = plantViewModel.plantDetail.value
+    val plants = plantViewModel.plantList.value
+
     Log.d("Cek Model", "hola")
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -79,6 +70,11 @@ fun ARScreen() {
         var frame by remember { mutableStateOf<Frame?>(null) }
         var modelPlaced by remember { mutableStateOf(false) }
         var selectedModel by remember { mutableStateOf("") } // No model selected initially
+
+        if(plantDetail.id != null){
+            Log.d("Test AR", "models/" + plantDetail.id.toString() + ".glb");
+            selectedModel = "models/" + plantDetail.id.toString() + ".glb"
+        }
 
         val context = LocalContext.current
         val modelFiles = remember {

@@ -47,7 +47,7 @@ fun BottomNavGraph(
 
         // Augmented Reality (Camera) screen
         composable(route = BottomBarScreen.Camera.route) {
-            ARScreen()
+            ARScreen(plantViewModel)
         }
 
         // My Plants screen
@@ -66,7 +66,7 @@ fun BottomNavGraph(
         
         composable("detailscreen")
         {  
-            EncyclopediaDetailScreen(navHost = navController, plantViewModel.plantDetail)
+            EncyclopediaDetailScreen(navHost = navController, plantViewModel)
         }
 
         composable("addmyplant")
