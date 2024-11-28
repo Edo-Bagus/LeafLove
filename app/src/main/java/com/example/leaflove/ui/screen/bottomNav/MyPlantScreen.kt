@@ -119,7 +119,24 @@ fun MyPlantScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel
                 .zIndex(1f)
         )
         {
-            MyPlantGrid(plants = plants, screenHeight, screenWidth)
-        }
+            if (plants.isEmpty()) {
+                // Display "No Data" if plants are empty
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No Data",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Gray
+                    )
+                }
+            } else {
+                // Display plants grid
+                MyPlantGrid(plants = plants, screenHeight, screenWidth)
+            }        }
     }
 }

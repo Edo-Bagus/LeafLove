@@ -31,14 +31,39 @@ import androidx.navigation.NavHostController
 import com.example.leaflove.services.LocationUtils
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.R
+import com.example.leaflove.ui.components.Plant
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.theme.ButtonGreen
+import com.example.leaflove.viewmodel.AuthViewModel
+import com.google.firebase.Timestamp
+import org.koin.compose.koinInject
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel) {
 
+    val authViewModel = koinInject<AuthViewModel>()
+
+    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+    val plants = mutableListOf<Plant>()
+    for(plant in authViewModel.userData.value?.my_plants!!){
+        val status = Status.values().find { it.rating == plant.plant_status } ?: Status.Mediocre
+        plants.add(Plant(
+            nama = plant.plant_name,
+            status = status.name,
+            image = R.drawable.contoh_tanaman,
+            to_water = dateFormatter.format(plant.plant_to_be_watered.toDate()),
+            last_water = dateFormatter.format(plant.plant_last_watered.toDate()),
+            age = calculatePlantAgeInDays(plant.plant_age)
+        ))
+    }
+    val plant = plants.randomOrNull()
 
     val context = LocalContext.current
     val locationUtils = remember { LocationUtils(context, locationViewModel) }
@@ -291,9 +316,22 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                             .height(screenHeight * 0.1f)
                             .align(Alignment.CenterHorizontally)
                     ) {
-                        Text(text = "My Plant",
-                            modifier = Modifier
-                                .align(Alignment.Center))
+                        if (plant != null){
+                            Row (modifier = Modifier
+                                .align(Alignment.Center) ) {
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(text = plant.nama)
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(text = plant.status)
+                                Spacer(modifier = Modifier.weight(1f))
+                                plant.age?.let { Text(text = it) }
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
+                        }else{
+                            Text(text = "No My Plant Data Available",
+                                modifier = Modifier
+                                    .align(Alignment.Center))
+                        }
                     }
                     Spacer(modifier = Modifier.weight(0.5f))
                     Box(
@@ -352,6 +390,20 @@ private fun requestLocationPermissions(context: Context) {
             )
         }
     }
+}
+
+fun calculatePlantAgeInDays(createdTimestamp: Timestamp): String {
+    // Convert Timestamp to Instant
+    val createdInstant = createdTimestamp.toDate().toInstant()
+
+    // Get the current time
+    val nowInstant = Instant.now()
+
+    // Calculate the total days between the created time and now
+    val totalDays = ChronoUnit.DAYS.between(createdInstant, nowInstant)
+
+    // Return the age as a formatted string
+    return "$totalDays days"
 }
 
 const val REQUEST_LOCATION_PERMISSION = 1

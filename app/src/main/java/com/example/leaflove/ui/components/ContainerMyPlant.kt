@@ -31,7 +31,10 @@ import com.example.leaflove.R
 data class Plant(
     val nama: String,
     val status: String,
-    val image: Int
+    val image: Int,
+    val to_water: String? = null,
+    val last_water: String? = null,
+    val age: String? = null
 )
 
 // Fungsi untuk menampilkan satu kartu Plant
