@@ -50,6 +50,7 @@ fun MyPlantScreen(navHost: NavHostController){
     var username by remember { mutableStateOf("") }
     val authViewModel = koinInject<AuthViewModel>()
 
+
     val plants = mutableListOf<Plant>()
         for(plant in authViewModel.userData.value?.my_plants!!){
             val status = Status.values().find { it.rating == plant.plant_status } ?: Status.Mediocre

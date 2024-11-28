@@ -1,6 +1,7 @@
 package com.example.leaflove.data.models
 
 
+import com.example.leaflove.data.entities.PlantDetailEntity
 import com.google.firebase.Timestamp
 
 data class UserDataModel(
@@ -16,4 +17,9 @@ data class MyPlantModel(
     val plant_to_be_watered: Timestamp = Timestamp.now(), // Default to the current timestamp
     val plant_fk: Int = 1,
     val plant_status: Int = 1 // Default to 0
+)
+
+data class MyPlantDetailModel(
+    val myPlantModel: MyPlantModel = MyPlantModel(),
+    val plantDetailEntity: PlantDetailEntity = PlantDetailEntity(),
 )
