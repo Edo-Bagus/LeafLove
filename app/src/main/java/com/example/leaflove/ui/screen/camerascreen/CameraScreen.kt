@@ -15,10 +15,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -30,6 +32,7 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.leaflove.ui.components.Plant
+import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -99,22 +102,23 @@ fun CameraScreen(navHost: NavHostController) {
                         savedImageUri = uri
                         Toast.makeText(context, "Image saved: $uri", Toast.LENGTH_SHORT).show()
 
-                        // Upload the image to Cloudinary
                         uri?.let { fileUri ->
                             coroutineScope.launch(Dispatchers.IO) {
                                 Log.d("testfoto", "test")
-                                uploadImageToCloudinary(context, fileUri) { uploadedUrl ->
-                                    // Update the state with the uploaded URL
-                                    plantViewModel.setImageUploadUrl(uploadedUrl)
-                                    Log.d("Cloudinary", "Uploaded Image URL: $uploadedUrl")
-                                    // You can pass this URL around or use it in your app
-                                }                            }
+                                plantViewModel.setImageUploadUri(uri)
+                            }
                         }
                     }
                 },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                colors = ButtonColors(
+                    contentColor = Color.White,
+                    containerColor = BasicGreen,
+                    disabledContentColor = BasicGreen,
+                    disabledContainerColor = Color.White
+                )
             ) {
-                Text("Take & Upload Picture")
+                Text("Take Picture")
             }
         }
     }

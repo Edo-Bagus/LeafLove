@@ -40,7 +40,7 @@ fun BottomNavGraph(
     // Define navigation graph
     NavHost(
         navController = navController,
-        startDestination = "camerascreen"
+        startDestination = BottomBarScreen.Home.route
     ) {
         composable(route = BottomBarScreen.Home.route)
         {

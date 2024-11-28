@@ -1,5 +1,6 @@
 package com.example.leaflove.viewmodel
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -68,8 +69,9 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
     private val _plantSelectedItem = mutableStateOf<PlantSpeciesEntity?>(null)
     val plantSelectedItem = _plantSelectedItem
 
-    private val _plantImageUploadUrl = mutableStateOf<String>("https://media.istockphoto.com/id/1380361370/photo/decorative-banana-plant-in-concrete-vase-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=eYADMQ9dXTz1mggdfn_exN2gY61aH4fJz1lfMomv6o4=")
-    val plantImageUploadUrl = _plantImageUploadUrl
+    private val _plantImageUploadUri = mutableStateOf<Uri>(Uri.EMPTY)
+    val plantImageUploadUri = _plantImageUploadUri
+
 
     fun fetchPlantSearchList(query: String){
         viewModelScope.launch{
@@ -132,8 +134,8 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         }
     }
 
-    fun setImageUploadUrl(url: String){
-        _plantImageUploadUrl.value = url;
+    fun setImageUploadUri(uri: Uri){
+        _plantImageUploadUri.value = uri;
     }
 
     fun filterPlantList(query: String) {
