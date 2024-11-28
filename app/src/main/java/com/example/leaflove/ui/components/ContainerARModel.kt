@@ -3,6 +3,7 @@ package com.example.leaflove.ui.components
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -32,7 +33,11 @@ import com.example.leaflove.data.entities.PlantSpeciesEntity
 import com.example.leaflove.viewmodel.PlantViewModel
 
 @Composable
-fun ModelARCard(encyclo: PlantSpeciesEntity, screenHeight: Dp, screenWidth: Dp) {
+fun ModelARCard(
+    encyclo: PlantSpeciesEntity,
+    onClick: () -> Unit,
+    screenHeight: Dp, screenWidth: Dp
+) {
     // Menghitung padding untuk menempatkan box ke tengah
     val sizeOuter = screenHeight * 0.12f
     val sizeInner = screenHeight * 0.1f
@@ -44,7 +49,8 @@ fun ModelARCard(encyclo: PlantSpeciesEntity, screenHeight: Dp, screenWidth: Dp) 
             .height(sizeOuter)
             .width(sizeOuter)
             .background(Color.White)
-            .padding(paddingCenter)  // Padding luar untuk aesthetics
+            .padding(paddingCenter)
+            .clickable { onClick() } // Make the card clickable// Padding luar untuk aesthetics
     ) {
         Box(
             modifier = Modifier

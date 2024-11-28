@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.leaflove.ui.components.ModelARCard
+import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.google.android.filament.Engine
 import com.google.ar.core.Anchor
@@ -83,7 +85,8 @@ fun ARScreen(plantViewModel: PlantViewModel) {
             }
             var frame by remember { mutableStateOf<Frame?>(null) }
             var modelPlaced by remember { mutableStateOf(false) }
-            var selectedModel by remember { mutableStateOf("") } // No model selected initially
+            var selectedModel by remember { mutableStateOf("") }
+            var selectedModelName by remember { mutableStateOf("") }// No model selected initially
 
             val context = LocalContext.current
             val modelFiles = remember {
@@ -144,32 +147,6 @@ fun ARScreen(plantViewModel: PlantViewModel) {
 
             var expanded by remember { mutableStateOf(false) }
 
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp)
-            ) {
-                Button(onClick = { expanded = true }) { // Toggle dropdown visibility
-                    Text(text = if (selectedModel.isEmpty()) "Select Model" else selectedModel)
-                }
-
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    modelFiles.forEach { model ->
-                        DropdownMenuItem(
-                            text = { Text(model) },
-                            onClick = {
-                                selectedModel = model
-                                expanded = false // Close dropdown after selection
-                            }
-                        )
-                    }
-                }
-            }
-
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(1),
                 contentPadding = PaddingValues(
@@ -184,7 +161,14 @@ fun ARScreen(plantViewModel: PlantViewModel) {
             ) {
                 items(plants.size) { index ->
                     val plant = plants[index]
-                    ModelARCard(encyclo = plant, screenHeight = screenheight, screenWidth = screenwidth)
+                    ModelARCard(
+                        encyclo = plant,
+                        screenHeight = screenheight,
+                        screenWidth = screenwidth,
+                        onClick = {
+                            selectedModel = "models/" + plant.id + ".glb"
+                            selectedModelName = plant.common_name.toString()
+                        })
                     Spacer(modifier = Modifier.width(screenwidth * 0.4f))
                 }
             }
@@ -194,12 +178,12 @@ fun ARScreen(plantViewModel: PlantViewModel) {
                     .fillMaxWidth()
                     .align(Alignment.TopCenter)
                     .padding(
-                        top = 72.dp, // Adjust padding to account for both header and dropdown
+                        top = 32.dp, // Adjust padding to account for both header and dropdown
                         start = 32.dp,
                         end = 32.dp
                     ),
                 textAlign = TextAlign.Center,
-                fontSize = 28.sp,
+                fontSize = 24.sp,
                 color = Color.White,
                 text = trackingFailureReason?.let {
                     it.getDescription(LocalContext.current)
@@ -207,7 +191,7 @@ fun ARScreen(plantViewModel: PlantViewModel) {
                     if (selectedModel.isEmpty()) {
                         "Select a model to begin"
                     } else {
-                        "Point your phone down at an empty space, and move it around slowly"
+                        "Model: ${selectedModelName} \n Point your phone down at an empty space, and move it around slowly"
                     }
                 } else {
                     "Tap anywhere to add model"
@@ -220,8 +204,13 @@ fun ARScreen(plantViewModel: PlantViewModel) {
             if (modelPlaced) {
                 Button(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
+                        .offset(x = screenwidth * 0.3f, y = screenheight * 0.57f),
+                    colors = ButtonColors(
+                        contentColor = Color.White,
+                        containerColor = Color.Red,
+                        disabledContentColor = BasicGreen,
+                        disabledContainerColor = Color.White
+                    ),
                     onClick = {
                         childNodes.clear() // Remove all child nodes (models)
                         planeRenderer = true // Re-enable plane renderer for placement
