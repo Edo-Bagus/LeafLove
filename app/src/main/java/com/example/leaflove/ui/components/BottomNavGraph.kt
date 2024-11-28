@@ -42,7 +42,7 @@ fun BottomNavGraph(
     ) {
         composable(route = BottomBarScreen.Home.route)
         {
-            HomeScreen(navHost = navController, weatherViewModel, locViewModel)
+            HomeScreen(navHost = navController, plantViewModel, weatherViewModel, locViewModel)
         }
 
         // Augmented Reality (Camera) screen

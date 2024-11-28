@@ -1,5 +1,6 @@
 package com.example.leaflove.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,8 @@ import com.example.leaflove.data.models.PlantSpecies
 import com.example.leaflove.data.models.WateringBenchmark
 import com.example.leaflove.data.repositories.PlantRepository
 import com.example.leaflove.services.PerenualAPIService
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,8 +49,11 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         viewModelScope.launch {
             initializeDAOPlant()
             fetchPlantListFromRoom()
+
         }
     }
+
+
 
 
     private val plantServices: PerenualAPIService = PerenualAPIService.create()
@@ -67,6 +73,24 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
 
     private val _plantSelectedItem = mutableStateOf<PlantSpeciesEntity?>(null)
     val plantSelectedItem = _plantSelectedItem
+
+    private val _funFacts = mutableStateOf<List<String>>(emptyList())
+    val funFacts = _funFacts
+
+
+    fun loadFunFacts(context: Context) {
+        viewModelScope.launch {
+            try {
+                val inputStream = context.assets.open("FunFacts.json")
+                val jsonString = inputStream.bufferedReader().use { it.readText() }
+                val funFactList: List<String> = Gson().fromJson(jsonString, object : TypeToken<List<String>>() {}.type)
+                _funFacts.value = funFactList
+                Log.d("FunFacts", "Fun facts loaded: ${_funFacts.value.size}")
+            } catch (e: Exception) {
+                Log.e("FunFacts Error", e.message ?: "Error loading fun facts")
+            }
+        }
+    }
 
     fun fetchPlantSearchList(query: String){
         viewModelScope.launch{

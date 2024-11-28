@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -54,7 +55,7 @@ import com.example.leaflove.viewmodel.PlantViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel) {
+fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel) {
 
     val authViewModel = koinInject<AuthViewModel>()
 
@@ -72,13 +73,17 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
             age = calculatePlantAgeInDays(plant.plant_age)
         ))
     }
-    val plant = plants.randomOrNull()
+    val plant = remember(plants) { plants.randomOrNull() }
 
     var customfont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),
         Font(R.font.baloo_bold, weight = FontWeight.Bold)
     )
     val context = LocalContext.current
+    plantViewModel.loadFunFacts(context)
+    val funFacts = remember(plantViewModel.funFacts.value) {
+        plantViewModel.funFacts.value.random()
+    }
     val locationUtils = remember { LocationUtils(context, locationViewModel) }
     val location = locationViewModel.locationState
 
@@ -293,7 +298,7 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                                     modifier = Modifier.size(screenWidth * 0.1f)
 
                                 )
-                                Text(text = "Ensiklopedia", fontSize = 12.sp)
+                                Text(text = "Encyclopedia", fontSize = 12.sp)
                             }
                         }
                         Spacer(modifier = Modifier.weight(1f))
@@ -308,10 +313,13 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                                 .width(screenWidth * 0.5f)
                                 .height(screenHeight * 0.1f)
                         ){
-                            Text(text = "Funfact",
+                            Text(text = funFacts,
                                 modifier = Modifier
-                                    .align(Alignment.Center))
+                                    .align(Alignment.Center),
+                                textAlign = TextAlign.Center,
+                                fontSize = 14.sp)
                         }
+
                         Spacer(modifier = Modifier.weight(1f))
 
                     }
