@@ -36,11 +36,13 @@ import com.example.leaflove.ui.theme.LeafLoveTheme
 import com.example.leaflove.ui.theme.rememberWindowSizeClass
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.LocationViewModel
+import com.example.leaflove.viewmodel.MyPlantViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.annotation.KoinInternalApi
 import org.koin.viewmodel.resolveViewModel
@@ -62,9 +64,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val window = rememberWindowSizeClass()
-            LeafLoveTheme (window){
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LeafLove(authviewmodel)
+            LeafLoveTheme (window) {
+                KoinAndroidContext {
+                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                        LeafLove(authviewmodel)
+                    }
                 }
             }
         }
@@ -75,8 +79,12 @@ class MainActivity : ComponentActivity() {
 @OptIn(KoinInternalApi::class)
 @Composable
 fun LeafLove(authViewModel: AuthViewModel) {
+
+    val weatherViewModel: WeatherViewModel = koinViewModel();
+    val locViewModel: LocationViewModel = koinViewModel();
     val appAuthViewModel = koinViewModel<AuthViewModel>();
     val plantViewModel:PlantViewModel = koinViewModel();
+    val myPlantViewModel:MyPlantViewModel = koinViewModel()
     val context = LocalContext.current
     val sharedPref = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
     // Check if the user is already logged in
@@ -87,7 +95,7 @@ fun LeafLove(authViewModel: AuthViewModel) {
 //    NavHost(navController = navController, startDestination = if (isLoggedIn) "mainscreen" else "loginscreen") {
 
 
-        NavHost(navController = navController, startDestination = "mainscreen") {
+        NavHost(navController = navController, startDestination = "loginscreen") {
 
         composable("loginscreen") {
             loginScreen(navController, appAuthViewModel)
@@ -96,7 +104,7 @@ fun LeafLove(authViewModel: AuthViewModel) {
             registerScreen(navHost = navController, appAuthViewModel)
         }
         composable("mainscreen") {
-            MainScreen(appAuthViewModel) // No navController needed to be passed here
+            MainScreen(appAuthViewModel, weatherViewModel, locViewModel, plantViewModel) // No navController needed to be passed here
         }
 
 //        composable("transaction") {

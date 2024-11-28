@@ -34,6 +34,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.leaflove.R
 import com.example.leaflove.data.entities.PlantSpeciesEntity
 import com.example.leaflove.data.models.DefaultImage
+import com.example.leaflove.utils.cleanString
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.google.gson.Gson
 
@@ -82,10 +83,7 @@ fun PlantListItem(encyclo: PlantSpeciesEntity, plantViewModel: PlantViewModel, n
                         )
                     }
                     encyclo.scientific_name?.let {
-                        val cleanedText = it.replace(Regex("\\\\u[0-9A-Fa-f]{4}"), "") // Removes \uXXXX escape sequences
-                            .replace(Regex("\\[|\\]"), "") // Removes square brackets
-                            .replace(Regex("\\s+"), " ") // Replaces multiple spaces with a single space
-                            .trim() // Removes leading and trailing spaces
+                        val cleanedText = cleanString(it)
 
                         Text(
                             text = cleanedText,
@@ -93,6 +91,7 @@ fun PlantListItem(encyclo: PlantSpeciesEntity, plantViewModel: PlantViewModel, n
                             color = Color.Gray
                         )
                     }
+
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -112,7 +111,7 @@ fun PlantListItem(encyclo: PlantSpeciesEntity, plantViewModel: PlantViewModel, n
 
 fun convertIntoImage(jsonString: String): String? {
     val data = Gson().fromJson(jsonString, DefaultImage::class.java)
-    val image = data.thumbnail;
+    val image = data.regular_url;
     return image
 }
 

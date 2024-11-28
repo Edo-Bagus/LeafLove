@@ -16,4 +16,7 @@ interface PlantSpeciesDao {
 
     @Query("SELECT (SELECT COUNT (*) FROM plant_species) == 0")
     suspend fun checkIsEmpty(): Boolean
+
+    @Query("SELECT * FROM plant_species WHERE LOWER(common_name) LIKE '%' || LOWER(:search) || '%'")
+    suspend fun searchSuggestionPlant(search:String): List<PlantSpeciesEntity>
 }

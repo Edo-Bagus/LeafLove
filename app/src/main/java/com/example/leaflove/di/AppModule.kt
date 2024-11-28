@@ -6,13 +6,16 @@ import com.example.leaflove.data.dao.PlantDetailDao_Impl
 import com.example.leaflove.data.dao.PlantSpeciesDao
 import com.example.leaflove.data.dao.PlantSpeciesDao_Impl
 import com.example.leaflove.data.database.AppDatabase
+import com.example.leaflove.data.models.MyPlantModel
 import com.example.leaflove.data.repositories.PlantRepository
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.LocationViewModel
+import com.example.leaflove.viewmodel.MyPlantViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 
@@ -39,8 +42,10 @@ var appModule = module {
     }
 
     // Provide the ViewModels, injecting the repository
-    viewModel { AuthViewModel() } // If AuthViewModel needs dependencies, pass them here
-    viewModel { PlantViewModel(get(), get()) } // Injecting PlantRepository into PlantViewModel
-    viewModel { LocationViewModel() }
-    viewModel { WeatherViewModel() }
+    single { AuthViewModel()} // If AuthViewModel needs dependencies, pass them here
+    single { PlantViewModel(get()) } // Injecting PlantRepository into PlantViewModel
+    single { LocationViewModel() }
+    single { WeatherViewModel() }
+    single { MyPlantViewModel(get())}
+
 }

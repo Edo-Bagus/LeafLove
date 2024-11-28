@@ -1,5 +1,6 @@
 package com.example.leaflove.ui.screen.plantscreen
 
+import android.util.Log
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +31,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +45,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -56,11 +59,26 @@ import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
+import com.example.leaflove.data.models.MyPlantModel
+import com.example.leaflove.ui.components.SearchBar
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.AuthViewModel
+import com.example.leaflove.viewmodel.PlantViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.compose.koinInject
+import uploadImageToCloudinary
+
 
 @Composable
 fun addmyplant(navHost: NavHostController)
 {
+    val authViewModel: AuthViewModel = koinInject()
+    val plantViewModel: PlantViewModel = koinInject()
+    val searchResults = plantViewModel.plantSearchList
+    var plant_url = "https://media.istockphoto.com/id/1380361370/photo/decorative-banana-plant-in-concrete-vase-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=eYADMQ9dXTz1mggdfn_exN2gY61aH4fJz1lfMomv6o4="
+    val context = LocalContext.current
+
     var customfont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),
         Font(R.font.baloo_bold, weight = FontWeight.Bold))
@@ -70,7 +88,7 @@ fun addmyplant(navHost: NavHostController)
     }
 
     var typeofplant by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf("")
     }
 
     BoxWithConstraints (modifier = Modifier.fillMaxSize()){
@@ -137,66 +155,77 @@ fun addmyplant(navHost: NavHostController)
                 )
 
                 Spacer(modifier = Modifier.weight(0.1f))
+
+
+                Button(onClick = {navHost.navigate("camerascreen")},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(x = -(width * 0.04f))
+                        .padding(horizontal = width * 0.01f, )
+                        .zIndex(0.9f),
+                    colors = ButtonColors(
+                        contentColor = Color.White,
+                        containerColor = BasicGreen,
+                        disabledContentColor = BasicGreen,
+                        disabledContainerColor = Color.White
+                    )
+                ){
+
+                    Text(text = "Add Pictures",
+                        fontFamily = customfont,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = with(LocalDensity.current) { (width * 0.05f).toSp() }
+                    )
+                }
+
                 Text(
                     text = "Type of your plant",
                     fontFamily = customfont,
                     fontSize = with(LocalDensity.current) { (width * 0.05f).toSp() },
                 )
+
                 Spacer(modifier = Modifier.weight(0.05f))
 
                 Box(
                     modifier = Modifier
                         .offset(x = -(width * 0.04f))
                         .padding(horizontal = width * 0.01f)
+                        .zIndex(0.5f)
+                        .height(height = (height*0.3f))
                 ){
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(height * 0.07f)
-                            .clip(RoundedCornerShape(50))
-                            .border(width = 1.dp, color = Color.Black, RoundedCornerShape(50))
-                            .offset(x = width * 0.04f)
-                    ) {
 
-                        TextField(
-                            value = typeofplant,
-                            onValueChange = { newText -> typeofplant = newText },
-                            placeholder = {
-                                Text(
-                                    text = "Search your plant",
-                                    color = Color.LightGray
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(R.drawable.search_icon),
-                                    contentDescription = "Search"
-                                )
-                            },
-                            modifier = Modifier.fillMaxSize(), // Ensures TextField fills the Box
-                            colors = TextFieldDefaults.colors(
-                                focusedContainerColor = Color.White,
-                                unfocusedContainerColor = Color.White,
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
-                                cursorColor = Color.Black
-                            ),
-                            textStyle = LocalTextStyle.current.copy(
-                                fontSize = 16.sp,
-                                color = Color.Black
-                            ),
-                            singleLine = true
-                        )
-                    }
+                    SearchBar(
+                        onQueryChange = { query ->
+                            plantViewModel.fetchPlantSearchList(query)
+                            if(query == ""){
+                                plantViewModel.clearSearchResults()
+                            }
+                        },
+                        searchResults = searchResults
+                    )
+
                 }
-                Spacer(modifier = Modifier.weight(1f))
 
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        Log.d("Firestore", authViewModel.userData.value.toString())
+                        uploadImageToCloudinary(context = context, imageUri = plantViewModel.plantImageUploadUri.value, onUploadSuccess = { url ->
+                            plant_url = url
+                            authViewModel.updateuserMyPlant(
+                                newMyPlant = MyPlantModel(
+                                    plant_name = nameofplant.text,
+                                    plant_fk = plantViewModel.plantSelectedItem.value?.id ?: 1,
+                                    plant_image_url = plant_url
+                                )
+                            )
+                        })
+                        },
+
                     modifier = Modifier
                         .fillMaxWidth()
-                        .offset(x = -(width * 0.04f))
-                        .padding(horizontal = width * 0.01f),
+                        .offset(x = -(width * 0.04f), y = 50.dp)
+                        .padding(horizontal = width * 0.01f, )
+                        .zIndex(0.9f),
                     colors = ButtonColors(
                         contentColor = Color.White,
                         containerColor = BasicGreen,
@@ -216,4 +245,5 @@ fun addmyplant(navHost: NavHostController)
             }
         }
     }
+
 }

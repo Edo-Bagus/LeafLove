@@ -13,71 +13,59 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.leaflove.data.models.MyPlantDetailModel
+import com.example.leaflove.data.models.MyPlantModel
 import com.example.leaflove.data.models.UserDataModel
+import com.example.leaflove.data.repositories.PlantRepository
+import com.example.leaflove.viewmodel.AuthViewModel
+import com.example.leaflove.viewmodel.PlantViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.DocumentSnapshot
+import kotlinx.coroutines.coroutineScope
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-fun fetchUserData(email: String, onResult: (UserDataModel?) -> Unit) {
-    db.collection("users")
-        .whereEqualTo("email", email) // Query by email
-        .get()
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                if (!task.result.isEmpty) {
-                    val document = task.result.documents[0] // Get the first document
-                    val userData = document.toObject(UserDataModel::class.java) // Map to UserDataModel
-                    onResult(userData) // Pass the result to the callback
-                } else {
-                    onResult(null) // No matching user found
-                }
-            } else {
-                onResult(null) // Query failed
-            }
-        }
-}
+
 
 
 
 @Composable
 fun TestingScreen(navController: NavHostController) {
-    val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    var userData by remember { mutableStateOf<UserDataModel?>(null) }
-    var email by remember { mutableStateOf("") }
+    val authViewModel: AuthViewModel = koinInject()
+    val plantRepository: PlantRepository = koinInject()
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Spacer(modifier = Modifier.padding(50.dp))
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
+    // State to hold the plant detail model
+    var myPlantDetailModel by remember { mutableStateOf<MyPlantDetailModel?>(null) }
 
-        // Button to Fetch Data
-        Button(onClick = {
-            fetchUserData(email) { result ->
-                userData = result
+    // Observe user data from the ViewModel
+    val userData = authViewModel.userData
+
+    // Coroutine scope for launching the data fetch
+    val coroutineScope = rememberCoroutineScope()
+
+    // Launching the coroutine to fetch data when userData changes
+    LaunchedEffect(userData.value) {
+        userData.value?.my_plants?.let { userPlants ->
+            if (userPlants.size > 1) {
+                val plantDetail = plantRepository.getPlantDetails(userPlants[1].plant_fk)
+                myPlantDetailModel = MyPlantDetailModel(userPlants[1], plantDetail)
             }
-        }) {
-            Text(text = "Fetch User Data")
         }
+    }
 
-        Spacer(modifier = Modifier.padding(8.dp))
+    Column {
+        Spacer(modifier = Modifier.padding(100.dp))
 
-        // Display User Data
-        if (userData != null) {
-            Text(text = "Email: ${userData?.email}")
-            Text(text = "Password: ${userData?.password}")
-            userData?.my_plants?.forEach { plant ->
-                Text(text = "Plant Name: ${plant.plant_name}")
-                Text(text = "Plant Age: ${plant.plant_age}")
-                Text(text = "Last Watered: ${plant.plant_last_watered}")
-                Text(text = "To Be Watered: ${plant.plant_to_be_watered}")
-            }
-        } else {
-            Text(text = "No user data found or enter an email to fetch.")
+        // Check if myPlantDetailModel is not null before accessing its properties
+        myPlantDetailModel?.let { detailModel ->
+            detailModel.plantDetailEntity.common_name?.let { Text(text = it) }
+            Spacer(modifier = Modifier.padding(50.dp))
+            detailModel.myPlantModel.plant_name.let { Text(text = it) }
+        } ?: run {
+            // Optionally show a loading or error state
+            Text(text = "Loading...")
         }
     }
 }

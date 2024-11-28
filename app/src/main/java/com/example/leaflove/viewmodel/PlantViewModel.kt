@@ -1,5 +1,7 @@
 package com.example.leaflove.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -19,38 +21,38 @@ import com.example.leaflove.data.models.DepthWaterRequirement
 import com.example.leaflove.data.models.Dimensions
 import com.example.leaflove.data.models.Hardiness
 import com.example.leaflove.data.models.HardinessLocation
+import com.example.leaflove.data.models.MyPlantDetailModel
 import com.example.leaflove.data.models.PlantDetailResponseModel
 import com.example.leaflove.data.models.PlantListResponseModel
 import com.example.leaflove.data.models.PlantSpecies
 import com.example.leaflove.data.models.WateringBenchmark
 import com.example.leaflove.data.repositories.PlantRepository
 import com.example.leaflove.services.PerenualAPIService
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 
-
-class PlantViewModel(private val plantSpeciesDao: PlantSpeciesDao,
-                     private val plantDetailDao: PlantDetailDao
-): ViewModel() {
-
-    init {
-        fetchPlantList()
-    }
+class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() {
 
     suspend fun initializeDAOPlant() {
         coroutineScope {
             if (plantRepository.checkIsEmpty()) {
-                Log.d("Check DB",plantRepository.checkIsEmpty().toString())
                 fetchPlantList();
-                insertPlantToRoom();
             }
         }
     }
 
+    init {
+        viewModelScope.launch {
+            initializeDAOPlant()
+            fetchPlantListFromRoom()
+        }
+    }
 
-    private var plantRepository = PlantRepository(plantSpeciesDao, plantDetailDao)
 
     private val plantServices: PerenualAPIService = PerenualAPIService.create()
 
@@ -64,11 +66,78 @@ class PlantViewModel(private val plantSpeciesDao: PlantSpeciesDao,
     private val _plantList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())
     val plantList = _plantList
 
+    private val _plantSearchList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())
+    val plantSearchList = _plantSearchList
+
+    private val _plantSelectedItem = mutableStateOf<PlantSpeciesEntity?>(null)
+    val plantSelectedItem = _plantSelectedItem
+
+    private val _plantImageUploadUri = mutableStateOf<Uri>(Uri.EMPTY)
+    val plantImageUploadUri = _plantImageUploadUri
+
+
+    private val _funFacts = mutableStateOf<List<String>>(emptyList())
+    val funFacts = _funFacts
+
+
+    fun loadFunFacts(context: Context) {
+        viewModelScope.launch {
+            try {
+                val inputStream = context.assets.open("FunFacts.json")
+                val jsonString = inputStream.bufferedReader().use { it.readText() }
+                val funFactList: List<String> = Gson().fromJson(jsonString, object : TypeToken<List<String>>() {}.type)
+                Log.d("Tes: ", funFactList.toString())
+                _funFacts.value = funFactList
+                Log.d("FunFacts", "Fun facts loaded: ${_funFacts.value.size}")
+            } catch (e: Exception) {
+                Log.e("FunFacts Error", e.message ?: "Error loading fun facts")
+            }
+        }
+    }
+
+    fun fetchPlantSearchList(query: String){
+        viewModelScope.launch{
+            try{
+                if(query.isBlank()){
+                    clearSearchResults()
+                } else {
+                    _plantSearchList.value = plantRepository.searchSuggestionPlant(query)
+                }
+                    Log.d("plantsearch", _plantSearchList.value.toString())
+
+            } catch (e : Exception){
+                    e.message?.let {Log.e("Plant Error", it)}
+            }
+        }
+    }
+
+
+
+    fun clearSearchResults() {
+        _plantSearchList.value = emptyList()
+    }
+
+
+    fun selectItem(plantSpeciesEntity: PlantSpeciesEntity){
+        _plantSelectedItem.value = plantSpeciesEntity
+    }
+
     fun fetchPlantList() {
         viewModelScope.launch {
             try {
                 val response = plantServices.getPlantList()
+
+
                 _plantState.value = response
+                var mappedPlantEntity = plantState.value.data
+                var result : List<PlantSpeciesEntity>? = emptyList();
+                if (mappedPlantEntity != null) {
+                    result = plantToEntityList(mappedPlantEntity)
+                }
+                if (result != null) {
+                    plantRepository.insertPlants(result)
+                }
+                Log.d("Tess", _plantState.value.toString())
             } catch (e: Exception) {
                 e.message?.let { Log.e("Plant Error", it) }
             }
@@ -87,83 +156,23 @@ class PlantViewModel(private val plantSpeciesDao: PlantSpeciesDao,
         }
     }
 
-    fun insertPlantToRoom(){
-        viewModelScope.launch {
-            try {
-                var mappedPlantEntity = plantState.value.data
-                var result : List<PlantSpeciesEntity>? = emptyList();
-                if (mappedPlantEntity != null) {
-                   result = plantToEntityList(mappedPlantEntity)
-                }
-                if (result != null) {
-                    plantRepository.insertPlants(result)
-                }
-            } catch (e: Exception) {
-                e.message?.let { Log.e("Plant Error", it) }
-            }
-        }
+    fun setImageUploadUri(uri: Uri){
+        _plantImageUploadUri.value = uri;
     }
 
-
-    // Function to fetch plant list (now with dummy data)
-    fun fetchPlantListDummy() {
+    fun filterPlantList(query: String) {
         viewModelScope.launch {
             try {
-                // Simulate a network delay
-                delay(1000L)
-
-                // Create dummy plant data
-                val dummyPlants = listOf(
-                    PlantSpecies(
-                        id = 1,
-                        common_name = "Golden Fullmoon Maple",
-                        scientific_name = listOf("Acer japonicum 'Aureum'"),
-                        other_name = emptyList(),
-                        cycle = "Perennial",
-                        watering = "Average",
-                        sunlight = listOf("full sun", "part shade"),
-                        default_image = DefaultImage(
-                            license = 45,
-                            license_name = "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
-                            license_url = "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
-                            original_url = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/og/2560px-Acer_shirasawanum_27Aureum27.jpg",
-                            regular_url = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/regular/2560px-Acer_shirasawanum_27Aureum27.jpg",
-                            medium_url = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/medium/2560px-Acer_shirasawanum_27Aureum27.jpg",
-                            small_url = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/small/2560px-Acer_shirasawanum_27Aureum27.jpg",
-                            thumbnail = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/thumbnail/2560px-Acer_shirasawanum_27Aureum27.jpg"
-                        )
-                    ),
-                    PlantSpecies(
-                        id = 2,
-                        common_name = "Pea",
-                        scientific_name = listOf("Helianthus"),
-                        other_name = null,
-                        cycle = "Annual",
-                        watering = "Frequent",
-                        sunlight = listOf("Full Sun"),
-                        default_image = DefaultImage(
-                            license = 456,
-                            license_name = "LicenseName",
-                            license_url = "https://licenseurl.com",
-                            original_url = "https://example.com/sunflower.jpg",
-                            regular_url = "https://example.com/sunflower_regular.jpg",
-                            medium_url = "https://example.com/sunflower_medium.jpg",
-                            small_url = "https://example.com/sunflower_small.jpg",
-                            thumbnail = "https://example.com/sunflower_thumbnail.jpg"
-                        )
-                    )
-                )
-
-                // Set the dummy data as the state
-                _plantState.value = PlantListResponseModel(
-                    data = dummyPlants,
-                    to = 2,
-                    per_page = 2,
-                    current_page = 1,
-                    from = 1,
-                    last_page = 1,
-                    total = 2
-                )
+                val filteredPlants = if (query.isBlank()) {
+                    // Reset to all plants if the query is empty
+                    plantRepository.getAllPlants()
+                } else {
+                    // Filter plants by name (case-insensitive)
+                    plantRepository.getAllPlants().filter { plant ->
+                        plant.common_name?.contains(query, ignoreCase = true) == true
+                    }
+                }
+                _plantList.value = filteredPlants
             } catch (e: Exception) {
                 e.message?.let { Log.e("Plant Error", it) }
             }
@@ -174,13 +183,14 @@ class PlantViewModel(private val plantSpeciesDao: PlantSpeciesDao,
         viewModelScope.launch {
             try{
                 if(!plantRepository.checkIsFilledPlantDetail(id)){
-
+                    Log.d("Cek", (!plantRepository.checkIsFilledPlantDetail(id)).toString())
                     _plantDetail.value = plantRepository.getPlantDetails(id)
                     Log.d("test ambil", _plantDetail.value.toString()   )
                 } else {
+                    Log.d("Cek", (!plantRepository.checkIsFilledPlantDetail(id)).toString())
                     val response = plantServices.getPlantDetail(id)
+                    _plantDetail.value = plantDetailToEntity(response)
                     insertIntoPlantDetailsRoom(response)
-                    _plantDetail.value = plantRepository.getPlantDetails(id)
                 }
             } catch (e: Exception){
             e.message?.let{ Log.e("Plant Detail Error", it)}
@@ -188,6 +198,9 @@ class PlantViewModel(private val plantSpeciesDao: PlantSpeciesDao,
         }
 
     }
+
+
+
     fun insertIntoPlantDetailsRoom(plantDetailResponse: PlantDetailResponseModel){
         viewModelScope.launch{
             try{
@@ -200,6 +213,34 @@ class PlantViewModel(private val plantSpeciesDao: PlantSpeciesDao,
             }
         }
     }
+
+    fun sortPlantList(by: String = "common_name", ascending: Boolean = true) {
+        viewModelScope.launch {
+            try {
+                val sortedPlants = when (by) {
+                    "common_name" -> {
+                        if (ascending) {
+                            plantRepository.getAllPlants().sortedBy { it.common_name }
+                        } else {
+                            plantRepository.getAllPlants().sortedByDescending { it.common_name }
+                        }
+                    }
+                    "scientific_name" -> {
+                        if (ascending) {
+                            plantRepository.getAllPlants().sortedBy { it.scientific_name }
+                        } else {
+                            plantRepository.getAllPlants().sortedByDescending { it.scientific_name }
+                        }
+                    }
+                    else -> _plantList.value // Default: do not sort
+                }
+                _plantList.value = sortedPlants
+            } catch (e: Exception) {
+                e.message?.let { Log.e("Sort Error", it) }
+            }
+        }
+    }
+
 
 
 }

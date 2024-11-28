@@ -91,6 +91,7 @@ dependencies {
     // Koin for Jetpack Compose
     implementation(libs.koin.androidx.compose)
 
+    implementation("com.cloudinary:cloudinary-android:3.0.2")
 
 
     // Optional: Koin for Navigation (if you're using Jetpack Navigation)
@@ -124,6 +125,8 @@ dependencies {
     implementation("androidx.camera:camera-camera2:1.1.0")
     implementation("androidx.camera:camera-lifecycle:1.1.0")
     implementation("androidx.camera:camera-view:1.1.0")
+
+    implementation("com.google.accompanist:accompanist-permissions:0.36.0")
 
     implementation("io.github.sceneview:arsceneview:2.2.1")
     implementation(libs.androidx.core.ktx)

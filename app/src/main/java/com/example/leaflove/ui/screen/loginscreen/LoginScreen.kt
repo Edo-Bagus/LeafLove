@@ -54,12 +54,23 @@ fun loginScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-    val authState = authViewModel.authState.observeAsState()
+    val authState = authViewModel.authState
 
-    LaunchedEffect(authState.value) {
-        when(authState.value){
-            is AuthState.Authenticated -> navHost.navigate("mainscreen")
-            is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_LONG).show()
+
+    LaunchedEffect(authState.value, authViewModel.userData.value) {
+        when (authState.value) {
+            is AuthState.Authenticated -> {
+                if (authViewModel.userData.value != null) {
+                    navHost.navigate("mainscreen")
+                }
+            }
+            is AuthState.Error -> {
+                Toast.makeText(
+                    context,
+                    (authState.value as AuthState.Error).message,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
             else -> Unit
         }
     }

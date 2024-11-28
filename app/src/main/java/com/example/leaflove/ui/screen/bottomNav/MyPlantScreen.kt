@@ -34,22 +34,38 @@ import com.example.leaflove.R
 import com.example.leaflove.ui.components.MyPlantGrid
 import com.example.leaflove.ui.components.Plant
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.LocationViewModel
+import com.example.leaflove.viewmodel.WeatherViewModel
+import com.example.leaflove.viewmodel.AuthViewModel
+import org.koin.compose.koinInject
+
+enum class Status(val rating: Int) {
+    Good(1),
+    Mediocre(2),
+    Bad(3);
+}
 
 @Composable
-fun MyPlantScreen(navHost: NavHostController){
+fun MyPlantScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel){
+
+    val weatherState by weatherViewModel.weatherState
+
+    val tempCelsius = weatherState.main?.temp?.let { it - 273.15 }
+    val tempCelsiusString = tempCelsius?.let { String.format("%.2f", it) } ?: "Loading"
+    val humidity = weatherState.main?.humidity?.toString() ?: "Loading"
+    val weatherMain = weatherState.weather?.firstOrNull()?.main ?: "Loading"
+
     val image3 = painterResource(R.drawable.menumyplant)
     val image4 = painterResource(R.drawable.footermyplant)
     var username by remember { mutableStateOf("") }
-    val plants = listOf(
-        Plant("Aloe Vera", "Healthy", R.drawable.contoh_tanaman),
-        Plant("Cactus", "Needs Water", R.drawable.contoh_tanaman),
-        Plant("Monstera", "Growing", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman),
-        Plant("Snake Plant", "Thriving", R.drawable.contoh_tanaman)
-    )
+    val authViewModel = koinInject<AuthViewModel>()
+
+
+    val plants = mutableListOf<Plant>()
+        for(plant in authViewModel.userData.value?.my_plants!!){
+            val status = Status.values().find { it.rating == plant.plant_status } ?: Status.Mediocre
+            plants.add(Plant(nama = plant.plant_name, status = status.name, image = plant.plant_image_url))
+        }
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         val screenHeight = maxHeight
@@ -84,11 +100,11 @@ fun MyPlantScreen(navHost: NavHostController){
                 Spacer(modifier = Modifier.height(16.dp))
                 Row {
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = "23*")
+                    Text(text = tempCelsiusString)
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = "rain")
+                    Text(text = weatherMain)
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = "12")
+                    Text(text = humidity)
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }
@@ -103,7 +119,24 @@ fun MyPlantScreen(navHost: NavHostController){
                 .zIndex(1f)
         )
         {
-            MyPlantGrid(plants = plants, screenHeight, screenWidth)
-        }
+            if (plants.isEmpty()) {
+                // Display "No Data" if plants are empty
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No Data",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Gray
+                    )
+                }
+            } else {
+                // Display plants grid
+                MyPlantGrid(navHost, plants = plants, screenHeight, screenWidth)
+            }        }
     }
 }

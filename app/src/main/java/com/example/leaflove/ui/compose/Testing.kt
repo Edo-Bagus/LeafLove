@@ -108,7 +108,7 @@ fun mapResponseToEntity(plantList: List<PlantSpecies>) : List<PlantSpeciesEntity
 suspend fun SubmitButtonHandler(plantViewModel: PlantViewModel, plantState: PlantListResponseModel){
     val plantEntities = plantState.data?.let { mapResponseToEntity(it) }
     if (plantEntities != null) {
-        plantViewModel.insertPlantToRoom()
+//        plantViewModel.insertPlantToRoom()
     }
 }
 
