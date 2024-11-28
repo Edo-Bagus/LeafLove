@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -355,44 +356,54 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
                             }
 
                             Spacer(modifier = Modifier.weight(0.1f))
+                            Log.d("Tes", plant.toString())
+                            if(plant != null){
+                                Column (
+                                    modifier = Modifier.width(screenWidth * 0.2f)
+                                ) {
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        Text(
+                                            text = "Name: " + plant.nama,
+                                            fontFamily = customfont,
+                                            fontWeight = FontWeight.Normal
+                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        Text(
+                                            text = "Age: " + plant.age,
+                                            fontFamily = customfont,
+                                            fontWeight = FontWeight.Normal
+                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                }
 
-                            Column (
-                                modifier = Modifier.width(screenWidth * 0.2f)
-                            ) {
+                                Spacer(modifier = Modifier.weight(0.1f))
+
+                                Column (
+                                    modifier = Modifier.width(screenWidth * 0.2f)
+                                ){
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Text(
+                                        text = "Last Water: " + plant.last_water,
+                                        fontFamily = customfont,
+                                        fontWeight = FontWeight.Normal)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Text(
+                                        text = "Next Water: " + plant.to_water,
+                                        fontFamily = customfont,
+                                        fontWeight = FontWeight.Normal)
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
+
+                                Spacer(modifier = Modifier.weight(0.1f))
+                            }else{
                                 Spacer(modifier = Modifier.weight(1f))
                                 Text(
-                                    text = "Nama dari tumbuhan",
-                                    fontFamily = customfont,
-                                    fontWeight = FontWeight.Normal
-                                )
-                                Spacer(modifier = Modifier.weight(1f))
-                                Text(
-                                    text = "Umur : Tua",
+                                    text = "No Plant Data Available",
                                     fontFamily = customfont,
                                     fontWeight = FontWeight.Normal
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
                             }
-
-                            Spacer(modifier = Modifier.weight(0.1f))
-
-                            Column (
-                                modifier = Modifier.width(screenWidth * 0.2f)
-                            ){
-                                Spacer(modifier = Modifier.weight(1f))
-                                Text(
-                                    text = "Apa",
-                                    fontFamily = customfont,
-                                    fontWeight = FontWeight.Normal)
-                                Spacer(modifier = Modifier.weight(1f))
-                                Text(
-                                    text = "Apa",
-                                    fontFamily = customfont,
-                                    fontWeight = FontWeight.Normal)
-                                Spacer(modifier = Modifier.weight(1f))
-                            }
-
-                            Spacer(modifier = Modifier.weight(0.1f))
                         }
                     }
 

@@ -57,10 +57,10 @@ fun loginScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
     val authState = authViewModel.authState
 
 
-    LaunchedEffect(authState.value, authViewModel.userData) {
+    LaunchedEffect(authState.value, authViewModel.userData.value) {
         when (authState.value) {
             is AuthState.Authenticated -> {
-                if (authViewModel.userData != mutableStateOf(null)) {
+                if (authViewModel.userData.value != null) {
                     navHost.navigate("mainscreen")
                 }
             }

@@ -62,6 +62,7 @@ import io.github.sceneview.rememberView
 @Composable
 fun ARScreen(plantViewModel: PlantViewModel) {
     val plants = plantViewModel.plantList.value
+    val plantDetail = plantViewModel.plantDetail.value
 
     BoxWithConstraints (modifier = Modifier.fillMaxSize()){
         val screenheight = maxHeight
@@ -85,8 +86,8 @@ fun ARScreen(plantViewModel: PlantViewModel) {
             }
             var frame by remember { mutableStateOf<Frame?>(null) }
             var modelPlaced by remember { mutableStateOf(false) }
-            var selectedModel by remember { mutableStateOf("") }
-            var selectedModelName by remember { mutableStateOf("") }// No model selected initially
+            var selectedModel by remember { mutableStateOf(plantDetail.id.toString()) }
+            var selectedModelName by remember { mutableStateOf(plantDetail.common_name.toString()) }// No model selected initially
 
             val context = LocalContext.current
             val modelFiles = remember {
