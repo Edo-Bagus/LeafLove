@@ -1,9 +1,12 @@
 package com.example.leaflove.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,15 +17,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.leaflove.R
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.PlantViewModel
 
 @Composable
-fun Header(navController: NavController, modifier: Modifier = Modifier, screenWidth: Dp, screenHeight: Dp) {
+fun Header(navController: NavController,
+           viewModel: PlantViewModel, modifier: Modifier = Modifier, screenWidth: Dp, screenHeight: Dp) {
     var search by remember { mutableStateOf("") }
 
     Row(
@@ -57,9 +63,6 @@ fun Header(navController: NavController, modifier: Modifier = Modifier, screenWi
                 .height(screenHeight * 0.056f)
                 .clip(RoundedCornerShape(50))
                 .background(Color.Black)
-                .clickable {
-                    navController.navigate("searchScreen") // Navigate on click
-                }
         ) {
             TextField(
                 value = search,
@@ -85,9 +88,25 @@ fun Header(navController: NavController, modifier: Modifier = Modifier, screenWi
                     cursorColor = Color.Black
                 ),
                 textStyle = LocalTextStyle.current.copy(fontSize = 16.sp, color = Color.Black),
-                singleLine = true
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        // Navigate to searchScreen when "Done" is pressed
+
+                        viewModel.filterPlantList(search)
+                        val currentRoute = navController.currentBackStackEntry?.destination?.route
+
+                        // Navigate to "searchScreen" only if not already on it
+                        if (currentRoute != "searchscreen") {
+                            navController.navigate("searchScreen")
+                        }
+                        search = ""
+                    }
+                )
             )
         }
+
 
 
         Spacer(modifier = Modifier.weight(1f))

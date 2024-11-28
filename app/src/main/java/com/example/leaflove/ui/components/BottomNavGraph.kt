@@ -23,13 +23,13 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun BottomNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    weatherViewModel: WeatherViewModel,
+    locViewModel: LocationViewModel,
+    plantViewModel: PlantViewModel
 ) {
-    val weatherViewModel: WeatherViewModel = koinViewModel();
-    val locViewModel: LocationViewModel = koinViewModel();
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp // Height of the screen in dp
-    val plant = koinViewModel<PlantViewModel>();
 
     // Get screen height for potential responsive design (currently unused)
     val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
@@ -52,7 +52,7 @@ fun BottomNavGraph(
 
         // My Plants screen
         composable(route = BottomBarScreen.MyPlant.route) {
-            MyPlantScreen(navHost = navController)
+            MyPlantScreen(navHost = navController, weatherViewModel, locViewModel)
         }
 
         composable("transaction")
@@ -61,12 +61,12 @@ fun BottomNavGraph(
         }
         composable("searchscreen")
         {
-            EncyclopediaMainScreen(navHost = navController, viewModel = plant)
+            EncyclopediaMainScreen(navHost = navController, viewModel = plantViewModel)
         }
         
         composable("detailscreen")
         {  
-            EncyclopediaDetailScreen(navHost = navController, plant.plantDetail)
+            EncyclopediaDetailScreen(navHost = navController, plantViewModel.plantDetail)
         }
 
         composable("addmyplant")

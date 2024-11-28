@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,10 +32,14 @@ import com.example.leaflove.viewmodel.PlantViewModel
 fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel) {
     LaunchedEffect(Unit) {
         viewModel.initializeDAOPlant()
-        viewModel.fetchPlantListFromRoom()
-        Log.d("Test", viewModel.plantList.toString())
     }
     val plants = viewModel.plantList.value
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.fetchPlantListFromRoom()
+        }
+    }
 
     BoxWithConstraints(
         modifier = Modifier

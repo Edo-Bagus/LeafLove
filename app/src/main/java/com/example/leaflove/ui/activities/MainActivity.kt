@@ -78,6 +78,9 @@ class MainActivity : ComponentActivity() {
 @OptIn(KoinInternalApi::class)
 @Composable
 fun LeafLove(authViewModel: AuthViewModel) {
+
+    val weatherViewModel: WeatherViewModel = koinViewModel();
+    val locViewModel: LocationViewModel = koinViewModel();
     val appAuthViewModel = koinViewModel<AuthViewModel>();
     val plantViewModel:PlantViewModel = koinViewModel();
     val context = LocalContext.current
@@ -99,7 +102,7 @@ fun LeafLove(authViewModel: AuthViewModel) {
             registerScreen(navHost = navController, appAuthViewModel)
         }
         composable("mainscreen") {
-            MainScreen(appAuthViewModel) // No navController needed to be passed here
+            MainScreen(appAuthViewModel, weatherViewModel, locViewModel, plantViewModel) // No navController needed to be passed here
         }
 
 //        composable("transaction") {

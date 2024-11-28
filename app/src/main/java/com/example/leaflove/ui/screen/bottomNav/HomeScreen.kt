@@ -44,8 +44,8 @@ fun HomeScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, l
     val locationUtils = remember { LocationUtils(context, locationViewModel) }
     val location = locationViewModel.locationState
 
-    val cuaca = weatherViewModel.weatherState.value.weather?.firstOrNull()?.main ?: "No weather data"
-    val humidity = weatherViewModel.weatherState.value.main?.humidity ?: "Test"
+    val cuaca = weatherViewModel.weatherState.value.weather?.firstOrNull()?.main ?: "Loading"
+    val humidity = weatherViewModel.weatherState.value.main?.humidity ?: "Loading"
     val tempKelvin = weatherViewModel.weatherState.value.main?.temp ?: 99999.99
     var tempCelcius = tempKelvin?.minus(273)
     var tempCelciusString = String.format("%.2f", tempCelcius)

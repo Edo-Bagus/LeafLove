@@ -33,10 +33,6 @@ import kotlinx.coroutines.launch
 
 class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() {
 
-    init {
-        fetchPlantList()
-    }
-
     suspend fun initializeDAOPlant() {
         coroutineScope {
             if (plantRepository.checkIsEmpty()) {
@@ -46,7 +42,6 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
             }
         }
     }
-
 
 
     private val plantServices: PerenualAPIService = PerenualAPIService.create()
@@ -102,65 +97,19 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
     }
 
 
-    // Function to fetch plant list (now with dummy data)
-    fun fetchPlantListDummy() {
+    fun filterPlantList(query: String) {
         viewModelScope.launch {
             try {
-                // Simulate a network delay
-                delay(1000L)
-
-                // Create dummy plant data
-                val dummyPlants = listOf(
-                    PlantSpecies(
-                        id = 1,
-                        common_name = "Golden Fullmoon Maple",
-                        scientific_name = listOf("Acer japonicum 'Aureum'"),
-                        other_name = emptyList(),
-                        cycle = "Perennial",
-                        watering = "Average",
-                        sunlight = listOf("full sun", "part shade"),
-                        default_image = DefaultImage(
-                            license = 45,
-                            license_name = "Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)",
-                            license_url = "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
-                            original_url = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/og/2560px-Acer_shirasawanum_27Aureum27.jpg",
-                            regular_url = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/regular/2560px-Acer_shirasawanum_27Aureum27.jpg",
-                            medium_url = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/medium/2560px-Acer_shirasawanum_27Aureum27.jpg",
-                            small_url = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/small/2560px-Acer_shirasawanum_27Aureum27.jpg",
-                            thumbnail = "https://perenual.com/storage/species_image/20_acer_japonicum_aureum/thumbnail/2560px-Acer_shirasawanum_27Aureum27.jpg"
-                        )
-                    ),
-                    PlantSpecies(
-                        id = 2,
-                        common_name = "Pea",
-                        scientific_name = listOf("Helianthus"),
-                        other_name = null,
-                        cycle = "Annual",
-                        watering = "Frequent",
-                        sunlight = listOf("Full Sun"),
-                        default_image = DefaultImage(
-                            license = 456,
-                            license_name = "LicenseName",
-                            license_url = "https://licenseurl.com",
-                            original_url = "https://example.com/sunflower.jpg",
-                            regular_url = "https://example.com/sunflower_regular.jpg",
-                            medium_url = "https://example.com/sunflower_medium.jpg",
-                            small_url = "https://example.com/sunflower_small.jpg",
-                            thumbnail = "https://example.com/sunflower_thumbnail.jpg"
-                        )
-                    )
-                )
-
-                // Set the dummy data as the state
-                _plantState.value = PlantListResponseModel(
-                    data = dummyPlants,
-                    to = 2,
-                    per_page = 2,
-                    current_page = 1,
-                    from = 1,
-                    last_page = 1,
-                    total = 2
-                )
+                val filteredPlants = if (query.isBlank()) {
+                    // Reset to all plants if the query is empty
+                    plantRepository.getAllPlants()
+                } else {
+                    // Filter plants by name (case-insensitive)
+                    plantRepository.getAllPlants().filter { plant ->
+                        plant.common_name?.contains(query, ignoreCase = true) == true
+                    }
+                }
+                _plantList.value = filteredPlants
             } catch (e: Exception) {
                 e.message?.let { Log.e("Plant Error", it) }
             }

@@ -39,9 +39,12 @@ import com.example.leaflove.ui.components.BottomNavGraph
 import com.example.leaflove.ui.components.Header
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.AuthViewModel
+import com.example.leaflove.viewmodel.LocationViewModel
+import com.example.leaflove.viewmodel.PlantViewModel
+import com.example.leaflove.viewmodel.WeatherViewModel
 
 @Composable
-fun MainScreen(authViewModel: AuthViewModel) {
+fun MainScreen(authViewModel: AuthViewModel, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel, plantViewModel: PlantViewModel) {
     // Create NavController for navigation
     val navController = rememberNavController()
     val configuration = LocalConfiguration.current
@@ -61,7 +64,7 @@ fun MainScreen(authViewModel: AuthViewModel) {
                 .fillMaxSize()
                 .zIndex(0f) // Base layer for the navigation content
         ) {
-            BottomNavGraph(navController = navController)
+            BottomNavGraph(navController = navController, weatherViewModel, locationViewModel, plantViewModel)
         }
 
         // Header component (optional, above navigation content)
@@ -72,6 +75,7 @@ fun MainScreen(authViewModel: AuthViewModel) {
                 .fillMaxWidth()
                 .statusBarsPadding(),
             screenWidth = screenWidth,
+            viewModel = plantViewModel,
             screenHeight = screenHeight
         )
 
@@ -166,8 +170,8 @@ fun BottomBarItem(
 
 
 
-@Composable
-@Preview
-fun BottomNavPreview() {
-    MainScreen(authViewModel = AuthViewModel())
-}
+//@Composable
+//@Preview
+//fun BottomNavPreview() {
+//    MainScreen(authViewModel = AuthViewModel())
+//}
