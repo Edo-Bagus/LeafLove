@@ -34,6 +34,7 @@ import com.example.leaflove.R
 import com.example.leaflove.ui.components.Plant
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.theme.ButtonGreen
+import com.example.leaflove.utils.calculatePlantAgeInDays
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.google.firebase.Timestamp
 import org.koin.compose.koinInject
@@ -390,20 +391,6 @@ private fun requestLocationPermissions(context: Context) {
             )
         }
     }
-}
-
-fun calculatePlantAgeInDays(createdTimestamp: Timestamp): String {
-    // Convert Timestamp to Instant
-    val createdInstant = createdTimestamp.toDate().toInstant()
-
-    // Get the current time
-    val nowInstant = Instant.now()
-
-    // Calculate the total days between the created time and now
-    val totalDays = ChronoUnit.DAYS.between(createdInstant, nowInstant)
-
-    // Return the age as a formatted string
-    return "$totalDays days"
 }
 
 const val REQUEST_LOCATION_PERMISSION = 1
