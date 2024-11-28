@@ -67,7 +67,7 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
         plants.add(Plant(
             nama = plant.plant_name,
             status = status.name,
-            image = R.drawable.contoh_tanaman,
+            image = plant.plant_image_url,
             to_water = formatDate(plant.plant_to_be_watered),
             last_water = formatDate(plant.plant_last_watered),
             age = calculatePlantAgeInDays(plant.plant_age)

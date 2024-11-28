@@ -1,5 +1,7 @@
 package com.example.leaflove.ui.components
 
+import CameraPermissionScreen
+import CameraScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -87,6 +89,9 @@ fun BottomNavGraph(
         composable(route = "myplantdetail")
         {
             myplantdetail(navController)
+        }
+        composable(route = "camerascreen"){
+            CameraPermissionScreen(navController)
         }
     }
 }

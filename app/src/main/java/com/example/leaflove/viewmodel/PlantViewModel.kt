@@ -1,6 +1,7 @@
 package com.example.leaflove.viewmodel
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -49,11 +50,8 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         viewModelScope.launch {
             initializeDAOPlant()
             fetchPlantListFromRoom()
-
         }
     }
-
-
 
 
     private val plantServices: PerenualAPIService = PerenualAPIService.create()
@@ -73,6 +71,10 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
 
     private val _plantSelectedItem = mutableStateOf<PlantSpeciesEntity?>(null)
     val plantSelectedItem = _plantSelectedItem
+
+    private val _plantImageUploadUri = mutableStateOf<Uri>(Uri.EMPTY)
+    val plantImageUploadUri = _plantImageUploadUri
+
 
     private val _funFacts = mutableStateOf<List<String>>(emptyList())
     val funFacts = _funFacts
@@ -154,6 +156,9 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         }
     }
 
+    fun setImageUploadUri(uri: Uri){
+        _plantImageUploadUri.value = uri;
+    }
 
     fun filterPlantList(query: String) {
         viewModelScope.launch {

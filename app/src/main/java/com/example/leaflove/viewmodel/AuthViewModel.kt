@@ -10,6 +10,7 @@ import com.example.leaflove.data.models.MyPlantModel
 import com.example.leaflove.data.models.UserDataModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.rpc.context.AttributeContext.Auth
 
@@ -53,7 +54,7 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun signup(email: String, password: String) {
+    fun signup(email: String, password: String, username: String) {
         if (email.isEmpty() || password.isEmpty()) {
             _authState.value = AuthState.Error("Email or password is empty")
             return
@@ -63,7 +64,7 @@ class AuthViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _authState.value = AuthState.Authenticated
-                    saveUserToDatabase(email, password) // Save user data to Firestore
+                    saveUserToDatabase(email, password, username) // Save user data to Firestore
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
@@ -76,8 +77,8 @@ class AuthViewModel : ViewModel() {
         _userData.value = null // Clear user data on sign out
     }
 
-    private fun saveUserToDatabase(email: String, password: String) {
-        val userData = UserDataModel(email, password, mutableListOf())
+    private fun saveUserToDatabase(email: String, password: String, username: String) {
+        val userData = UserDataModel(username, email, password, mutableListOf())
         db.collection("users")
             .document(email) // Use email as the document ID
             .set(userData)
@@ -105,6 +106,7 @@ class AuthViewModel : ViewModel() {
                         Log.d("Firestore", "Plants: $plants")
                         plants?.forEach { plantMap ->
                             val plant = MyPlantModel(
+                                plant_image_url = plantMap["plant_image_url"] as? String ?: "https://media.istockphoto.com/id/1380361370/photo/decorative-banana-plant-in-concrete-vase-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=eYADMQ9dXTz1mggdfn_exN2gY61aH4fJz1lfMomv6o4=",
                                 plant_name = plantMap["plant_name"] as? String ?: "",
                                 plant_age = plantMap["plant_age"] as? Timestamp ?: Timestamp.now(),
                                 plant_last_watered = plantMap["plant_last_watered"] as? Timestamp ?: Timestamp.now(),
@@ -141,6 +143,53 @@ class AuthViewModel : ViewModel() {
             updatetoDatabase()
         } else {
             Log.e("Auth", "No user data available to update")
+        }
+    }
+
+    fun updateUserMyPlantLast_Watered(newMyPlant: MyPlantModel){
+        // Reference to the user's document
+        val userRef: DocumentReference? = userData.value?.email?.let {
+            db.collection("users").document(
+                it
+            )
+        }
+
+        // Fetch the document to get the current state of the myPlants array
+        if (userRef != null) {
+            userRef.get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val myPlants = document.get("my_plants") as? List<Map<String, Any>> ?: emptyList()
+
+                        // Find the plant to update
+                        val updatedPlants = myPlants.map { plant ->
+                            if (plant["plant_name"] == newMyPlant.plant_name) {
+                                // Create a new map with the updated last_watered field
+                                plant.toMutableMap().apply {
+                                    this["plant_last_watered"] = Timestamp.now()
+                                }
+                            } else {
+                                plant
+                            }
+                        }
+
+                        // Update the user's document with the modified myPlants array
+                        userRef.update("my_plants", updatedPlants)
+                            .addOnSuccessListener {
+                                // Success
+                                Log.d("Firebase", "Plant updated successfully")
+                            }
+                            .addOnFailureListener { exception ->
+                                // Failure
+                                Log.w("Firebase", "Error updating plant", exception)
+                            }
+                    } else {
+                        Log.w("Firebase", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("Firebase", "Error getting document", exception)
+                }
         }
     }
 
