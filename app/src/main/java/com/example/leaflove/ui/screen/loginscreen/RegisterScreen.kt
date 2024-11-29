@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -35,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.leaflove.R
@@ -133,7 +135,9 @@ fun registerScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
                     shape = RoundedCornerShape(50),
                     value = username,
                     onValueChange = { username = it },
-                    label = { Text(text = "Username") }
+                    label = { Text(text = "Username") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
@@ -145,7 +149,9 @@ fun registerScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
                     colors = OutlinedTextFieldDefaults.colors(),
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text(text = "Password") }
+                    label = { Text(text = "Password") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
@@ -157,7 +163,9 @@ fun registerScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
                     colors = OutlinedTextFieldDefaults.colors(),
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text(text = "Email") }
+                    label = { Text(text = "Email") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 OutlinedTextField(
@@ -169,7 +177,9 @@ fun registerScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
                     colors = OutlinedTextFieldDefaults.colors(),
                     value = phone_num,
                     onValueChange = { phone_num = it },
-                    label = { Text(text = "Phone Number") }
+                    label = { Text(text = "Phone Number") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
                 Button(
                     onClick = { authViewModel.signup(email, password, username) },
