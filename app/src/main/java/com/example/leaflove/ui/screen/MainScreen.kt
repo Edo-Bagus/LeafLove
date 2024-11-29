@@ -1,6 +1,7 @@
 package com.example.leaflove.ui.screen
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,12 +18,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -38,20 +41,41 @@ import com.example.leaflove.ui.components.BottomBarScreen
 import com.example.leaflove.ui.components.BottomNavGraph
 import com.example.leaflove.ui.components.Header
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.AuthState
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.example.leaflove.viewmodel.WeatherViewModel
 
 @Composable
-fun MainScreen(authViewModel: AuthViewModel, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel, plantViewModel: PlantViewModel) {
+fun MainScreen(loginScreenNavHostController: NavHostController,authViewModel: AuthViewModel, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel, plantViewModel: PlantViewModel) {
     // Create NavController for navigation
     val navController = rememberNavController()
     val configuration = LocalConfiguration.current
+    val context = LocalContext.current
 
     // Screen dimensions for responsive design
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
+
+    LaunchedEffect(authViewModel.authState.value, authViewModel.userData.value) {
+        when (authViewModel.authState.value) {
+            is AuthState.Unauthenticated -> {
+                if (authViewModel.userData.value == null) {
+                    loginScreenNavHostController.navigate("loginscreen")
+                }
+            }
+            is AuthState.Error -> {
+                Toast.makeText(
+                    context,
+                    (authViewModel.authState.value as AuthState.Error).message,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            else -> Unit
+        }
+    }
+
 
     Box(
         modifier = Modifier

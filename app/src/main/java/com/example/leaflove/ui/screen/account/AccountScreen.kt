@@ -38,6 +38,8 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.AuthViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun AccountScreen(navHost: NavHostController){
@@ -45,6 +47,7 @@ fun AccountScreen(navHost: NavHostController){
     var username by remember { mutableStateOf("") }
     val columnsize = 420.dp
     val offsetmainmenu = 100.dp
+    val authViewModel = koinInject<AuthViewModel>()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -123,7 +126,7 @@ fun AccountScreen(navHost: NavHostController){
                 )
             }
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { authViewModel.signout() },
             modifier = Modifier
                 .padding(20.dp, 300.dp, 40.dp, 0.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
