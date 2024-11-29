@@ -3,8 +3,6 @@ package com.example.leaflove.viewmodel
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.leaflove.data.models.MyPlantModel
 import com.example.leaflove.data.models.UserDataModel
@@ -12,7 +10,6 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.rpc.context.AttributeContext.Auth
 
 class AuthViewModel : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -163,7 +160,9 @@ class AuthViewModel : ViewModel() {
 
                         // Find the plant to update
                         val updatedPlants = myPlants.map { plant ->
-                            if (plant["plant_name"] == newMyPlant.plant_name) {
+                            Log.d("Firebase", plant["plant_name"].toString() )
+
+                            if (plant["plant_name"].toString() == newMyPlant.plant_name) {
                                 // Create a new map with the updated last_watered field
                                 plant.toMutableMap().apply {
                                     this["plant_last_watered"] = Timestamp.now()
@@ -176,7 +175,16 @@ class AuthViewModel : ViewModel() {
                         // Update the user's document with the modified myPlants array
                         userRef.update("my_plants", updatedPlants)
                             .addOnSuccessListener {
-                                // Success
+                                _userData.value = _userData.value?.copy(
+                                    my_plants = _userData.value!!.my_plants.map { plant ->
+                                        if (newMyPlant.plant_name == plant.plant_name) {
+                                            plant.copy(plant_last_watered = Timestamp.now(), plant_to_be_watered = Timestamp.now())
+                                        } else {
+                                            plant
+                                        }
+                                    }
+                                )
+
                                 Log.d("Firebase", "Plant updated successfully")
                             }
                             .addOnFailureListener { exception ->

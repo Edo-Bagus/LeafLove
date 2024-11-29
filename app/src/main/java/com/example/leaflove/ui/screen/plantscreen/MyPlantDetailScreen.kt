@@ -74,6 +74,7 @@ import com.example.leaflove.utils.formatDate
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.MyPlantViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
+import com.google.firebase.Timestamp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.compose.koinInject
@@ -161,7 +162,7 @@ fun myplantdetail(navHost: NavHostController)
 
         Column(
             modifier = Modifier
-                .offset(y = screenHeight * 0.1f)
+                .offset(y = screenHeight * 0.08f)
         ) {
             Row {
                 Spacer(modifier = Modifier.weight(0.1f))
@@ -181,7 +182,7 @@ fun myplantdetail(navHost: NavHostController)
                 )
                 Spacer(modifier = Modifier.weight(0.1f))
             }
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(0.5f))
             Row {
                 Spacer(modifier = Modifier.weight(1f))
                 Box(
@@ -209,7 +210,7 @@ fun myplantdetail(navHost: NavHostController)
 
                 Box(
                     modifier = Modifier
-                        .height(screenHeight * 0.5f)
+                        .height(screenHeight * 0.55f)
                         .width(screenWidth * 0.4f)
                 )
                 {
@@ -332,11 +333,51 @@ fun myplantdetail(navHost: NavHostController)
                             }
                         }
                         Spacer(modifier = Modifier.weight(1f))
+
+                        Box(
+                            modifier = Modifier
+                                .width(screenWidth * 0.28f)
+                                .height(screenWidth * 0.2f)
+                                .clip(RoundedCornerShape(20.dp))
+                        ){
+                            Button(
+                                onClick = { authViewModel.selectedPlant.value?.let {
+                                    authViewModel.updateUserMyPlantLast_Watered(
+                                        it
+                                    ); last_water = formatDate(timestamp = Timestamp.now()); to_water = formatDate(timestamp = Timestamp.now())
+                                }},
+                                modifier = Modifier
+                                    .zIndex(1f)
+                                    .fillMaxSize()
+                                    .shadow(
+                                        elevation = 8.dp, // Tinggi bayangan
+                                        shape = RoundedCornerShape(10.dp), // Sama dengan radius sudut tombol
+                                        clip = false // Tidak memotong konten berdasarkan bentuk
+                                    ),
+                                colors = ButtonColors(
+                                    contentColor = Color.White,
+                                    containerColor = BasicGreen,
+                                    disabledContentColor = BasicGreen,
+                                    disabledContainerColor = Color.White
+                                ),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text(
+                                    text = "Watering",
+                                    fontFamily = customfont,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp)
+                            }
+                        }
+
+
+                        Spacer(modifier = Modifier.weight(1f))
+
                     }
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(0.7f))
             Box(
                 modifier = Modifier
                     .padding(10.dp)
@@ -368,7 +409,7 @@ fun myplantdetail(navHost: NavHostController)
             }
 
 
-            Spacer(modifier = Modifier.weight(6f))
+            Spacer(modifier = Modifier.weight(5f))
 
         }
     }

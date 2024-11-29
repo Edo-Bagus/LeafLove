@@ -2,6 +2,8 @@ package com.example.leaflove.ui.screen.account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -18,6 +20,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,17 +31,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
 import com.example.leaflove.ui.theme.BasicGreen
+import com.example.leaflove.viewmodel.AuthViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun AccountScreen(navHost: NavHostController){
@@ -45,6 +60,11 @@ fun AccountScreen(navHost: NavHostController){
     var username by remember { mutableStateOf("") }
     val columnsize = 420.dp
     val offsetmainmenu = 100.dp
+    val authViewModel = koinInject<AuthViewModel>()
+    var customfont = FontFamily(
+        Font(R.font.baloo_font, weight = FontWeight.Normal),
+        Font(R.font.baloo_bold, weight = FontWeight.Bold)
+    )
 
     BoxWithConstraints(
         modifier = Modifier
@@ -58,81 +78,67 @@ fun AccountScreen(navHost: NavHostController){
         ) {
             Box(
                 modifier = Modifier
-                    .height(screenHeight * 0.3f) // Mengisi 40% bagian atas layar
+                    .height(screenHeight * 0.25f)
                     .fillMaxWidth()
-                    .background(BasicGreen),
-                contentAlignment = Alignment.Center
+                    .background(BasicGreen)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp) // Menambahkan padding agar kotak tidak menempel ke sisi layar
-                        .align(Alignment.CenterStart), // Menempatkan Row di sisi kiri tengah
-                    verticalAlignment = Alignment.CenterVertically // Menyelaraskan elemen secara vertikal
-                ){
-                    Box(
-                        modifier = Modifier
-                            .size(100.dp)
+                Column(
+                    modifier =  Modifier
+                        .padding(screenWidth * 0.05f, screenHeight * 0.08f)
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = authViewModel.userData.value?.username.toString(),
+                        fontFamily = customfont,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 32.sp,
+                        color = Color.White,
+                        textAlign =TextAlign.Left,
                     )
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.ilham),
-                            contentDescription = "Image Ilham",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(125.dp)
-                                .clip(RoundedCornerShape(75.dp))
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp)) // Spasi antara kotak dan teks
-
-                    Column(
-                        horizontalAlignment = Alignment.Start // Menyelaraskan teks di tengah kolom
-                    ) {
-                        Text(
-                            text = "Bapak Budi",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp,
-                            color = Color.White,
-                            textAlign =TextAlign.Left
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Plant 5",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color.White,
-                            textAlign = TextAlign.Left
-                        )
-                    }
+                    Spacer(modifier = Modifier.weight(0.3f))
+                    Text(
+                        text = "Plant : " + (authViewModel.userData.value?.my_plants?.size ?: 0),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = customfont,
+                        fontSize = 24.sp,
+                        color = Color.White,
+                        textAlign = TextAlign.Left
+                    )
+                    Spacer(modifier = Modifier.weight(2f))
                 }
             }
-        }
-
-
-        Button(
-                onClick = { navHost.navigate("about") },
+            Spacer(modifier = Modifier.weight(0.05f))
+            Box(
                 modifier = Modifier
-                    .padding(20.dp, 250.dp, 40.dp, 0.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
-            ) {
+                    .padding(horizontal = screenWidth * 0.1f)
+                    .clickable { navHost.navigate("about") }
+            ){
                 Text(
-                    text = "About Us",
-                    color = Color.Black
-                )
+                    text = "About us",
+                    fontFamily = customfont,
+                    fontSize = 24.sp)
             }
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier
-                .padding(20.dp, 300.dp, 40.dp, 0.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
-
-        ) {
-            Text(
-                text = "Log Out",
-                color = Color.Black
+            HorizontalDivider(
+                modifier = Modifier.padding(top = 8.dp, start = screenWidth * 0.05f, end = screenWidth * 0.05f),
+                thickness = 2.dp,
+                color = Color.LightGray
             )
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = screenWidth * 0.1f)
+                    .clickable
+                    {
+                        authViewModel.signout()
+
+                    }
+            ){
+                Text(
+                    text = "Log out",
+                    fontFamily = customfont,
+                    fontSize = 24.sp,
+                    color = Color.Red)
+            }
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.leaflove.ui.screen.loginscreen
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -21,6 +22,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -33,8 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,6 +60,9 @@ fun loginScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
+    var isPasswordVisible by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
 
     val authState = authViewModel.authState
 
@@ -133,7 +143,9 @@ fun loginScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
                 onValueChange = { email = it },
                 label = { Text(text = "Email") },
                 shape = RoundedCornerShape(50),
-                colors = OutlinedTextFieldDefaults.colors()
+                colors = OutlinedTextFieldDefaults.colors(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -147,27 +159,31 @@ fun loginScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
                 onValueChange = { password = it },
                 label = { Text(text = "Password") },
                 shape = RoundedCornerShape(50),
-                colors = OutlinedTextFieldDefaults.colors()
+                colors = OutlinedTextFieldDefaults.colors(),
+                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val icon = if (isPasswordVisible) R.drawable.ic_visibility else R.drawable.ic_visibility_off
+                    Image(
+                        painter = painterResource(icon),
+                        contentDescription = if (isPasswordVisible) "Hide password" else "Show password",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable { isPasswordVisible = !isPasswordVisible }
+                    )
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done // Set IME action to Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        // Fungsi yang dijalankan saat Enter ditekan
+                        authViewModel.login(email, password) // Menutup keyboard
+                    }
+                )
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Sign In Button
-//            Button(
-//                onClick = { navHost.navigate("mainScreen"){
-//                    popUpTo(0) {
-//                        inclusive = true
-//                    }
-//                } },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(horizontal = screenWidth * 0.05f),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = ButtonGreen,
-//                    contentColor = Color.White
-//                )
-//            ) {
-//                Text(text = "Sign In")
-//            }
 
             Button(
                 onClick = {
