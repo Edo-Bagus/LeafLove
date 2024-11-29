@@ -74,6 +74,7 @@ import com.example.leaflove.utils.formatDate
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.MyPlantViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
+import com.google.firebase.Timestamp
 import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.compose.koinInject
@@ -340,7 +341,11 @@ fun myplantdetail(navHost: NavHostController)
                                 .clip(RoundedCornerShape(20.dp))
                         ){
                             Button(
-                                onClick = { authViewModel.updateUserMyPlantLast_Watered(MyPlantModel())},
+                                onClick = { authViewModel.selectedPlant.value?.let {
+                                    authViewModel.updateUserMyPlantLast_Watered(
+                                        it
+                                    ); last_water = formatDate(timestamp = Timestamp.now()); to_water = formatDate(timestamp = Timestamp.now())
+                                }},
                                 modifier = Modifier
                                     .zIndex(1f)
                                     .fillMaxSize()

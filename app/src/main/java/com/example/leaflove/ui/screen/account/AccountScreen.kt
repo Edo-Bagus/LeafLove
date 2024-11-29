@@ -129,11 +129,7 @@ fun AccountScreen(navHost: NavHostController){
                     .clickable
                     {
                         authViewModel.signout()
-                        navHost.navigate("loginscreen") {
-                            popUpTo(navHost.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
+
                     }
             ){
                 Text(
