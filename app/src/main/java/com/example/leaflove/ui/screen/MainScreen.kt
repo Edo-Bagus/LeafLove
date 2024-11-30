@@ -1,6 +1,5 @@
 package com.example.leaflove.ui.screen
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -27,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -43,12 +41,13 @@ import com.example.leaflove.ui.components.Header
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.AuthState
 import com.example.leaflove.viewmodel.AuthViewModel
-import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.viewmodel.PlantViewModel
-import com.example.leaflove.viewmodel.WeatherViewModel
+import org.koin.compose.koinInject
 
 @Composable
-fun MainScreen(loginScreenNavHostController: NavHostController,authViewModel: AuthViewModel, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel, plantViewModel: PlantViewModel) {
+fun MainScreen(loginScreenNavHostController: NavHostController) {
+    val authViewModel = koinInject<AuthViewModel>()
+
     // Create NavController for navigation
     val navController = rememberNavController()
     val configuration = LocalConfiguration.current
@@ -88,7 +87,7 @@ fun MainScreen(loginScreenNavHostController: NavHostController,authViewModel: Au
                 .fillMaxSize()
                 .zIndex(0f) // Base layer for the navigation content
         ) {
-            BottomNavGraph(navController = navController, weatherViewModel, locationViewModel, plantViewModel)
+            BottomNavGraph(navController = navController)
         }
 
         // Header component (optional, above navigation content)
@@ -99,7 +98,6 @@ fun MainScreen(loginScreenNavHostController: NavHostController,authViewModel: Au
                 .fillMaxWidth()
                 .statusBarsPadding(),
             screenWidth = screenWidth,
-            viewModel = plantViewModel,
             screenHeight = screenHeight
         )
 
@@ -191,11 +189,3 @@ fun BottomBarItem(
         }
     }
 }
-
-
-
-//@Composable
-//@Preview
-//fun BottomNavPreview() {
-//    MainScreen(authViewModel = AuthViewModel())
-//}

@@ -47,7 +47,7 @@ data class Plant(
 // Fungsi untuk menampilkan satu kartu Plant
 @Composable
 fun MyPlantCard(navHost: NavHostController, plant: Plant, screenHeight: Dp, screenWidth: Dp) {
-    var authViewModel = koinInject<AuthViewModel>()
+    val authViewModel = koinInject<AuthViewModel>()
 
     Column(
         modifier = Modifier
@@ -55,8 +55,6 @@ fun MyPlantCard(navHost: NavHostController, plant: Plant, screenHeight: Dp, scre
             .offset(x = screenWidth * 0.01f)
             .clip(RoundedCornerShape(20.dp))
             .clickable {
-                // Navigate to the detail page with plant name as an argument
-                Log.d("Tess: ", authViewModel.userData.value?.my_plants?.find { it.plant_name == plant.nama }.toString())
                 authViewModel.selectedPlant.value = authViewModel.userData.value?.my_plants?.find { it.plant_name == plant.nama }
                 navHost.navigate("myplantdetail")
             }

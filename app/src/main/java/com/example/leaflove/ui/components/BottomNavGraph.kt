@@ -28,18 +28,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,
-    weatherViewModel: WeatherViewModel,
-    locViewModel: LocationViewModel,
-    plantViewModel: PlantViewModel
 ) {
-    val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp // Height of the screen in dp
-    val plant = koinViewModel<PlantViewModel>();
-
-    // Get screen height for potential responsive design (currently unused)
-    val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
-    val responsiveOffset = screenHeightDp * 0.1f
-
     // Define navigation graph
     NavHost(
         navController = navController,
@@ -47,17 +36,17 @@ fun BottomNavGraph(
     ) {
         composable(route = BottomBarScreen.Home.route)
         {
-            HomeScreen(navHost = navController, plantViewModel, weatherViewModel, locViewModel)
+            HomeScreen(navHost = navController)
         }
 
         // Augmented Reality (Camera) screen
         composable(route = BottomBarScreen.Camera.route) {
-            ARScreen(plantViewModel)
+            ARScreen()
         }
 
         // My Plants screen
         composable(route = BottomBarScreen.MyPlant.route) {
-            MyPlantScreen(navHost = navController, weatherViewModel, locViewModel)
+            MyPlantScreen(navHost = navController)
         }
 
         composable("transaction")
@@ -66,12 +55,12 @@ fun BottomNavGraph(
         }
         composable("searchscreen")
         {
-            EncyclopediaMainScreen(navHost = navController, viewModel = plantViewModel)
+            EncyclopediaMainScreen(navHost = navController)
         }
         
         composable("detailscreen")
         {  
-            EncyclopediaDetailScreen(navHost = navController, plantViewModel)
+            EncyclopediaDetailScreen(navHost = navController)
         }
 
         composable("addmyplant")

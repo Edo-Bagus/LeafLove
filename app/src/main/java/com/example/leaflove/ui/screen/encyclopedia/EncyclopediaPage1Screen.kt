@@ -45,17 +45,22 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.leaflove.R
 import com.example.leaflove.data.entities.PlantDetailEntity
+import com.example.leaflove.ui.components.Plant
 import com.example.leaflove.ui.components.convertIntoImage
 import com.example.leaflove.ui.screen.storescreen.StoreScreen
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.utils.cleanString
 import com.example.leaflove.utils.parseStringList
 import com.example.leaflove.viewmodel.PlantViewModel
+import org.koin.compose.koinInject
 import org.w3c.dom.Text
 
 @Composable
-fun EncyclopediaDetailScreen(navHost: NavHostController, plantViewModel: PlantViewModel)
+fun EncyclopediaDetailScreen(navHost: NavHostController)
 {
+
+    val plantViewModel = koinInject<PlantViewModel>()
+
     var customfont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),
         Font(R.font.baloo_bold, weight = FontWeight.Bold)

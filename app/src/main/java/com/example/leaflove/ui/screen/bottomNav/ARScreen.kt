@@ -56,11 +56,15 @@ import io.github.sceneview.rememberModelLoader
 import io.github.sceneview.rememberNodes
 import io.github.sceneview.rememberOnGestureListener
 import io.github.sceneview.rememberView
+import org.koin.compose.koinInject
 
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
-fun ARScreen(plantViewModel: PlantViewModel) {
+fun ARScreen() {
+
+    val plantViewModel = koinInject<PlantViewModel>()
+
     val plants = plantViewModel.plantList.value
     val plantDetail = plantViewModel.plantDetail.value
 
@@ -158,7 +162,7 @@ fun ARScreen(plantViewModel: PlantViewModel) {
                 ),
                 modifier = Modifier
                     .height(screenheight * 0.15f)
-                    .offset(y=screenheight * 0.63f)
+                    .offset(y = screenheight * 0.63f)
             ) {
                 items(plants.size) { index ->
                     val plant = plants[index]

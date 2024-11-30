@@ -51,10 +51,14 @@ import com.example.leaflove.ui.theme.Background
 import com.example.leaflove.ui.theme.ButtonGreen
 import com.example.leaflove.viewmodel.AuthState
 import com.example.leaflove.viewmodel.AuthViewModel
+import com.google.rpc.context.AttributeContext.Auth
+import org.koin.compose.koinInject
 
 
 @Composable
-fun loginScreen(navHost: NavHostController, authViewModel: AuthViewModel) {
+fun loginScreen(navHost: NavHostController) {
+    val authViewModel = koinInject<AuthViewModel>()
+
     val image = painterResource(R.drawable.backgroundlogin1)
     val image2 = painterResource(R.drawable.test2)
     var email by remember { mutableStateOf("") }

@@ -21,12 +21,7 @@ class MyPlantViewModel(
 
     private val plantServices: PerenualAPIService = PerenualAPIService.create()
 
-    init {
-        Log.d("Tes: ", "sdfbseb")
-    }
-
     fun loadFunFactList(id: Int, name: String){
-        Log.d("Tes: ", id.toString() + name)
         viewModelScope.launch {
             try{
                 var plant: PlantDetailEntity;

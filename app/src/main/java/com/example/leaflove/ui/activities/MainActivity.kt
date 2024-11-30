@@ -101,13 +101,13 @@ fun LeafLove(authViewModel: AuthViewModel) {
     NavHost(navController = navController, startDestination = "loginscreen") {
 
         composable("loginscreen") {
-            loginScreen(navController, appAuthViewModel)
+            loginScreen(navController)
         }
         composable("signupscreen") {
-            registerScreen(navHost = navController, appAuthViewModel)
+            registerScreen(navHost = navController)
         }
         composable("mainscreen") {
-            MainScreen(navController,appAuthViewModel, weatherViewModel, locViewModel, plantViewModel) // No navController needed to be passed here
+            MainScreen(navController) // No navController needed to be passed here
         }
 
 //        composable("transaction") {

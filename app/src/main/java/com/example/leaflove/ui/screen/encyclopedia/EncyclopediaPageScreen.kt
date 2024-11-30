@@ -1,18 +1,15 @@
 package com.example.leaflove.ui.screen.encyclopedia
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,13 +26,16 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.example.leaflove.R
 import com.example.leaflove.ui.components.PlantListItem
-import com.example.leaflove.ui.components.encyclo
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.PlantViewModel
+import org.koin.compose.koinInject
 
 @Composable
-fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel) {
-    val plants = viewModel.plantList.value
+fun EncyclopediaMainScreen(navHost: NavHostController) {
+
+    val plantViewModel = koinInject<PlantViewModel>()
+
+    val plants = plantViewModel.plantList.value
     var customfont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),
         Font(R.font.baloo_bold, weight = FontWeight.Bold)
@@ -43,7 +43,7 @@ fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel
 
     DisposableEffect(Unit) {
         onDispose {
-            viewModel.fetchPlantListFromRoom()
+            plantViewModel.fetchPlantListFromRoom()
         }
     }
 
@@ -84,7 +84,7 @@ fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel
                     .offset(y = 28.dp)
             ) {
                 plants.forEach { plant ->
-                    PlantListItem(encyclo = plant, viewModel, navHost)
+                    PlantListItem(encyclo = plant, plantViewModel, navHost)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -102,7 +102,7 @@ fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel
         // Wrapping the entire content in a scrollable column
         Box(
             modifier = Modifier
-                .offset(x= screenWidth * 0.05f,y = screenHeight * 0.17f)
+                .offset(x = screenWidth * 0.05f, y = screenHeight * 0.17f)
                 .clip(RoundedCornerShape(10.dp))
         )
         {
@@ -112,7 +112,7 @@ fun EncyclopediaMainScreen(navHost: NavHostController, viewModel: PlantViewModel
                     .width(screenWidth * 0.6f),
                 color = BasicGreen
             ) {
-                DropDown(viewModel)
+                DropDown(plantViewModel)
             }
         }
     }
