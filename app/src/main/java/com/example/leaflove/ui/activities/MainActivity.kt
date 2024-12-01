@@ -52,16 +52,8 @@ import org.koin.viewmodel.resolveViewModel
 
 
 class MainActivity : ComponentActivity() {
-    private val requestCameraPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (!isGranted) {
-                // Handle permission denied (show a dialog or return)
-            }
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         enableEdgeToEdge()
         val authviewmodel = AuthViewModel();
 

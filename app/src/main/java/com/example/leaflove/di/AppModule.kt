@@ -8,6 +8,8 @@ import com.example.leaflove.data.dao.PlantSpeciesDao_Impl
 import com.example.leaflove.data.database.AppDatabase
 import com.example.leaflove.data.models.MyPlantModel
 import com.example.leaflove.data.repositories.PlantRepository
+import com.example.leaflove.services.OpenWeatherAPIService
+import com.example.leaflove.services.PerenualAPIService
 import com.example.leaflove.viewmodel.AuthViewModel
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.viewmodel.MyPlantViewModel
@@ -41,11 +43,20 @@ var appModule = module {
         PlantRepository(get(), get());
     }
 
+    // Provide the OpenWeatherAPIService dependency
+    single<OpenWeatherAPIService> {
+        OpenWeatherAPIService.create()
+    }
+
+    single<PerenualAPIService> {
+        PerenualAPIService.create()
+    }
+
     // Provide the ViewModels, injecting the repository
     single { AuthViewModel()} // If AuthViewModel needs dependencies, pass them here
-    single { PlantViewModel(get()) } // Injecting PlantRepository into PlantViewModel
+    single { PlantViewModel(get(), get()) } // Injecting PlantRepository into PlantViewModel
     single { LocationViewModel() }
-    single { WeatherViewModel() }
-    single { MyPlantViewModel(get())}
+    single { WeatherViewModel(get()) }
+    single { MyPlantViewModel(get(), get())}
 
 }

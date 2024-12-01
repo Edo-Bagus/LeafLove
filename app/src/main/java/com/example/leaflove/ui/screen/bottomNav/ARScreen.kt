@@ -2,6 +2,7 @@ package com.example.leaflove.ui.screen.bottomNav
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
@@ -76,6 +77,7 @@ fun ARScreen() {
                 .height(screenheight * 0.8f)
                 .offset(y = screenheight * 0.08f),
         ) {
+            val context = LocalContext.current
             val engine = rememberEngine()
             val modelLoader = rememberModelLoader(engine)
             val materialLoader = rememberMaterialLoader(engine)
@@ -92,12 +94,6 @@ fun ARScreen() {
             var modelPlaced by remember { mutableStateOf(false) }
             var selectedModel by remember { mutableStateOf("models/" + plantDetail.id.toString() + ".glb") }
             var selectedModelName by remember { mutableStateOf(plantDetail.common_name ?: "") }
-
-            val context = LocalContext.current
-            val modelFiles = remember {
-                // Use context.assets to list the files in the "models" folder
-                context.assets.list("models")?.filter { it.endsWith(".glb") }?.map { "models/$it" } ?: emptyList()
-            }
 
             ARScene(
                 modifier = Modifier.fillMaxSize(),
@@ -150,7 +146,6 @@ fun ARScreen() {
                     })
             )
 
-            var expanded by remember { mutableStateOf(false) }
 
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(1),
@@ -171,9 +166,20 @@ fun ARScreen() {
                         screenHeight = screenheight,
                         screenWidth = screenwidth,
                         onClick = {
-                            selectedModel = "models/" + plant.id + ".glb"
-                            selectedModelName = plant.common_name.toString()
-                        })
+                            if (plant.id > 3) {
+                                // Display a warning message to the user
+                                Toast.makeText(
+                                    context,
+                                    "Warning: Model not available yet, please choose another model",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                selectedModel = "models/" + plant.id + ".glb"
+                                selectedModelName = plant.common_name.toString()
+                            }
+                        }
+                    )
+
                     Spacer(modifier = Modifier.width(screenwidth * 0.4f))
                 }
             }
@@ -190,13 +196,11 @@ fun ARScreen() {
                 textAlign = TextAlign.Center,
                 fontSize = 24.sp,
                 color = Color.White,
-                text = trackingFailureReason?.let {
-                    it.getDescription(LocalContext.current)
-                } ?: if (childNodes.isEmpty()) {
+                text = trackingFailureReason?.getDescription(LocalContext.current) ?: if (childNodes.isEmpty()) {
                     if (selectedModelName.isEmpty()) {
                         "Select a model to begin"
                     } else {
-                        "Model: ${selectedModelName} \n Point your phone down at an empty space, and move it around slowly"
+                        "Model: $selectedModelName \n Point your phone down at an empty space, and move it around slowly"
                     }
                 } else {
                     "Tap anywhere to add model"
@@ -238,7 +242,6 @@ fun createAnchorNode(
     selectedModel: String
 ): AnchorNode {
     val anchorNode = AnchorNode(engine = engine, anchor = anchor)
-    Log.d("Cek Model", selectedModel)
     val modelNode = ModelNode(
         modelInstance = modelLoader.createModelInstance(selectedModel),
         // Scale to fit in a 0.5 meters cube

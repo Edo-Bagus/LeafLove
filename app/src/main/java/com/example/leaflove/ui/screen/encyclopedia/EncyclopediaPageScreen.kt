@@ -30,16 +30,16 @@ import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.PlantViewModel
 import org.koin.compose.koinInject
 
+val customFont = FontFamily(
+    Font(R.font.baloo_font, weight = FontWeight.Normal),
+    Font(R.font.baloo_bold, weight = FontWeight.Bold)
+)
 @Composable
 fun EncyclopediaMainScreen(navHost: NavHostController) {
 
     val plantViewModel = koinInject<PlantViewModel>()
 
     val plants = plantViewModel.plantList.value
-    var customfont = FontFamily(
-        Font(R.font.baloo_font, weight = FontWeight.Normal),
-        Font(R.font.baloo_bold, weight = FontWeight.Bold)
-    )
 
     DisposableEffect(Unit) {
         onDispose {
@@ -53,7 +53,6 @@ fun EncyclopediaMainScreen(navHost: NavHostController) {
             .background(Color.White)
     ) {
         val screenHeight = maxHeight
-        val screenWidth = maxWidth
 
         Column(
             modifier = Modifier.fillMaxSize()
@@ -69,7 +68,7 @@ fun EncyclopediaMainScreen(navHost: NavHostController) {
             ) {
                 Text(
                     text = "Top Search",
-                    fontFamily = customfont,
+                    fontFamily = customFont,
                     fontWeight = FontWeight.Bold,
                     fontSize = 36.sp,
                     color = Color.White
@@ -121,10 +120,6 @@ fun EncyclopediaMainScreen(navHost: NavHostController) {
 @Composable
 fun DropDown(viewModel: PlantViewModel) {
 
-    var customfont = FontFamily(
-        Font(R.font.baloo_font, weight = FontWeight.Normal),
-        Font(R.font.baloo_bold, weight = FontWeight.Bold))
-
     val isDropDownExpanded = remember {
         mutableStateOf(false)
     }
@@ -153,7 +148,7 @@ fun DropDown(viewModel: PlantViewModel) {
             ) {
                 Text(
                     text = if (itemPosition.value == -1) placeholder else usernames[itemPosition.value],
-                    fontFamily = customfont,
+                    fontFamily = customFont,
                     fontWeight = FontWeight.Bold,
                     color = if (itemPosition.value == -1) Color.Gray else Color.White)
                 Image(

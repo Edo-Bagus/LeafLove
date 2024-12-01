@@ -17,7 +17,8 @@ val plantApiKey = BuildConfig.PLANT_API_KEY
 interface PerenualAPIService {
     @GET("species-list")
     suspend fun getPlantList(
-        @Query("key") apiKey: String = plantApiKey
+        @Query("key") apiKey: String = plantApiKey,
+        @Query("page") page: Int
     ): PlantListResponseModel
 
     @GET("species/details/{plant_id}")
