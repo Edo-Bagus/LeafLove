@@ -1,5 +1,9 @@
 package com.example.leaflove.ui.screen.account
 
+import android.content.Context
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,6 +42,7 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -47,24 +52,50 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
+import com.cloudinary.android.MediaManager
+import com.cloudinary.android.callback.ErrorInfo
+import com.cloudinary.android.callback.UploadCallback
 import com.example.leaflove.R
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.AuthViewModel
 import org.koin.compose.koinInject
+import uploadImageToCloudinary
 
 @Composable
-fun AccountScreen(navHost: NavHostController){
+fun AccountScreen(navHost: NavHostController) {
     val image1 = painterResource(R.drawable.ilham)
-    var username by remember { mutableStateOf("") }
-    val columnsize = 420.dp
-    val offsetmainmenu = 100.dp
     val authViewModel = koinInject<AuthViewModel>()
-    var customfont = FontFamily(
+    val context = LocalContext.current
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) } // Nullable URI to handle default case
+    var customFont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),
         Font(R.font.baloo_bold, weight = FontWeight.Bold)
     )
+
+    // Image picker launcher
+    val getImageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            imageUri = uri
+            uploadImageProfileToCloudinary(context, uri, { url ->
+                authViewModel.updateUserImageUrl(
+                    url,
+                    onSuccess = {
+                        Toast.makeText(context, "Upload Successful", Toast.LENGTH_SHORT).show()
+                    },
+                    onFailure = {
+                        Toast.makeText(context, "Upload Failed", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            })
+        }
+    }
 
     BoxWithConstraints(
         modifier = Modifier
@@ -73,9 +104,11 @@ fun AccountScreen(navHost: NavHostController){
     ) {
         val screenHeight = maxHeight
         val screenWidth = maxWidth
+
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            // Top section with user data
             Box(
                 modifier = Modifier
                     .height(screenHeight * 0.25f)
@@ -83,69 +116,172 @@ fun AccountScreen(navHost: NavHostController){
                     .background(BasicGreen)
             ) {
                 Column(
-                    modifier =  Modifier
+                    modifier = Modifier
                         .padding(screenWidth * 0.05f, screenHeight * 0.08f)
                 ) {
-                    Spacer(modifier = Modifier.weight(1f))
                     Text(
-                        text = authViewModel.userData.value?.username.toString(),
-                        fontFamily = customfont,
+                        text = authViewModel.userData.value?.username ?: "Username",
+                        fontFamily = customFont,
                         fontWeight = FontWeight.Bold,
                         fontSize = 32.sp,
                         color = Color.White,
-                        textAlign =TextAlign.Left,
+                        textAlign = TextAlign.Left,
                     )
-                    Spacer(modifier = Modifier.weight(0.3f))
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Plant : " + (authViewModel.userData.value?.my_plants?.size ?: 0),
+                        text = "Plant: ${authViewModel.userData.value?.my_plants?.size ?: 0}",
                         fontWeight = FontWeight.Bold,
-                        fontFamily = customfont,
+                        fontFamily = customFont,
                         fontSize = 24.sp,
                         color = Color.White,
                         textAlign = TextAlign.Left
                     )
-                    Spacer(modifier = Modifier.weight(2f))
                 }
             }
-            Spacer(modifier = Modifier.weight(0.05f))
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Profile picture and information section
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Profile picture button
+                Button(
+                    onClick = { getImageLauncher.launch("image/*") },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.Transparent
+
+                    ),
+                    elevation = null, // Remove button elevation for a flat design
+                    modifier = Modifier
+                        .size(100.dp) // Ensure consistent size for the button
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize() // Make the image fill the button
+                            .clip(RoundedCornerShape(50.dp)) // Circular shape matching the button size
+                    ) {
+                        val profileImageUrl = authViewModel.userData.value?.profile_image_url
+
+                         if (!profileImageUrl.isNullOrEmpty()) {
+                            // Display the profile image from the backend
+                            Image(
+                                painter = rememberAsyncImagePainter(profileImageUrl),
+                                contentDescription = "Profile Image from Backend",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize() // Fill the box
+                            )
+                        } else {
+                            // Fallback to the default image
+                            Image(
+                                painter = image1,
+                                contentDescription = "Default Profile Image",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize() // Fill the box
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column {
+                    Text(
+                        text = authViewModel.userData.value?.username ?: "Bapak Budi",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        color = Color.Black,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Plants: ${authViewModel.userData.value?.my_plants?.size ?: 0}",
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp,
+                        color = Color.DarkGray,
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // About Us and Logout buttons
             Box(
                 modifier = Modifier
                     .padding(horizontal = screenWidth * 0.1f)
                     .clickable { navHost.navigate("about") }
-            ){
+            ) {
                 Text(
-                    text = "About us",
-                    fontFamily = customfont,
-                    fontSize = 24.sp)
+                    text = "About Us",
+                    fontFamily = customFont,
+                    fontSize = 24.sp
+                )
             }
+
             HorizontalDivider(
-                modifier = Modifier.padding(top = 8.dp, start = screenWidth * 0.05f, end = screenWidth * 0.05f),
+                modifier = Modifier.padding(
+                    top = 8.dp,
+                    start = screenWidth * 0.05f,
+                    end = screenWidth * 0.05f
+                ),
                 thickness = 2.dp,
                 color = Color.LightGray
             )
+
             Box(
                 modifier = Modifier
                     .padding(horizontal = screenWidth * 0.1f)
-                    .clickable
-                    {
+                    .clickable {
                         authViewModel.signout()
-
                     }
-            ){
+            ) {
                 Text(
-                    text = "Log out",
-                    fontFamily = customfont,
+                    text = "Log Out",
+                    fontFamily = customFont,
                     fontSize = 24.sp,
-                    color = Color.Red)
+                    color = Color.Red
+                )
             }
-            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
 
 
+fun uploadImageProfileToCloudinary(context: Context, imageUri: Uri, onUploadSuccess: (String) -> Unit) {
+    MediaManager.get().upload(imageUri)
+        .unsigned("leaflove_image") // Replace with your unsigned preset
+        .callback(object : UploadCallback {
+            override fun onStart(requestId: String?) {
+                Toast.makeText(context, "Upload started", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onProgress(requestId: String?, bytes: Long, totalBytes: Long) {
+                val progress = (bytes / totalBytes.toDouble() * 100).toInt()
+                Toast.makeText(context, "Uploading: $progress%", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onSuccess(requestId: String?, resultData: MutableMap<Any?, Any?>?) {
+                val uploadedUrl = resultData?.get("secure_url") as String
+                Toast.makeText(context, "Upload successful: $uploadedUrl", Toast.LENGTH_LONG).show()
+                onUploadSuccess(uploadedUrl)
+            }
+
+            override fun onError(requestId: String?, error: ErrorInfo?) {
+                Toast.makeText(context, "Upload rescheduled: ${error.toString()}", Toast.LENGTH_LONG).show()
+            }
+
+            override fun onReschedule(requestId: String?, error: ErrorInfo?) {
+                Toast.makeText(context, "Upload rescheduled: ${error.toString()}", Toast.LENGTH_LONG).show()
+
+            }
 
 
+        })
+        .dispatch()
+}
 
 
 

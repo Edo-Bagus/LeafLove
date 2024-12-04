@@ -8,7 +8,8 @@ data class UserDataModel(
     val username: String = "",
     val email: String = "", // Default to an empty string
     val password: String = "", // Default to an empty string
-    var my_plants: List<MyPlantModel> = mutableListOf() // Default to an empty list
+    var my_plants: List<MyPlantModel> = mutableListOf(), // Default to an empty list
+    val profile_image_url: String = ""
 )
 
 data class MyPlantModel(

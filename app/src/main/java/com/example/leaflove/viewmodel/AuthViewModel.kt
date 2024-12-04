@@ -201,6 +201,20 @@ class AuthViewModel : ViewModel() {
         }
     }
 
+    fun updateUserImageUrl(imageUrl: String, onSuccess: () -> Unit, onFailure: () -> Unit){
+        userData.value?.email?.let { db.collection("users").document(it)
+            .update("profile_image_url", imageUrl).addOnSuccessListener{
+                onSuccess()
+                Log.d("Firebase", "Berhasil Update")
+            }.addOnFailureListener{ exception ->
+                onFailure()
+
+
+            }
+        }
+    }
+
+
     private fun updatetoDatabase() {
         Log.d("Firestore", "Masuk")
         if (_authState.value is AuthState.Authenticated) {
