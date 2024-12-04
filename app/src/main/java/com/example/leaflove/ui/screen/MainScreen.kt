@@ -57,8 +57,10 @@ fun MainScreen(loginScreenNavHostController: NavHostController) {
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
 
-    LaunchedEffect(authViewModel.authState.value, authViewModel.userData.value) {
-        when (authViewModel.authState.value) {
+    val authState = authViewModel.authState.value
+
+    LaunchedEffect(authState, authViewModel.userData.value) {
+        when (authState) {
             is AuthState.Unauthenticated -> {
                 if (authViewModel.userData.value == null) {
                     loginScreenNavHostController.navigate("loginscreen")
@@ -67,7 +69,7 @@ fun MainScreen(loginScreenNavHostController: NavHostController) {
             is AuthState.Error -> {
                 Toast.makeText(
                     context,
-                    (authViewModel.authState.value as AuthState.Error).message,
+                    authState.message,
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -113,7 +115,11 @@ fun MainScreen(loginScreenNavHostController: NavHostController) {
 }
 
 @Composable
-fun BottomBar(navController: NavHostController, modifier: Modifier = Modifier, screenHeight: Dp) {
+fun BottomBar(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    screenHeight: Dp
+) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.Camera,
