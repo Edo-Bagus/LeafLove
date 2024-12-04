@@ -58,8 +58,8 @@ class PlantViewModel(
         }
     }
 
-    private val _plantDetail = mutableStateOf(PlantDetailEntity())
-    val plantDetail: State<PlantDetailEntity> = _plantDetail
+    private val _plantDetail = mutableStateOf<PlantDetailEntity?>(null)
+    val plantDetail: State<PlantDetailEntity?> = _plantDetail
 
     private val _plantList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())
     val plantList = _plantList
@@ -243,6 +243,7 @@ class PlantViewModel(
         }
     }
 
-
-
+//    fun resetPlantDetail(){
+//        _plantDetail.value = null
+//    }
 }

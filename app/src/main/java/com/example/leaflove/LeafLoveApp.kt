@@ -12,15 +12,19 @@ import com.example.leaflove.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 
+const val cloudName = BuildConfig.CLOUD_NAME
+const val cloudApiKey = BuildConfig.CLOUDINARY_API_KEY
+const val cloudApiSecret = BuildConfig.CLOUDINARY_API_SECRET
+
 class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
 
         val config = mutableMapOf(
-            "cloud_name" to "ddrnhafts",  // Replace with your cloud name
-            "api_key" to "751861626526443", // Replace with your API key
-            "api_secret" to "2daW9bFOlzqNJPqZCLAgkU4OSSg" // Replace with your API secret
+            "cloud_name" to cloudName,  // Replace with your cloud name
+            "api_key" to cloudApiKey, // Replace with your API key
+            "api_secret" to cloudApiSecret // Replace with your API secret
         )
         MediaManager.init(this, config)
 

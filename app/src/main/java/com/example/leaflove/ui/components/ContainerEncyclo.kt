@@ -38,12 +38,6 @@ import com.example.leaflove.utils.cleanString
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.google.gson.Gson
 
-data class encyclo(
-    val nama: String,
-    val namalatin: String,
-    val image: Int
-)
-
 @Composable
 fun PlantListItem(encyclo: PlantSpeciesEntity, plantViewModel: PlantViewModel, navHost: NavHostController) {
     Column (

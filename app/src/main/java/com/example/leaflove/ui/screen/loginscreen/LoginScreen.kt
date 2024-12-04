@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -63,6 +64,7 @@ fun LoginScreen(navHost: NavHostController) {
     val context = LocalContext.current
     var isPasswordVisible by remember { mutableStateOf(false) }
     val authState = authViewModel.authState.value
+    val focusManager = LocalFocusManager.current
 
 
     LaunchedEffect(authState, authViewModel.userData.value) {

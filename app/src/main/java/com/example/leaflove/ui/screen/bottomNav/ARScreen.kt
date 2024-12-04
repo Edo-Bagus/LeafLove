@@ -92,8 +92,8 @@ fun ARScreen() {
             }
             var frame by remember { mutableStateOf<Frame?>(null) }
             var modelPlaced by remember { mutableStateOf(false) }
-            var selectedModel by remember { mutableStateOf("models/" + plantDetail.id.toString() + ".glb") }
-            var selectedModelName by remember { mutableStateOf(plantDetail.common_name ?: "") }
+            var selectedModel by remember { mutableStateOf("models/" + plantDetail?.id.toString() + ".glb") }
+            var selectedModelName by remember { mutableStateOf(plantDetail?.common_name ?: "") }
 
             ARScene(
                 modifier = Modifier.fillMaxSize(),
