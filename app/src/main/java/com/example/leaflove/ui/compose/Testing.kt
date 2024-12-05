@@ -33,7 +33,7 @@ import com.example.leaflove.data.repositories.PlantRepository
 @Composable
 fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
     var plantDetailText by remember { mutableStateOf<String>("")}
-    val plantState = plantViewModel.plantState.value
+//    val plantState = plantViewModel.plantState.value
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -53,9 +53,9 @@ fun Testing(navHost: NavHostController, plantViewModel: PlantViewModel) {
     ) {
         // Submit button to save plants to database
         Button(onClick = {
-            coroutineScope.launch {
-                SubmitButtonHandler(plantViewModel, plantState)
-            }
+//            coroutineScope.launch {
+//                SubmitButtonHandler(plantViewModel, plantState)
+//            }
         }) {
             Text("Submit")
         }

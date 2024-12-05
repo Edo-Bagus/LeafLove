@@ -38,12 +38,6 @@ import com.example.leaflove.utils.cleanString
 import com.example.leaflove.viewmodel.PlantViewModel
 import com.google.gson.Gson
 
-data class encyclo(
-    val nama: String,
-    val namalatin: String,
-    val image: Int
-)
-
 @Composable
 fun PlantListItem(encyclo: PlantSpeciesEntity, plantViewModel: PlantViewModel, navHost: NavHostController) {
     Column (
@@ -62,7 +56,6 @@ fun PlantListItem(encyclo: PlantSpeciesEntity, plantViewModel: PlantViewModel, n
             {
 
                 encyclo.default_image?.let {
-                    Log.d("Check Image", it)
                     if(it == "null"){
                         Image(painter = painterResource(R.drawable.backgroundlogin1) , modifier = Modifier.size(64.dp), contentDescription = null)
                     } else {
@@ -118,5 +111,4 @@ fun convertIntoImage(jsonString: String): String? {
 fun fetchPlantDetailsFromRoom(id: Int, plant: PlantViewModel, navHost: NavHostController){
     plant.fetchPlantDetails(id)
     navHost.navigate("detailscreen")
-    Log.d("Test plant detail", plant.plantDetail.toString())
 }

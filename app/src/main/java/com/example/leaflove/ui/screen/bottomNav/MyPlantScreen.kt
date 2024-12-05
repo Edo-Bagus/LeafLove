@@ -46,7 +46,9 @@ enum class Status(val rating: Int) {
 }
 
 @Composable
-fun MyPlantScreen(navHost: NavHostController, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel){
+fun MyPlantScreen(navHost: NavHostController){
+
+    val weatherViewModel = koinInject<WeatherViewModel>()
 
     val weatherState by weatherViewModel.weatherState
 

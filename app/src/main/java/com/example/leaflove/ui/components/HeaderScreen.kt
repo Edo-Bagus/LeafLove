@@ -1,8 +1,6 @@
 package com.example.leaflove.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -25,10 +23,17 @@ import androidx.navigation.NavController
 import com.example.leaflove.R
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.PlantViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun Header(navController: NavController,
-           viewModel: PlantViewModel, modifier: Modifier = Modifier, screenWidth: Dp, screenHeight: Dp) {
+           modifier: Modifier = Modifier,
+           screenWidth: Dp,
+           screenHeight: Dp
+) {
+
+    val plantViewModel = koinInject<PlantViewModel>()
+
     var search by remember { mutableStateOf("") }
 
     Row(
@@ -44,7 +49,7 @@ fun Header(navController: NavController,
             colors = ButtonDefaults.buttonColors(containerColor = Color.White
             ),
             modifier = Modifier
-                .height(screenHeight*0.056f)
+                .height(screenHeight * 0.056f)
                 .shadow(
                     elevation = 10.dp,
                     shape = RoundedCornerShape(20.dp),
@@ -94,7 +99,7 @@ fun Header(navController: NavController,
                     onDone = {
                         // Navigate to searchScreen when "Done" is pressed
 
-                        viewModel.filterPlantList(search)
+                        plantViewModel.filterPlantList(search)
                         val currentRoute = navController.currentBackStackEntry?.destination?.route
 
                         // Navigate to "searchScreen" only if not already on it

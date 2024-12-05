@@ -43,6 +43,27 @@ android {
             name = "PLANT_API_KEY",
             value = plantApiKey
         )
+
+        val cloudName = properties.getProperty("CLOUD_NAME") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "CLOUD_NAME",
+            value = cloudName
+        )
+
+        val cloudApiKey = properties.getProperty("CLOUDINARY_API_KEY") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "CLOUDINARY_API_KEY",
+            value = cloudApiKey
+        )
+
+        val cloudApiSecret = properties.getProperty("CLOUDINARY_API_SECRET") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "CLOUDINARY_API_SECRET",
+            value = cloudApiSecret
+        )
     }
 
     buildTypes {

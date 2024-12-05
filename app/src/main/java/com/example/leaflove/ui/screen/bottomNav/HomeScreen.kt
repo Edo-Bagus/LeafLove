@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,40 +27,41 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.leaflove.services.LocationUtils
 import com.example.leaflove.viewmodel.LocationViewModel
 import com.example.leaflove.R
 import com.example.leaflove.ui.components.Plant
-import com.example.leaflove.data.entities.PlantDetailEntity
 import com.example.leaflove.ui.theme.BasicGreen
 import com.example.leaflove.viewmodel.WeatherViewModel
 import com.example.leaflove.ui.theme.ButtonGreen
 import com.example.leaflove.utils.calculatePlantAgeInDays
 import com.example.leaflove.utils.formatDate
 import com.example.leaflove.viewmodel.AuthViewModel
-import com.google.firebase.Timestamp
 import org.koin.compose.koinInject
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-import java.util.Locale
 import com.example.leaflove.viewmodel.PlantViewModel
 
+val customfont = FontFamily(
+    Font(R.font.baloo_font, weight = FontWeight.Normal),
+    Font(R.font.baloo_bold, weight = FontWeight.Bold)
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weatherViewModel: WeatherViewModel, locationViewModel: LocationViewModel) {
+fun HomeScreen(navHost: NavHostController) {
 
     val authViewModel = koinInject<AuthViewModel>()
-
-
-
+    val plantViewModel = koinInject<PlantViewModel>()
+    val weatherViewModel = koinInject<WeatherViewModel>()
+    val locationViewModel = koinInject<LocationViewModel>()
 
     val plants = mutableListOf<Plant>()
     for(plant in authViewModel.userData.value?.my_plants!!){
@@ -77,10 +77,7 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
     }
     val plant = remember(plants) { plants.randomOrNull() }
 
-    var customfont = FontFamily(
-        Font(R.font.baloo_font, weight = FontWeight.Normal),
-        Font(R.font.baloo_bold, weight = FontWeight.Bold)
-    )
+
     val context = LocalContext.current
     plantViewModel.loadFunFacts(context)
     val funFacts = remember(plantViewModel.funFacts.value) {
@@ -94,6 +91,7 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
     val tempKelvin = weatherViewModel.weatherState.value.main?.temp ?: 99999.99
     var tempCelcius = tempKelvin?.minus(273)
     var tempCelciusString = String.format("%.2f", tempCelcius)
+
     // Start location updates when the composable is entered
     LaunchedEffect(Unit) {
         if (locationUtils.hasLocationPermission(context)) {
@@ -117,7 +115,6 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
         val screenHeight = maxHeight
         val screenWidth = maxWidth
 
-        val scope = rememberCoroutineScope()
         val scaffoldState = rememberBottomSheetScaffoldState()
 
         BottomSheetScaffold(
@@ -132,36 +129,13 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(modifier = Modifier.weight(0.1f))
-
-                    Box(
-                        modifier = Modifier
-                            .shadow(
-                                elevation = 10.dp,
-                                shape = RoundedCornerShape(20.dp),
-                                clip = false
-                            )
-                            .background(ButtonGreen)
-                            .width(screenWidth * 0.8f)
-                            .height(screenHeight * 0.1f)
-                            .align(Alignment.CenterHorizontally)
-                    ) {
-                        Row (modifier = Modifier
-                            .align(Alignment.Center) ) {
-                            Spacer(modifier = Modifier.weight(1f))
-                            Text(text = cuaca,
-                                color = Color.White
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            Text(text = humidity.toString(),
-                                color = Color.White)
-                            Spacer(modifier = Modifier.weight(1f))
-                            Text(text = tempCelciusString + "˚C",
-                                color = Color.White)
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
-
-                    }
-
+                    WeatherCard(
+                        screenHeight = screenHeight,
+                        screenWidth = screenWidth,
+                        weather = cuaca,
+                        humidity = humidity.toString(),
+                        temperature = tempCelciusString
+                    )
                     Spacer(modifier = Modifier.weight(0.5f))
 
                     Row(
@@ -170,98 +144,29 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Spacer(modifier = Modifier.weight(1f))
-                        Box(
-                            modifier = Modifier
-                                .shadow(
-                                    elevation = 10.dp,
-                                    shape = RoundedCornerShape(20.dp),
-                                    clip = false
-                                )
-                                .background(Color.White)
-                                .size(screenWidth * 0.2f)
-                        ){
-                            Column (
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .clickable
-                                    {
-                                        navHost.navigate("transaction")
-                                    },
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ){
-                                Image(
-                                    painter = painterResource(R.drawable.cart),
-                                    contentDescription = "Store",
-                                    alignment = Alignment.Center,
-                                    modifier = Modifier.size(screenWidth * 0.1f)
-
-                                )
-                                Text(text = "Store")
-                            }
-                        }
+                        FeatureCard(
+                            navHost = navHost,
+                            screenWidth = screenWidth,
+                            route = "transaction",
+                            image = R.drawable.cart,
+                            text = "Store"
+                        )
                         Spacer(modifier = Modifier.weight(1f))
-                        Box(
-                            modifier = Modifier
-                                .shadow(
-                                    elevation = 10.dp,
-                                    shape = RoundedCornerShape(20.dp),
-                                    clip = false
-                                )
-                                .background(Color.White)
-                                .size(screenWidth * 0.2f)
-                        ){
-                            Column (
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .clickable
-                                    {
-                                        navHost.navigate("camera")
-                                    },
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ){
-                                Image(
-                                    painter = painterResource(R.drawable.baseline_camera_alt_24_selected),
-                                    contentDescription = "Camera",
-                                    alignment = Alignment.Center,
-                                    modifier = Modifier.size(screenWidth * 0.1f)
-
-                                )
-                                Text(text = "AR")
-                            }
-                        }
+                        FeatureCard(
+                            navHost = navHost,
+                            screenWidth = screenWidth,
+                            route = "camera",
+                            image = R.drawable.baseline_camera_alt_24_selected,
+                            text = "AR"
+                        )
                         Spacer(modifier = Modifier.weight(1f))
-                        Box(
-                            modifier = Modifier
-                                .shadow(
-                                    elevation = 10.dp,
-                                    shape = RoundedCornerShape(20.dp),
-                                    clip = false
-                                )
-                                .background(Color.White)
-                                .size(screenWidth * 0.2f)
-                        ){
-                            Column (
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .clickable
-                                    {
-                                        navHost.navigate("my_plant")
-                                    },
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ){
-                                Image(
-                                    painter = painterResource(R.drawable.baseline_forest_24_selected),
-                                    contentDescription = "Plant",
-                                    alignment = Alignment.Center,
-                                    modifier = Modifier.size(screenWidth * 0.1f)
-
-                                )
-                                Text(text = "My Plant")
-                            }
-                        }
+                        FeatureCard(
+                            navHost = navHost,
+                            screenWidth = screenWidth,
+                            route = "my_plant",
+                            image = R.drawable.baseline_forest_24_selected,
+                            text = "My Plant"
+                        )
                         Spacer(modifier = Modifier.weight(1f))
                     }
 
@@ -273,151 +178,29 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Spacer(modifier = Modifier.weight(1f))
-                        Box(
-                            modifier = Modifier
-                                .shadow(
-                                    elevation = 10.dp,
-                                    shape = RoundedCornerShape(20.dp),
-                                    clip = false
-                                )
-                                .background(Color.White)
-                                .size(screenWidth * 0.2f)
-                        ){
-                            Column (
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .clickable
-                                    {
-                                        navHost.navigate("searchScreen")
-                                    },
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ){
-                                Image(
-                                    painter = painterResource(R.drawable.baseline_search_24),
-                                    contentDescription = "Ensiklopedia",
-                                    alignment = Alignment.Center,
-                                    modifier = Modifier.size(screenWidth * 0.1f)
-
-                                )
-                                Text(text = "Encyclopedia", fontSize = 12.sp)
-                            }
-                        }
+                        FeatureCard(
+                            navHost = navHost,
+                            screenWidth = screenWidth,
+                            route = "searchscreen",
+                            image = R.drawable.baseline_search_24,
+                            text = "Encyclopedia"
+                        )
                         Spacer(modifier = Modifier.weight(1f))
-                        Box(
-                            modifier = Modifier
-                                .shadow(
-                                    elevation = 10.dp,
-                                    shape = RoundedCornerShape(20.dp),
-                                    clip = false
-                                )
-                                .background(Color.White)
-                                .width(screenWidth * 0.5f)
-                                .height(screenHeight * 0.1f)
-                        ){
-                            Text(text = funFacts,
-                                modifier = Modifier
-                                    .align(Alignment.Center),
-                                textAlign = TextAlign.Center,
-                                fontSize = 14.sp)
-                        }
-
+                        FunFactCard(
+                            screenWidth = screenWidth,
+                            screenHeight = screenHeight,
+                            funFacts = funFacts
+                        )
                         Spacer(modifier = Modifier.weight(1f))
 
                     }
 
                     Spacer(modifier = Modifier.weight(0.5f))
-                    Box(
-                        modifier = Modifier
-                            .shadow(
-                                elevation = 10.dp,
-                                shape = RoundedCornerShape(20.dp),
-                                clip = false
-                            )
-                            .background(Color.White)
-                            .width(screenWidth * 0.8f)
-                            .height(screenHeight * 0.2f)
-                            .align(Alignment.CenterHorizontally)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier.fillMaxSize() // Pastikan Row mengisi seluruh area
-                        ) {
-                            Spacer(modifier = Modifier.weight(0.1f))
-
-                            Box(
-                                modifier = Modifier
-                                    .shadow(
-                                        elevation = 10.dp,
-                                        shape = RoundedCornerShape(10.dp),
-                                        clip = false
-                                    )
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(Color.White)
-                                    .size(screenWidth * 0.3f)
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.contoh_tanaman),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.weight(0.1f))
-                            Log.d("Tes", plant.toString())
-                            if(plant != null){
-                                Column (
-                                    modifier = Modifier.width(screenWidth * 0.2f)
-                                ) {
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Text(
-                                            text = "Name: " + plant.nama,
-                                            fontFamily = customfont,
-                                            fontWeight = FontWeight.Normal
-                                        )
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Text(
-                                            text = "Age: " + plant.age,
-                                            fontFamily = customfont,
-                                            fontWeight = FontWeight.Normal
-                                        )
-                                        Spacer(modifier = Modifier.weight(1f))
-                                }
-
-                                Spacer(modifier = Modifier.weight(0.1f))
-
-                                Column (
-                                    modifier = Modifier.width(screenWidth * 0.2f)
-                                ){
-                                    Spacer(modifier = Modifier.weight(1f))
-                                    Text(
-                                        text = "Last Water: " + plant.last_water,
-                                        fontFamily = customfont,
-                                        fontWeight = FontWeight.Normal)
-                                    Spacer(modifier = Modifier.weight(1f))
-                                    Text(
-                                        text = "Next Water: " + plant.to_water,
-                                        fontFamily = customfont,
-                                        fontWeight = FontWeight.Normal)
-                                    Spacer(modifier = Modifier.weight(1f))
-                                }
-
-                                Spacer(modifier = Modifier.weight(0.1f))
-                            }else{
-                                Spacer(modifier = Modifier.weight(1f))
-                                Text(
-                                    text = "No Plant Data Available",
-                                    fontFamily = customfont,
-                                    fontWeight = FontWeight.Normal
-                                )
-                                Spacer(modifier = Modifier.weight(1f))
-                            }
-                        }
-                    }
-
-
+                    RandomMyPlantCard(
+                        plant,
+                        screenWidth,
+                        screenHeight
+                    )
                     Spacer(modifier = Modifier.weight(1.5f))
 
 
@@ -472,6 +255,239 @@ fun HomeScreen(navHost: NavHostController, plantViewModel: PlantViewModel, weath
                         .size(size = screenHeight * 0.5f)
                         .offset(x = screenWidth * 0.3f, y = screenHeight * 0.03f)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun WeatherCard(
+    screenHeight: Dp,
+    screenWidth: Dp,
+    weather: String,
+    humidity: String,
+    temperature: String
+){
+    Box(
+        modifier = Modifier
+            .shadow(
+                elevation = 10.dp,
+                shape = RoundedCornerShape(20.dp),
+                clip = false
+            )
+            .background(ButtonGreen)
+            .width(screenWidth * 0.8f)
+            .height(screenHeight * 0.1f)
+    ) {
+        Row (modifier = Modifier
+            .align(Alignment.Center) ) {
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = weather,
+                color = Color.White,
+                fontFamily = customfont
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = humidity,
+                color = Color.White,
+                fontFamily = customfont
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = "$temperature˚C",
+                fontFamily = customfont,
+                color = Color.White)
+            Spacer(modifier = Modifier.weight(1f))
+        }
+
+    }
+}
+
+@Composable
+fun FeatureCard(
+    navHost: NavHostController,
+    screenWidth: Dp,
+    route: String,
+    image: Int,
+    text: String
+) {
+    Box(
+        modifier = Modifier
+            .shadow(
+                elevation = 10.dp,
+                shape = RoundedCornerShape(20.dp),
+                clip = false
+            )
+            .background(Color.White)
+            .size(screenWidth * 0.2f)
+    ) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .clickable {
+                    navHost.navigate(route)
+                },
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(image),
+                contentDescription = null,
+                alignment = Alignment.Center,
+                modifier = Modifier.size(screenWidth * 0.1f)
+            )
+
+            // Dynamic font size adjustment
+            BoxWithConstraints {
+                val maxWidth = maxWidth
+                val fontSize = remember(text) { mutableStateOf(16.sp) } // Default font size
+
+                // Measure the text and adjust font size
+                Text(
+                    text = text,
+                    fontSize = fontSize.value,
+                    fontFamily = customfont,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { textLayoutResult ->
+                        if (textLayoutResult.hasVisualOverflow) {
+                            fontSize.value *= 0.8f // Reduce font size by 10%
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun FunFactCard(
+    screenWidth: Dp,
+    screenHeight: Dp,
+    funFacts: String
+){
+    Box(
+        modifier = Modifier
+            .shadow(
+                elevation = 10.dp,
+                shape = RoundedCornerShape(20.dp),
+                clip = false
+            )
+            .background(Color.White)
+            .width(screenWidth * 0.5f)
+            .height(screenHeight * 0.1f)
+    ){
+        Text(text = funFacts,
+            modifier = Modifier
+                .align(Alignment.Center),
+            textAlign = TextAlign.Center,
+            fontSize = 14.sp,
+            fontFamily = customfont)
+    }
+}
+
+@Composable
+fun RandomMyPlantCard(
+    plant: Plant?,
+    screenWidth: Dp,
+    screenHeight: Dp,
+) {
+    Box(
+        modifier = Modifier
+            .shadow(
+                elevation = 10.dp,
+                shape = RoundedCornerShape(20.dp),
+                clip = false
+            )
+            .background(Color.White)
+            .width(screenWidth * 0.8f)
+            .height(screenHeight * 0.2f)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Spacer(modifier = Modifier.weight(0.1f))
+
+            Box(
+                modifier = Modifier
+                    .shadow(
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(10.dp),
+                        clip = false
+                    )
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color.White)
+                    .size(screenWidth * 0.3f)
+            ) {
+                if (plant != null) {
+                    Image(
+                        painter = rememberAsyncImagePainter(plant.image),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(R.drawable.contoh_tanaman),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(0.1f))
+            if (plant != null) {
+                Column(
+                    modifier = Modifier.width(screenWidth * 0.2f)
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "Name: " + plant.nama,
+                        fontFamily = customfont,
+                        fontWeight = FontWeight.Normal
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "Age: " + plant.age,
+                        fontFamily = customfont,
+                        fontWeight = FontWeight.Normal
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+
+                Spacer(modifier = Modifier.weight(0.1f))
+
+                Column(
+                    modifier = Modifier.width(screenWidth * 0.2f)
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "Last Water: " + plant.last_water,
+                        fontFamily = customfont,
+                        fontWeight = FontWeight.Normal
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "Next Water: " + plant.to_water,
+                        fontFamily = customfont,
+                        fontWeight = FontWeight.Normal
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+
+                Spacer(modifier = Modifier.weight(0.1f))
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "No Plant Data Available",
+                    fontFamily = customfont,
+                    fontWeight = FontWeight.Normal
+                )
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
     }

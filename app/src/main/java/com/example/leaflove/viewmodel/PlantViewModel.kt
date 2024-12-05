@@ -30,13 +30,18 @@ import com.example.leaflove.data.repositories.PlantRepository
 import com.example.leaflove.services.PerenualAPIService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.log
 
 
-class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() {
+class PlantViewModel(
+    private val plantRepository: PlantRepository,
+    private val plantServices: PerenualAPIService
+): ViewModel() {
 
     suspend fun initializeDAOPlant() {
         coroutineScope {
@@ -53,15 +58,8 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         }
     }
 
-
-    private val plantServices: PerenualAPIService = PerenualAPIService.create()
-
-
-    private val _plantState = mutableStateOf(PlantListResponseModel())
-    val plantState = _plantState
-
-    private val _plantDetail = mutableStateOf(PlantDetailEntity())
-    val plantDetail: State<PlantDetailEntity> = _plantDetail
+    private val _plantDetail = mutableStateOf<PlantDetailEntity?>(null)
+    val plantDetail: State<PlantDetailEntity?> = _plantDetail
 
     private val _plantList = mutableStateOf<List<PlantSpeciesEntity>>(emptyList())
     val plantList = _plantList
@@ -123,21 +121,23 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
     }
 
     fun fetchPlantList() {
+        val allPlants = mutableListOf<PlantSpecies>()
         viewModelScope.launch {
             try {
-                val response = plantServices.getPlantList()
-
-
-                _plantState.value = response
-                var mappedPlantEntity = plantState.value.data
-                var result : List<PlantSpeciesEntity>? = emptyList();
-                if (mappedPlantEntity != null) {
-                    result = plantToEntityList(mappedPlantEntity)
+                withContext(Dispatchers.IO) {
+                    for (page in 1..5) {
+                        try {
+                            val response = plantServices.getPlantList(page = page)
+                            response.data?.let { allPlants.addAll(it) } // Assuming `data` contains the list of plants
+                        } catch (e: Exception) {
+                            println("Error fetching page $page: ${e.message}")
+                        }
+                    }
                 }
-                if (result != null) {
-                    plantRepository.insertPlants(result)
-                }
-                Log.d("Tess", _plantState.value.toString())
+                val result : List<PlantSpeciesEntity>?
+                result = plantToEntityList(allPlants)
+                _plantList.value = result
+                plantRepository.insertPlants(result)
             } catch (e: Exception) {
                 e.message?.let { Log.e("Plant Error", it) }
             }
@@ -179,7 +179,7 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         }
     }
 
-    fun fetchPlantDetails(id: Int = 2){
+    fun fetchPlantDetails(id: Int){
         viewModelScope.launch {
             try{
                 if(!plantRepository.checkIsFilledPlantDetail(id)){
@@ -217,6 +217,7 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
     fun sortPlantList(by: String = "common_name", ascending: Boolean = true) {
         viewModelScope.launch {
             try {
+                Log.d("Sort: ", "Check")
                 val sortedPlants = when (by) {
                     "common_name" -> {
                         if (ascending) {
@@ -234,6 +235,7 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
                     }
                     else -> _plantList.value // Default: do not sort
                 }
+                Log.d("Sort: ", sortedPlants.toString())
                 _plantList.value = sortedPlants
             } catch (e: Exception) {
                 e.message?.let { Log.e("Sort Error", it) }
@@ -241,6 +243,7 @@ class PlantViewModel(private val plantRepository: PlantRepository): ViewModel() 
         }
     }
 
-
-
+//    fun resetPlantDetail(){
+//        _plantDetail.value = null
+//    }
 }

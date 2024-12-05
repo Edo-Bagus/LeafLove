@@ -8,8 +8,9 @@ import com.example.leaflove.services.OpenWeatherAPIService
 import com.example.leaflove.data.models.WeatherResponseModel
 import kotlinx.coroutines.launch
 
-class WeatherViewModel : ViewModel() {
-    private val weatherServices: OpenWeatherAPIService = OpenWeatherAPIService.create()
+class WeatherViewModel(
+    private val weatherServices: OpenWeatherAPIService
+) : ViewModel() {
 
     private val _weatherState = mutableStateOf(WeatherResponseModel())
     val weatherState = _weatherState

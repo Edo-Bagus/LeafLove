@@ -14,19 +14,13 @@ import com.example.leaflove.utils.parseStringList
 import kotlinx.coroutines.launch
 
 class MyPlantViewModel(
-    private val plantRepository: PlantRepository
+    private val plantRepository: PlantRepository,
+    private val plantServices: PerenualAPIService
 ) : ViewModel() {
     private val _funFactList = mutableStateOf<List<String>>(emptyList())
     val funFactList = _funFactList
 
-    private val plantServices: PerenualAPIService = PerenualAPIService.create()
-
-    init {
-        Log.d("Tes: ", "sdfbseb")
-    }
-
     fun loadFunFactList(id: Int, name: String){
-        Log.d("Tes: ", id.toString() + name)
         viewModelScope.launch {
             try{
                 var plant: PlantDetailEntity;
