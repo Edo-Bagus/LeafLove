@@ -72,7 +72,7 @@ fun AboutScreen(navHost: NavHostController) {
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.offset( y = screenWidth * 0.01f)
+                    modifier = Modifier.offset( y = screenWidth * 0.05f)
                 ) {
                     Text(
                         text = "About Us",
