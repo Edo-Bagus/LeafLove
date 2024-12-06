@@ -483,8 +483,8 @@ fun RandomMyPlantCard(
 fun AdjustableText(
     text: String,
     modifier: Modifier = Modifier,
-    initialFontSize: TextUnit = 18.sp, // Ukuran awal
-    minFontSize: TextUnit = 10.sp,    // Ukuran minimum
+    initialFontSize: TextUnit = 18.sp,
+    minFontSize: TextUnit = 10.sp,
     fontWeight: FontWeight = FontWeight.Bold,
     fontFamily: FontFamily = FontFamily.Default
 ) {
@@ -496,15 +496,14 @@ fun AdjustableText(
         fontSize = fontSize,
         fontWeight = fontWeight,
         fontFamily = fontFamily,
-        maxLines = 1, // Batasi teks hanya 1 baris
-        overflow = TextOverflow.Clip, // Mencegah teks terpotong
+        maxLines = 1,
+        overflow = TextOverflow.Clip,
         modifier = modifier,
         softWrap = false,
         onTextLayout = { result ->
             if (result.didOverflowWidth) {
-                // Kurangi ukuran font jika teks meluap dari box
                 val newFontSize = (fontSize.value - 1).coerceAtLeast(minFontSize.value)
-                fontSize = newFontSize.sp // Konversi kembali ke TextUnit
+                fontSize = newFontSize.sp
             }
         }
     )

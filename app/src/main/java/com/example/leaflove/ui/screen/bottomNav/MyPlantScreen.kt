@@ -77,7 +77,7 @@ fun MyPlantScreen(navHost: NavHostController){
             modifier = Modifier
                 .fillMaxWidth()
                 .height(screenHeight * 0.3f)
-                .offset(y = screenHeight * 0.1f)
+                .offset(y = screenHeight * 0.09f)
                 .zIndex(1f)
         ) {
             Column {
@@ -116,7 +116,7 @@ fun MyPlantScreen(navHost: NavHostController){
             modifier = Modifier
                 .fillMaxWidth()
                 .height(screenHeight * 0.7f)
-                .offset(y = screenHeight * 0.3f)
+                .offset(y = screenHeight * 0.23f)
                 .background(Color.White)
                 .zIndex(1f)
         )
