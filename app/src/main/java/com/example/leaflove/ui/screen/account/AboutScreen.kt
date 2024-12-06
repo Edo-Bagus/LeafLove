@@ -34,6 +34,8 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -43,11 +45,7 @@ import com.example.leaflove.ui.theme.BasicGreen
 
 @Composable
 fun AboutScreen(navHost: NavHostController) {
-    val image = painterResource(R.drawable.edo)
-    val image1 = painterResource(R.drawable.ilham)
-    val image2 = painterResource(R.drawable.marshell)
-    val image3 = painterResource(R.drawable.dafa)
-    var customfont = FontFamily(
+    val customFont = FontFamily(
         Font(R.font.baloo_font, weight = FontWeight.Normal),
         Font(R.font.baloo_bold, weight = FontWeight.Bold)
     )
@@ -60,143 +58,124 @@ fun AboutScreen(navHost: NavHostController) {
         val screenHeight = maxHeight
         val screenWidth = maxWidth
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.weight(1f))
+            // Header Section
             Box(
                 modifier = Modifier
-                    .height(screenHeight * 0.3f)
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(bottomEnd = 25.dp))
+                    .height(screenHeight * 0.3f)
+                    .clip(RoundedCornerShape(bottomEnd = screenWidth * 0.05f))
                     .background(BasicGreen),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    modifier = Modifier.offset( y = screenWidth * 0.05f)
                 ) {
                     Text(
                         text = "About Us",
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
-                        fontFamily = customfont,
-                        color = Color.White,
-                        textAlign = TextAlign.Justify,
-                        modifier = Modifier.padding(0.dp, 40.dp, 0.dp, 0.dp)
+                        fontFamily = customFont,
+                        color = Color.White
                     )
                     Text(
                         text = "Welcome to LeafLove\n" +
-                                "This Application will help you to manage and prepare anything for your plant. We also have a feature of AR so you can make a plan for your plant\n" +
+                                "This Application will help you to manage and prepare anything for your plant. We also have a feature of AR so you can make a plan for your plant.\n" +
                                 "This Application was created by Team 5 in PAPB Course.",
                         fontSize = 14.sp,
-                        fontFamily = customfont,
+                        fontFamily = customFont,
                         color = Color.White,
-                        textAlign = TextAlign.Justify,
-                        modifier = Modifier.padding(horizontal = screenWidth * 0.1f)
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
-
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-            Row {
-                Column (modifier = Modifier.padding(screenWidth * 0.1f)) {
-                    Box(
-                        modifier = Modifier
-                            .size(125.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                    )
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.edo),
-                            contentDescription = "Image Edo",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(75.dp))
-                        )
-                    }
-                    Text(
-                        text = "Eduardus Bagus W. \n" + "22/493128/TK/53996",
-                        fontSize = 16.sp,
-                        fontFamily = customfont,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Box(
-                        modifier = Modifier
-                            .size(125.dp)
-                    )
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.marshell),
-                            contentDescription = "Image Marcel",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(75.dp))
-                        )
-                    }
-                    Text(
-                        text = "Marchel Rianra G. S. \n" + "22/494013/TK/54157",
-                        fontSize = 16.sp,
-                        fontFamily = customfont,
-                        textAlign = TextAlign.Center
-                    )
+            Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-                Column (modifier = Modifier.padding(horizontal = screenWidth * 0.05f, vertical = screenWidth * 0.1f)){
-                    Box(
-                        modifier = Modifier
-                            .size(125.dp)
-                    )
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.dafa),
-                            contentDescription = "Image Dafa",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(75.dp))
-                        )
-                    }
-                    Text(
-                        text = "Muhamad Daffa A. R. \n" + "22/503970/TK/55101",
-                        fontSize = 16.sp,
-                        fontFamily = customfont,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Box(
-                        modifier = Modifier
-                            .size(125.dp)
-                    )
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.ilham),
-                            contentDescription = "Image Ilham",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(125.dp)
-                                .clip(RoundedCornerShape(75.dp))
-                        )
-                    }
-                    Text(
-                        text = "Moh. Nazril Ilham \n" + "22/493142/TK/54000",
-                        fontSize = 16.sp,
-                        fontFamily = customfont,
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                }
+            // Member Section
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                MemberCard(
+                    imageRes = R.drawable.edo,
+                    name = "Eduardus Bagus W.",
+                    id = "22/493128/TK/53996",
+                    customFont = customFont
+                )
+                MemberCard(
+                    imageRes = R.drawable.dafa,
+                    name = "Muhamad Daffa A. R.",
+                    id = "22/503970/TK/55101",
+                    customFont = customFont
+                )
             }
-            Spacer(modifier = Modifier.weight(1f))
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                MemberCard(
+                    imageRes = R.drawable.marshell,
+                    name = "Marchel Rianra G. S.",
+                    id = "22/494013/TK/54157",
+                    customFont = customFont
+                )
+                MemberCard(
+                    imageRes = R.drawable.ilham,
+                    name = "Moh. Nazril Ilham",
+                    id = "22/493142/TK/54000",
+                    customFont = customFont
+                )
+            }
         }
     }
 }
+
+@Composable
+fun MemberCard(
+    imageRes: Int,
+    name: String,
+    id: String,
+    customFont: FontFamily
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.width(150.dp)
+    ) {
+        Image(
+            painter = painterResource(id = imageRes),
+            contentDescription = name,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(150.dp)
+                .clip(RoundedCornerShape(80.dp))
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = name,
+            fontSize = 14.sp,
+            fontFamily = customFont,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = id,
+            fontSize = 12.sp,
+            fontFamily = customFont,
+            textAlign = TextAlign.Center,
+            color = Color.Gray
+        )
+    }
+}
+

@@ -84,7 +84,8 @@ fun AccountScreen(navHost: NavHostController){
             ) {
                 Column(
                     modifier =  Modifier
-                        .padding(screenWidth * 0.05f, screenHeight * 0.08f)
+                        .padding(screenWidth * 0.05f, screenHeight * 0.03f)
+                        .offset(y = screenHeight * 0.01f)
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
@@ -95,7 +96,7 @@ fun AccountScreen(navHost: NavHostController){
                         color = Color.White,
                         textAlign =TextAlign.Left,
                     )
-                    Spacer(modifier = Modifier.weight(0.3f))
+                    Spacer(modifier = Modifier.weight(0.1f))
                     Text(
                         text = "Plant : " + (authViewModel.userData.value?.my_plants?.size ?: 0),
                         fontWeight = FontWeight.Bold,
@@ -104,7 +105,7 @@ fun AccountScreen(navHost: NavHostController){
                         color = Color.White,
                         textAlign = TextAlign.Left
                     )
-                    Spacer(modifier = Modifier.weight(2f))
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
             Spacer(modifier = Modifier.weight(0.05f))
