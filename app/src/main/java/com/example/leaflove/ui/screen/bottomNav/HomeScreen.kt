@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -420,77 +421,93 @@ fun RandomMyPlantCard(
                     )
                     .clip(RoundedCornerShape(10.dp))
                     .background(Color.White)
-                    .size(screenWidth * 0.3f)
+                    .size(screenWidth * 0.2f)
             ) {
-                if (plant != null) {
-                    Image(
-                        painter = rememberAsyncImagePainter(plant.image),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                } else {
-                    Image(
-                        painter = painterResource(R.drawable.contoh_tanaman),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+                Image(
+                    painter = rememberAsyncImagePainter(plant?.image),
+                    contentDescription = plant?.nama,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
             }
 
             Spacer(modifier = Modifier.weight(0.1f))
-            if (plant != null) {
-                Column(
-                    modifier = Modifier.width(screenWidth * 0.2f)
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "Name: " + plant.nama,
-                        fontFamily = customfont,
-                        fontWeight = FontWeight.Normal
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "Age: " + plant.age,
-                        fontFamily = customfont,
-                        fontWeight = FontWeight.Normal
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                }
 
-                Spacer(modifier = Modifier.weight(0.1f))
-
-                Column(
-                    modifier = Modifier.width(screenWidth * 0.2f)
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "Last Water: " + plant.last_water,
-                        fontFamily = customfont,
-                        fontWeight = FontWeight.Normal
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = "Next Water: " + plant.to_water,
-                        fontFamily = customfont,
-                        fontWeight = FontWeight.Normal
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-
-                Spacer(modifier = Modifier.weight(0.1f))
-            } else {
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = "No Plant Data Available",
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(8.dp) // Ruang di sekitar teks
+            ) {
+                AdjustableText(
+                    text = plant?.nama ?: "Unknown",
                     fontFamily = customfont,
-                    fontWeight = FontWeight.Normal
+                    initialFontSize = 18.sp,
+                    minFontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.width(screenWidth * 0.5f)
                 )
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(screenHeight * 0.01f))
+                AdjustableText(
+                    text = "Status: ${plant?.status ?: "Unknown"}",
+                    fontFamily = customfont,
+                    initialFontSize = 14.sp,
+                    minFontSize = 10.sp,
+                    modifier = Modifier.width(screenWidth * 0.5f)
+                )
+                Spacer(modifier = Modifier.height(screenHeight * 0.01f))
+                AdjustableText(
+                    text = "To Water: ${plant?.last_water ?: "Unknown"}",
+                    fontFamily = customfont,
+                    initialFontSize = 14.sp,
+                    minFontSize = 10.sp,
+                    modifier = Modifier.width(screenWidth * 0.5f)
+                )
+                Spacer(modifier = Modifier.height(screenHeight * 0.01f))
+                AdjustableText(
+                    text = "To Water: ${plant?.to_water ?: "Unknown"}",
+                    fontFamily = customfont,
+                    initialFontSize = 14.sp,
+                    minFontSize = 10.sp,
+                    modifier = Modifier.width(screenWidth * 0.5f)
+                )
             }
+
+            Spacer(modifier = Modifier.weight(0.1f))
         }
     }
+}
+
+@Composable
+fun AdjustableText(
+    text: String,
+    modifier: Modifier = Modifier,
+    initialFontSize: TextUnit = 18.sp, // Ukuran awal
+    minFontSize: TextUnit = 10.sp,    // Ukuran minimum
+    fontWeight: FontWeight = FontWeight.Bold,
+    fontFamily: FontFamily = FontFamily.Default
+) {
+    // State untuk ukuran teks
+    var fontSize by remember { mutableStateOf(initialFontSize) }
+
+    Text(
+        text = text,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        maxLines = 1, // Batasi teks hanya 1 baris
+        overflow = TextOverflow.Clip, // Mencegah teks terpotong
+        modifier = modifier,
+        softWrap = false,
+        onTextLayout = { result ->
+            if (result.didOverflowWidth) {
+                // Kurangi ukuran font jika teks meluap dari box
+                val newFontSize = (fontSize.value - 1).coerceAtLeast(minFontSize.value)
+                fontSize = newFontSize.sp // Konversi kembali ke TextUnit
+            }
+        }
+    )
 }
 
 private fun requestLocationPermissions(context: Context) {
